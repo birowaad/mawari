@@ -1,489 +1,183 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container-fluid px-0" id="mainContainer">
-
-    <!-- Hero Title -->
-    <div class="text-center py-3" style="background: linear-gradient(135deg, #fff9f0, #fff5e6);">
-        <h1 class="display-5 fw-bold" style="color: #8B6914;">
-            {% if current_lang == 'en' %}🏛️ AlUla Heritage Experience{% else %}🏛️ تجربة تراث العلا{% endif %}
-        </h1>
-        <p class="lead fs-6" style="color: #6c757d;">
-            {% if current_lang == 'en' %}Explore tombs, artifacts & desert life in Augmented Reality{% else %}استكشف المقابر والقطع الأثرية والحياة الصحراوية بالواقع المعزز{% endif %}
-        </p>
-    </div>
-
-    <!-- 3 TABS -->
-    <div class="text-center mb-4">
-        <div class="btn-group shadow-sm flex-wrap" role="group">
-            <button id="tabSitesBtn" class="btn btn-warning px-4 rounded-pill me-2 mb-1" onclick="showTab('sites')" style="font-weight: bold;">
-                🏛️ {% if current_lang == 'en' %}Sites{% else %}مواقع{% endif %}
-            </button>
-            <button id="tabArtifactsBtn" class="btn btn-outline-warning px-4 rounded-pill me-2 mb-1" onclick="showTab('artifacts')" style="font-weight: bold;">
-                🏺 {% if current_lang == 'en' %}Artifacts{% else %}قطع أثرية{% endif %}
-            </button>
-            <button id="tabDesertBtn" class="btn btn-outline-warning px-4 rounded-pill mb-1" onclick="showTab('desert')" style="font-weight: bold;">
-                🐪 {% if current_lang == 'en' %}Desert Life{% else %}حياة صحراوية{% endif %}
-            </button>
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+        <div>
+            <h2 class="interactive-text mb-1">
+                {% if current_lang == 'en' %}Welcome{% else %}مرحباً{% endif %}, {{ username }}! 👋
+            </h2>
+            <p class="text-muted">
+                {% if current_lang == 'en' %}Your journey through AlUla's ancient heritage{% else %}رحلتك عبر تراث العلا القديم{% endif %}
+            </p>
+        </div>
+        <div>
+            <span class="badge bg-warning text-dark p-2">
+                <i class="bi bi-star-fill"></i> {% if current_lang == 'en' %}Heritage Explorer{% else %}مستكشف التراث{% endif %}
+            </span>
         </div>
     </div>
 
-    <!-- 3D MODEL VIEWER -->
-    <div class="row mx-0 py-3" style="background: linear-gradient(135deg, #f5f5f0, #e8e4d8);">
-        <div class="col-12">
-            <div class="position-relative rounded-4 shadow-xl" style="border: 1px solid rgba(184,134,11,0.3); overflow: hidden; margin: 0 10px;">
-                <div class="bg-dark" id="modelViewerContainer">
-                    <iframe
-                        id="model-frame"
-                        title="3D Model Viewer"
-                        src="https://sketchfab.com/models/9b18367aac28420bbc066d65e73b9acd/embed?autostart=1&ui_controls=1&ui_infos=1"
-                        frameborder="0"
-                        allow="autoplay; fullscreen; xr-spatial-tracking"
-                        allowfullscreen
-                        style="width:100%; height:60vh; min-height:450px; background: #0a0a0a; border-radius: 12px;">
-                    </iframe>
-                </div>
-
-                <div class="position-absolute bottom-0 start-0 end-0 p-3 text-center" style="background: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.4), transparent); backdrop-filter: blur(8px); border-radius: 0 0 12px 12px;">
-                    <div class="d-flex gap-3 justify-content-center flex-wrap">
-                        <button id="playPauseBtn" class="btn btn-gold btn-rounded-pill px-4 py-2" onclick="toggleAudioStory()" style="background: linear-gradient(135deg, #DAA520, #B8860B); border: none; color: white;">
-                            <i id="audioIcon" class="bi bi-play-circle-fill"></i>
-                            {% if current_lang == 'en' %} 🎧 Play Story{% else %} 🎧 استمع للقصة{% endif %}
-                        </button>
-                        <button class="btn btn-outline-gold btn-rounded-pill px-4 py-2" onclick="scrollToQR()" style="background: rgba(255,255,255,0.15); backdrop-filter: blur(4px); border: 1px solid #DAA520; color: #FFF;">
-                            <i class="bi bi-qr-code"></i> {% if current_lang == 'en' %}📱 AR Mode{% else %}📱 وضع AR{% endif %}
-                        </button>
-                    </div>
-                </div>
-
-                <div class="position-absolute top-0 end-0 m-3">
-                    <span class="badge bg-dark bg-opacity-75 rounded-pill px-3 py-2" style="backdrop-filter: blur(4px);">
-                        <i class="bi bi-hand-index"></i> {% if current_lang == 'en' %}Drag to rotate • Scroll to zoom{% else %}اسحب للتدوير • مرر للتكبير{% endif %}
-                    </span>
-                </div>
+    <!-- إحصائيات المستخدم -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3 col-6">
+            <div class="card dashboard-stats-card p-3 text-center border-0 shadow-sm">
+                <i class="bi bi-camera-fill fs-1 text-primary"></i>
+                <h3 class="mb-0 mt-2" id="modelsExploredCount">0</h3>
+                <p class="text-muted small">{% if current_lang == 'en' %}Models Explored{% else %}نماذج تم استكشافها{% endif %}</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card dashboard-stats-card p-3 text-center border-0 shadow-sm">
+                <i class="bi bi-clock-history fs-1 text-success"></i>
+                <h3 class="mb-0 mt-2" id="totalTimeSpent">0</h3>
+                <p class="text-muted small">{% if current_lang == 'en' %}Minutes Explored{% else %}دقائق استكشاف{% endif %}</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card dashboard-stats-card p-3 text-center border-0 shadow-sm">
+                <i class="bi bi-headphones fs-1 text-info"></i>
+                <h3 class="mb-0 mt-2" id="storiesListened">0</h3>
+                <p class="text-muted small">{% if current_lang == 'en' %}Stories Listened{% else %}قصص تم الاستماع إليها{% endif %}</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card dashboard-stats-card p-3 text-center border-0 shadow-sm">
+                <i class="bi bi-trophy-fill fs-1 text-warning"></i>
+                <h3 class="mb-0 mt-2" id="achievementsCount">0</h3>
+                <p class="text-muted small">{% if current_lang == 'en' %}Achievements{% else %}إنجازات{% endif %}</p>
             </div>
         </div>
     </div>
 
-    <!-- STORY PANEL -->
-    <div id="storyPanel" class="position-fixed bottom-0 start-0 end-0 p-3" style="display: none; z-index: 1050; background: linear-gradient(135deg, #fff9f0, #fff5e6); border-top: 4px solid #DAA520; transform: translateY(100%); transition: transform 0.3s ease;">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-12">
-                    <div class="d-flex justify-content-between align-items-start gap-3">
-                        <div class="flex-grow-1">
-                            <h5 id="storyTitle" class="text-warning mb-2" style="font-weight: bold;"></h5>
-                            <p id="storyText" class="text-dark mb-2" style="font-size: 0.9rem; line-height: 1.5; max-height: 80px; overflow-y: auto;"></p>
-                            <div class="progress mb-2" style="height: 3px;">
-                                <div id="storyProgress" class="progress-bar bg-warning" style="width: 0%"></div>
-                            </div>
-                        </div>
-                        <button class="btn-close btn-close-dark" onclick="closeStoryPanel()"></button>
-                    </div>
+    <!-- قائمة أحدث النماذج المستكشفة -->
+    <div class="card shadow-sm mb-4 border-0">
+        <div class="card-header bg-transparent border-0 pt-3">
+            <h5 class="mb-0"><i class="bi bi-clock-history text-warning"></i> {% if current_lang == 'en' %}Recently Explored{% else %}آخر النماذج المستكشفة{% endif %}</h5>
+        </div>
+        <div class="card-body">
+            <div id="recentModelsList" class="row g-3">
+                <div class="col-12 text-center text-muted py-3">
+                    <i class="bi bi-info-circle"></i> {% if current_lang == 'en' %}No models explored yet. Start your journey!{% else %}لم يتم استكشاف أي نماذج بعد. ابدأ رحلتك!{% endif %}
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- TAB 1: SITES -->
-    <div id="sitesTab" class="container my-4">
-        <h4 class="mb-3 text-center">{% if current_lang == 'en' %}🏛️ Archaeological Sites{% else %}🏛️ المواقع الأثرية{% endif %}</h4>
-        <div class="row g-3">
-            <div class="col-md-6 col-lg-4">
-                <div class="card model-card h-100" data-model-id="qasr_al_farid">
-                    <div class="card-body text-center">
-                        <i class="bi bi-building fs-1 text-primary"></i>
-                        <h6 class="fw-bold mt-2">🏛️ Qasr al-Farid</h6>
-                        <p class="small text-muted">{% if current_lang == 'en' %}The Lonely Castle | Hegra | 1st Century CE{% else %}القصر الوحيد | الحجر | القرن الأول الميلادي{% endif %}</p>
-                        <div class="model-stats small mb-2">
-                            <span class="badge bg-secondary"><i class="bi bi-clock"></i> <span class="time-spent">0</span> min</span>
-                            <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
-                        </div>
-                        <div class="progress mb-2" style="height: 4px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
-                        <button class="btn btn-sm btn-outline-primary w-100 explore-btn" onclick='loadModel("qasr_al_farid", "Qasr al-Farid", "sketchfab", "9b18367aac28420bbc066d65e73b9acd")'>
-                            <i class="bi bi-vr"></i> {% if current_lang == 'en' %}Explore in AR{% else %}استكشف بالواقع المعزز{% endif %}
-                        </button>
-                    </div>
-                </div>
+    <!-- أزرار الإجراءات السريعة -->
+    <div class="row g-3">
+        <div class="col-md-4 col-sm-6">
+            <div class="card dashboard-card p-3 text-center border-0 shadow-sm">
+                <i class="bi bi-person-circle fs-1 text-primary"></i>
+                <h5 class="mt-2">{% if current_lang == 'en' %}Edit Profile{% else %}تعديل الملف الشخصي{% endif %}</h5>
+                <a href="{{ url_for('profile') }}" class="btn btn-warning mt-2">{% if current_lang == 'en' %}Go{% else %}انتقال{% endif %}</a>
             </div>
         </div>
-    </div>
-
-    <!-- TAB 2: ARTIFACTS -->
-    <div id="artifactsTab" class="container my-4" style="display: none;">
-        <h4 class="mb-3 text-center">{% if current_lang == 'en' %}🏺 Ancient Artifacts{% else %}🏺 القطع الأثرية{% endif %}</h4>
-        <div class="row g-3">
-            <div class="col-md-6 col-lg-4">
-                <div class="card artifact-card h-100" data-model-id="roman_oil_lamp">
-                    <div class="card-body text-center">
-                        <i class="bi bi-cup-straw fs-1 text-warning"></i>
-                        <h6 class="fw-bold mt-2">🪔 Roman Oil Lamp</h6>
-                        <p class="small text-muted">{% if current_lang == 'en' %}Taracco | 1st-2nd Century CE{% else %}تاراكو | القرن الأول والثاني الميلادي{% endif %}</p>
-                        <div class="model-stats small mb-2">
-                            <span class="badge bg-secondary"><i class="bi bi-clock"></i> <span class="time-spent">0</span> min</span>
-                            <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
-                        </div>
-                        <div class="progress mb-2" style="height: 4px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
-                        <button class="btn btn-sm btn-outline-secondary w-100 explore-btn" onclick='loadModel("roman_oil_lamp", "Roman Oil Lamp", "glb", "/static/models/roman_oil_lamp_tarraco.glb")'>
-                            <i class="bi bi-vr"></i> {% if current_lang == 'en' %}View in 3D{% else %}عرض ثلاثي الأبعاد{% endif %}
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="card artifact-card h-100" data-model-id="ancient_pottery">
-                    <div class="card-body text-center">
-                        <i class="bi bi-brightness-alt-high fs-1 text-info"></i>
-                        <h6 class="fw-bold mt-2">🏺 Ancient Pottery Set</h6>
-                        <p class="small text-muted">{% if current_lang == 'en' %}Nabataean | 1st Century BCE-1st Century CE{% else %}نبطي | القرن الأول قبل الميلاد - القرن الأول الميلادي{% endif %}</p>
-                        <div class="model-stats small mb-2">
-                            <span class="badge bg-secondary"><i class="bi bi-clock"></i> <span class="time-spent">0</span> min</span>
-                            <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
-                        </div>
-                        <div class="progress mb-2" style="height: 4px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
-                        <button class="btn btn-sm btn-outline-secondary w-100 explore-btn" onclick='loadModel("ancient_pottery", "Ancient Pottery Set", "glb", "/static/models/ancient_pottery_set.glb")'>
-                            <i class="bi bi-vr"></i> {% if current_lang == 'en' %}View in 3D{% else %}عرض ثلاثي الأبعاد{% endif %}
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="card artifact-card h-100" data-model-id="dallah_coffee">
-                    <div class="card-body text-center">
-                        <i class="bi bi-cup-hot fs-1 text-danger"></i>
-                        <h6 class="fw-bold mt-2">☕ Dallah Coffee Pot</h6>
-                        <p class="small text-muted">{% if current_lang == 'en' %}Traditional Arabian | Hospitality Symbol{% else %}عربي تقليدي | رمز الكرم{% endif %}</p>
-                        <div class="model-stats small mb-2">
-                            <span class="badge bg-secondary"><i class="bi bi-clock"></i> <span class="time-spent">0</span> min</span>
-                            <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
-                        </div>
-                        <div class="progress mb-2" style="height: 4px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
-                        <button class="btn btn-sm btn-outline-secondary w-100 explore-btn" onclick='loadModel("dallah_coffee", "Dallah Coffee Pot", "glb", "/static/models/dallah_arabian_coffee_pot.glb")'>
-                            <i class="bi bi-vr"></i> {% if current_lang == 'en' %}View in 3D{% else %}عرض ثلاثي الأبعاد{% endif %}
-                        </button>
-                    </div>
-                </div>
+        <div class="col-md-4 col-sm-6">
+            <div class="card dashboard-card p-3 text-center border-0 shadow-sm">
+                <i class="bi bi-vr fs-1 text-success"></i>
+                <h5 class="mt-2">{% if current_lang == 'en' %}Explore Heritage{% else %}استكشف التراث{% endif %}</h5>
+                <a href="{{ url_for('heritage') }}" class="btn btn-warning mt-2">{% if current_lang == 'en' %}Go{% else %}انتقال{% endif %}</a>
             </div>
         </div>
-    </div>
-
-    <!-- TAB 3: DESERT LIFE -->
-    <div id="desertTab" class="container my-4" style="display: none;">
-        <div class="row g-3">
-            <div class="col-md-6 col-lg-4">
-                <div class="card desert-card h-100" data-model-id="camel">
-                    <div class="card-body text-center">
-                        <i class="bi bi-eyedropper fs-1 text-success"></i>
-                        <h6 class="fw-bold mt-2">🐪 Arabian Camel</h6>
-                        <p class="small text-muted">{% if current_lang == 'en' %}Ship of the Desert{% else %}سفينة الصحراء{% endif %}</p>
-                        <div class="model-stats small mb-2">
-                            <span class="badge bg-secondary"><i class="bi bi-clock"></i> <span class="time-spent">0</span> min</span>
-                            <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
-                        </div>
-                        <div class="progress mb-2" style="height: 4px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
-                        <button class="btn btn-sm btn-outline-success w-100 explore-btn" onclick='loadModel("camel", "Arabian Camel", "glb", "/static/models/camel.glb")'>
-                            <i class="bi bi-vr"></i> {% if current_lang == 'en' %}View in 3D{% else %}عرض ثلاثي الأبعاد{% endif %}
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="card desert-card h-100" data-model-id="oasis">
-                    <div class="card-body text-center">
-                        <i class="bi bi-water fs-1 text-info"></i>
-                        <h6 class="fw-bold mt-2">🌴 Desert Oasis</h6>
-                        <p class="small text-muted">{% if current_lang == 'en' %}AlUla Valley{% else %}وادي العلا{% endif %}</p>
-                        <div class="model-stats small mb-2">
-                            <span class="badge bg-secondary"><i class="bi bi-clock"></i> <span class="time-spent">0</span> min</span>
-                            <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
-                        </div>
-                        <div class="progress mb-2" style="height: 4px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
-                        <button class="btn btn-sm btn-outline-success w-100 explore-btn" onclick='loadModel("oasis", "Desert Oasis", "glb", "/static/models/osais.glb")'>
-                            <i class="bi bi-vr"></i> {% if current_lang == 'en' %}View in 3D{% else %}عرض ثلاثي الأبعاد{% endif %}
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="card desert-card h-100" data-model-id="tent">
-                    <div class="card-body text-center">
-                        <i class="bi bi-house-door fs-1 text-secondary"></i>
-                        <h6 class="fw-bold mt-2">🏕️ Arabian Tent</h6>
-                        <p class="small text-muted">{% if current_lang == 'en' %}Bedouin Dwelling{% else %}مسكن بدوي{% endif %}</p>
-                        <div class="model-stats small mb-2">
-                            <span class="badge bg-secondary"><i class="bi bi-clock"></i> <span class="time-spent">0</span> min</span>
-                            <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
-                        </div>
-                        <div class="progress mb-2" style="height: 4px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
-                        <button class="btn btn-sm btn-outline-success w-100 explore-btn" onclick='loadModel("tent", "Arabian Tent", "glb", "/static/models/tent_arab.glb")'>
-                            <i class="bi bi-vr"></i> {% if current_lang == 'en' %}View in 3D{% else %}عرض ثلاثي الأبعاد{% endif %}
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="card desert-card h-100" data-model-id="desert_cliff">
-                    <div class="card-body text-center">
-                        <i class="bi bi-mountain fs-1 text-warning"></i>
-                        <h6 class="fw-bold mt-2">⛰️ Western Desert Cliff</h6>
-                        <p class="small text-muted">{% if current_lang == 'en' %}Sandstone Formation{% else %}تكوين رملي{% endif %}</p>
-                        <div class="model-stats small mb-2">
-                            <span class="badge bg-secondary"><i class="bi bi-clock"></i> <span class="time-spent">0</span> min</span>
-                            <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
-                        </div>
-                        <div class="progress mb-2" style="height: 4px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
-                        <button class="btn btn-sm btn-outline-success w-100 explore-btn" onclick='loadModel("desert_cliff", "Western Desert Cliff", "glb", "/static/models/desert_western_cliff_high.glb")'>
-                            <i class="bi bi-vr"></i> {% if current_lang == 'en' %}View in 3D{% else %}عرض ثلاثي الأبعاد{% endif %}
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="card desert-card h-100" data-model-id="desert_rock">
-                    <div class="card-body text-center">
-                        <i class="bi bi-gem fs-1 text-secondary"></i>
-                        <h6 class="fw-bold mt-2">🪨 Western Ledge Rock</h6>
-                        <p class="small text-muted">{% if current_lang == 'en' %}Natural Formation{% else %}تكوين طبيعي{% endif %}</p>
-                        <div class="model-stats small mb-2">
-                            <span class="badge bg-secondary"><i class="bi bi-clock"></i> <span class="time-spent">0</span> min</span>
-                            <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
-                        </div>
-                        <div class="progress mb-2" style="height: 4px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
-                        <button class="btn btn-sm btn-outline-success w-100 explore-btn" onclick='loadModel("desert_rock", "Western Ledge Rock", "glb", "/static/models/desert_western_ledge_rock.glb")'>
-                            <i class="bi bi-vr"></i> {% if current_lang == 'en' %}View in 3D{% else %}عرض ثلاثي الأبعاد{% endif %}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- QR CODE SECTION -->
-    <div id="qrSection" class="container py-4" style="background: linear-gradient(135deg, #f8f9fa, #e9ecef);">
-        <div class="row justify-content-center">
-            <div class="col-md-8 col-lg-6">
-                <div class="text-center p-4 rounded-4 shadow-sm" style="background: white; border: 1px solid rgba(184,134,11,0.2);">
-                    <div class="d-flex align-items-center justify-content-center gap-4 flex-wrap">
-                        <div class="qr-wrapper" style="background: white; padding: 10px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-                            <img id="qrCodeImage" src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://sketchfab.com/models/9b18367aac28420bbc066d65e73b9acd" alt="QR Code" style="width: 100px; height: 100px;">
-                        </div>
-                        <div class="text-start">
-                            <span class="badge bg-warning text-dark rounded-pill px-3 py-2 mb-2">
-                                <i class="bi bi-vr"></i> {% if current_lang == 'en' %}Augmented Reality Ready{% else %}جاهز للواقع المعزز{% endif %}
-                            </span>
-                            <p class="small text-muted mb-0">
-                                <i class="bi bi-hand-index-thumb"></i>
-                                {% if current_lang == 'en' %}Scan QR code then tap "View in AR"{% else %}امسح رمز QR ثم اضغط "View in AR"{% endif %}
-                            </p>
-                        </div>
-                    </div>
-                </div>
+        <div class="col-md-4 col-sm-6">
+            <div class="card dashboard-card p-3 text-center border-0 shadow-sm">
+                <i class="bi bi-box-arrow-right fs-1 text-danger"></i>
+                <h5 class="mt-2">{% if current_lang == 'en' %}Logout{% else %}تسجيل خروج{% endif %}</h5>
+                <a href="{{ url_for('logout') }}" class="btn btn-danger mt-2">{% if current_lang == 'en' %}Logout{% else %}تسجيل خروج{% endif %}</a>
             </div>
         </div>
     </div>
 </div>
 
-<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
-
 <script>
-    let currentLanguage = '{{ current_lang }}';
-    let currentSpeechLang = currentLanguage === 'en' ? 'en-US' : 'ar-SA';
-    let speechSynth = null;
-    let isPlaying = false;
-    let currentUtterance = null;
-    let progressInterval = null;
-    let currentStoryText = "";
-    let currentStoryTitle = "";
-    let currentModelId = "";
-
-    const stories = {
-        qasr_al_farid: { en: "Qasr al-Farid, The Lonely Castle of Hegra, is the most iconic tomb at Saudi Arabia's first UNESCO World Heritage Site. Carved entirely from a single sandstone monolith in the 1st century CE for Lihyan, son of Kuza.", ar: "قصر الفريد، القصر الوحيد في الحجر، هو أشهر مقبرة في أول موقع تراث عالمي لليونسكو في المملكة العربية السعودية. نحت بالكامل من كتلة حجر رملي واحدة في القرن الأول الميلادي لحيان بن كوزا." },
-        roman_oil_lamp: { en: "This Roman oil lamp from Taracco, dating to the 1st-2nd century CE, was essential for daily life. Made of terracotta, these lamps illuminated homes, temples, and tombs.", ar: "هذا المصباح الزيتي الروماني من تاراكو، الذي يعود تاريخه إلى القرن الأول والثاني الميلادي، كان ضرورياً للحياة اليومية. هذه المصابيح الفخارية أضاءت المنازل والمعابد والمقابر." },
-        ancient_pottery: { en: "This Nabataean pottery set represents the famous thin-walled, elegantly painted ceramics that were traded across the ancient world.", ar: "تمثل مجموعة الفخار النبطي هذه الفخار الشهير رقيق الجدران والمزين برسومات أنيقة والذي تم تداوله في جميع أنحاء العالم القديم." },
-        dallah_coffee: { en: "The Dallah is an iconic Arabian coffee pot, symbol of hospitality and generosity in Arab culture.", ar: "الدلة هي وعاء قهوة عربي أيقوني، رمز الكرم والضيافة في الثقافة العربية." },
-        camel: { en: "The Arabian camel, known as the 'Ship of the Desert,' was essential for survival and trade in ancient Arabia.", ar: "الجمل العربي، المعروف بـ'سفينة الصحراء'، كان ضرورياً للبقاء والتجارة في شبه الجزيرة العربية القديمة." },
-        oasis: { en: "Desert oases like those in AlUla were vital lifelines in the harsh desert environment.", ar: "كانت الواحات الصحراوية مثل تلك الموجودة في العلا شريان حياة حيوياً في البيئة الصحراوية القاسية." },
-        tent: { en: "The Arabian tent is the traditional dwelling of Bedouin nomads, woven from goat or camel hair.", ar: "الخيمة العربية هي المسكن التقليدي للبدو الرحل، منسوجة من شعر الماعز أو الإبل." },
-        desert_cliff: { en: "These layered sandstone cliffs tell a geological story spanning millions of years in AlUla.", ar: "تصف منحدرات الحجر الرملي المتطابقة هذه قصة جيولوجية تمتد لملايين السنين في العلا." },
-        desert_rock: { en: "These natural rock formations were shaped by wind and water over thousands of years.", ar: "هذه التكوينات الصخرية الطبيعية شكلتها الرياح والمياه على مدى آلاف السنين." }
-    };
-
-    if ('speechSynthesis' in window) speechSynth = window.speechSynthesis;
-
-    // ==================== دوال تسجيل الإحصائيات ====================
-    function updateCardStats(modelId, timeSpent, storiesCount) {
-        const card = document.querySelector(`.card[data-model-id="${modelId}"]`);
-        if (card) {
-            const timeSpan = card.querySelector('.time-spent');
-            const storiesSpan = card.querySelector('.stories-count');
-            const progressBar = card.querySelector('.progress-bar');
-            if (timeSpan) {
-                let currentTime = parseInt(timeSpan.innerText) || 0;
-                timeSpan.innerText = currentTime + timeSpent;
-            }
-            if (storiesSpan) {
-                let currentStories = parseInt(storiesSpan.innerText) || 0;
-                storiesSpan.innerText = currentStories + storiesCount;
-            }
-            if (progressBar) {
-                let totalTime = parseInt(timeSpan?.innerText) || timeSpent;
-                let progressPercent = Math.min((totalTime / 60) * 100, 100);
-                progressBar.style.width = `${progressPercent}%`;
-            }
+    // تحميل وعرض الإحصائيات من localStorage
+    function loadDashboardStats() {
+        const savedHistory = localStorage.getItem('heritageExploredHistory');
+        
+        if (savedHistory) {
+            const history = JSON.parse(savedHistory);
+            const totalModels = history.length;
+            const totalMinutes = history.reduce((sum, item) => sum + (item.time || 0), 0);
+            const totalStories = history.reduce((sum, item) => sum + (item.stories || 0), 0);
+            
+            document.getElementById('modelsExploredCount').textContent = totalModels;
+            document.getElementById('totalTimeSpent').textContent = totalMinutes;
+            document.getElementById('storiesListened').textContent = totalStories;
+            
+            // حساب الإنجازات بناءً على الإحصائيات
+            let achievements = 0;
+            if (totalModels >= 1) achievements++;
+            if (totalModels >= 3) achievements++;
+            if (totalModels >= 6) achievements++;
+            if (totalMinutes >= 10) achievements++;
+            if (totalMinutes >= 30) achievements++;
+            if (totalStories >= 3) achievements++;
+            if (totalStories >= 7) achievements++;
+            document.getElementById('achievementsCount').textContent = achievements;
+            
+            // عرض آخر النماذج المستكشفة
+            displayRecentModels(history);
         }
     }
-
-    function recordExploration(modelId, timeSpent, storiesCount) {
-        let history = JSON.parse(localStorage.getItem('heritageExploredHistory') || '[]');
-        let existingIndex = history.findIndex(item => item.id === modelId);
+    
+    // عرض آخر 4 نماذج تم استكشافها
+    function displayRecentModels(history) {
+        const recentContainer = document.getElementById('recentModelsList');
+        const sorted = [...history].sort((a, b) => (b.lastVisited || 0) - (a.lastVisited || 0));
+        const recent = sorted.slice(0, 4);
         
-        if (existingIndex !== -1) {
-            history[existingIndex].time = (history[existingIndex].time || 0) + timeSpent;
-            history[existingIndex].stories = (history[existingIndex].stories || 0) + storiesCount;
-            history[existingIndex].lastVisited = Date.now();
-        } else {
-            history.push({ id: modelId, name: currentStoryTitle, time: timeSpent, stories: storiesCount, lastVisited: Date.now() });
+        if (recent.length === 0) {
+            recentContainer.innerHTML = `<div class="col-12 text-center text-muted py-3">
+                <i class="bi bi-info-circle"></i> ${getText('no_models')}
+            </div>`;
+            return;
         }
         
-        localStorage.setItem('heritageExploredHistory', JSON.stringify(history));
-        updateCardStats(modelId, timeSpent, storiesCount);
+        recentContainer.innerHTML = recent.map(item => `
+            <div class="col-md-3 col-6">
+                <div class="card border-0 shadow-sm text-center p-2 h-100">
+                    <div class="model-icon mt-2">
+                        <i class="bi bi-building fs-2 text-primary"></i>
+                    </div>
+                    <h6 class="mt-2 mb-0 small fw-bold">${item.name}</h6>
+                    <small class="text-muted">${getText('last_visited')}: ${new Date(item.lastVisited).toLocaleDateString()}</small>
+                    <div class="mt-1">
+                        <span class="badge bg-secondary">${item.time || 0} ${getText('min')}</span>
+                        <span class="badge bg-info ms-1">${item.stories || 0} 🎧</span>
+                    </div>
+                </div>
+            </div>
+        `).join('');
     }
-
-    // ==================== دوال الصوت والقصة ====================
-    function playSpeech(text, modelId) {
-        if (currentUtterance) speechSynth.cancel();
-        if (progressInterval) clearInterval(progressInterval);
-        
-        currentUtterance = new SpeechSynthesisUtterance(text);
-        currentUtterance.lang = currentSpeechLang;
-        currentUtterance.rate = 0.85;
-        
-        const wordCount = text.split(' ').length;
-        const estimatedDuration = Math.max(5, wordCount / 3);
-        let elapsed = 0;
-        const progressBar = document.getElementById('storyProgress');
-        
-        currentUtterance.onstart = () => {
-            isPlaying = true;
-            updatePlayButton(true);
-            progressBar.style.width = '0%';
-            progressInterval = setInterval(() => {
-                elapsed += 0.1;
-                let percent = (elapsed / estimatedDuration) * 100;
-                if (percent <= 100) progressBar.style.width = `${percent}%`;
-                if (elapsed >= estimatedDuration) clearInterval(progressInterval);
-            }, 100);
+    
+    // نصوص مترجمة للوحة التحكم
+    function getText(key) {
+        const lang = '{{ current_lang }}';
+        const texts = {
+            no_models: { en: 'No models explored yet. Start your journey!', ar: 'لم يتم استكشاف أي نماذج بعد. ابدأ رحلتك!' },
+            last_visited: { en: 'Last visited', ar: 'آخر زيارة' },
+            min: { en: 'min', ar: 'دقيقة' }
         };
-        
-        currentUtterance.onend = () => {
-            isPlaying = false;
-            updatePlayButton(false);
-            if (progressInterval) clearInterval(progressInterval);
-            progressBar.style.width = '100%';
-            setTimeout(() => { progressBar.style.width = '0%'; }, 500);
-            // تسجيل استماع القصة عند الانتهاء
-            recordExploration(modelId, 0, 1);
-        };
-        
-        speechSynth.speak(currentUtterance);
+        return texts[key]?.[lang] || texts[key]?.en || key;
     }
-
-    function toggleAudioStory() {
-        if (isPlaying && speechSynth) {
-            speechSynth.cancel();
-            isPlaying = false;
-            if (progressInterval) clearInterval(progressInterval);
-            updatePlayButton(false);
-        } else if (currentStoryText) {
-            playSpeech(currentStoryText, currentModelId);
-        }
-    }
-
-    function updatePlayButton(isPlayingStatus) {
-        const btn = document.getElementById('playPauseBtn');
-        if (isPlayingStatus) {
-            if (currentLanguage === 'en') {
-                btn.innerHTML = '<i class="bi bi-stop-circle-fill"></i> ⏹️ Stop Story';
-            } else {
-                btn.innerHTML = '<i class="bi bi-stop-circle-fill"></i> ⏹️ إيقاف القصة';
-            }
-        } else {
-            if (currentLanguage === 'en') {
-                btn.innerHTML = '<i class="bi bi-play-circle-fill"></i> 🎧 Play Story';
-            } else {
-                btn.innerHTML = '<i class="bi bi-play-circle-fill"></i> 🎧 استمع للقصة';
-            }
-        }
-    }
-
-    function showStoryPanel() {
-        const panel = document.getElementById('storyPanel');
-        document.getElementById('storyTitle').innerHTML = `📖 ${currentStoryTitle}`;
-        document.getElementById('storyText').innerHTML = currentStoryText;
-        panel.style.display = 'block';
-        setTimeout(() => { panel.style.transform = 'translateY(0)'; }, 10);
-    }
-
-    function closeStoryPanel() {
-        if (isPlaying && speechSynth) speechSynth.cancel();
-        if (progressInterval) clearInterval(progressInterval);
-        document.getElementById('storyPanel').style.transform = 'translateY(100%)';
-        setTimeout(() => { document.getElementById('storyPanel').style.display = 'none'; }, 300);
-        updatePlayButton(false);
-    }
-
-    // ==================== دوال التحميل والتبويبات ====================
-    function showTab(tab) {
-        document.getElementById('sitesTab').style.display = 'none';
-        document.getElementById('artifactsTab').style.display = 'none';
-        document.getElementById('desertTab').style.display = 'none';
-        if (tab === 'sites') document.getElementById('sitesTab').style.display = 'block';
-        else if (tab === 'artifacts') document.getElementById('artifactsTab').style.display = 'block';
-        else if (tab === 'desert') document.getElementById('desertTab').style.display = 'block';
-    }
-
-    function loadModel(modelId, modelName, modelType, modelUrl) {
-        const container = document.getElementById('modelViewerContainer');
-        currentModelId = modelId;
-        currentStoryTitle = modelName;
-        
-        // تحديث QR code
-        document.getElementById('qrCodeImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${window.location.origin}${window.location.pathname}`;
-        
-        // تحميل النموذج
-        if (modelType === 'sketchfab') {
-            container.innerHTML = `<iframe src="https://sketchfab.com/models/${modelUrl}/embed" frameborder="0" allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen style="width:100%; height:60vh; min-height:450px; background: #0a0a0a; border-radius: 12px;"></iframe>`;
-        } else {
-            container.innerHTML = `<model-viewer src="${modelUrl}" ar ar-modes="webxr scene-viewer quick-look" camera-controls auto-rotate style="width:100%; height:60vh; min-height:450px; background: #1a1a1a; border-radius: 12px;"><button slot="ar-button" style="background: #DAA520; border: none; color: white; padding: 12px 24px; border-radius: 40px;">🕶️ View in AR</button></model-viewer>`;
-        }
-        
-        // تعيين القصة
-        const story = stories[modelId];
-        currentStoryText = story ? (currentLanguage === 'en' ? story.en : story.ar) : (currentLanguage === 'en' ? modelName : modelName);
-        
-        // عرض لوحة القصة وتشغيل الصوت
-        setTimeout(() => { 
-            showStoryPanel(); 
-            playSpeech(currentStoryText, modelId);
-            // تسجيل بداية استكشاف (زيادة الوقت)
-            recordExploration(modelId, 1, 0);
-        }, 500);
-    }
-
-    function scrollToQR() { document.getElementById('qrSection').scrollIntoView({ behavior: 'smooth', block: 'center' }); }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        showTab('sites');
-    });
+    
+    document.addEventListener('DOMContentLoaded', loadDashboardStats);
 </script>
 
 <style>
-    body { background: linear-gradient(135deg, #faf8f0, #f0ede5); }
-    .model-card, .artifact-card, .desert-card { transition: transform 0.2s; background: white; border-radius: 16px; cursor: pointer; border: 1px solid rgba(0,0,0,0.05); }
-    .model-card:hover, .artifact-card:hover, .desert-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.15); }
-    .btn-gold:hover, .btn-outline-gold:hover { transform: scale(1.05); filter: brightness(1.1); }
-    @media (max-width: 768px) { iframe, model-viewer { height: 45vh !important; min-height: 350px; } }
-    [dir="rtl"] .text-start { text-align: right !important; }
-    model-viewer { --poster-color: transparent; }
+    .dashboard-stats-card, .dashboard-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        background: white;
+        border-radius: 12px;
+    }
+    .dashboard-stats-card:hover, .dashboard-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1) !important;
+    }
+    @media (max-width: 768px) {
+        .dashboard-stats-card h3 { font-size: 1.2rem; }
+        .recent-model-title { font-size: 0.8rem; }
+    }
 </style>
 {% endblock %}
