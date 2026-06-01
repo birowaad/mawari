@@ -1,84 +1,154 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-lg-8">
-        <div class="text-center mb-5">
-            <h1 class="display-5 fw-bold" style="color: #DAA520;">
-                {% if current_lang == 'en' %}About Mawari{% else %}حول مواري{% endif %}
-            </h1>
-            <p class="lead">
-                {% if current_lang == 'en' %}Preserving AlUla's Heritage Through Technology{% else %}الحفاظ على تراث العلا من خلال التكنولوجيا{% endif %}
-            </p>
-        </div>
+<div class="container py-4">
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold" style="color: #DAA520;">
+            {% if current_lang == 'en' %}✨ Mawari (AR) Smart Application ✨{% else %}✨ تطبيق مواري (AR) الذكي ✨{% endif %}
+        </h1>
+        <p class="lead">
+            {% if current_lang == 'en' %}Preserving AlUla's Heritage Through Augmented Reality{% else %}الحفاظ على تراث العلا من خلال الواقع المعزز{% endif %}
+        </p>
+    </div>
 
-        <div class="card shadow-sm border-0 rounded-4 mb-4">
-            <div class="card-body p-4">
-                <h3><i class="bi bi-quote"></i> {% if current_lang == 'en' %}Our Story{% else %}قصتنا{% endif %}</h3>
-                <p>
-                    {% if current_lang == 'en' %}Mawari is a web application inspired by the rich heritage and breathtaking landscapes of AlUla, Saudi Arabia. The name "Mawari" reflects the spirit of exploration and cultural appreciation that defines this ancient region.{% else %}مواري هو تطبيق ويب مستوحى من التراث الغني والمناظر الطبيعية الخلابة للعلا في المملكة العربية السعودية. يعكس اسم "مواري" روح الاستكشاف والتقدير الثقافي التي تحدد هذه المنطقة القديمة.{% endif %}
-                </p>
-                <p>
-                    {% if current_lang == 'en' %}Our mission is to make cultural heritage accessible to everyone through immersive Augmented Reality experiences. We believe that technology can bridge the gap between past and present, allowing people worldwide to connect with AlUla's remarkable history.{% else %}مهمتنا هي جعل التراث الثقافي في متناول الجميع من خلال تجارب الواقع المعزز الغامرة. نعتقد أن التكنولوجيا يمكن أن تسد الفجوة بين الماضي والحاضر، مما يسمح للناس في جميع أنحاء العالم بالتواصل مع تاريخ العلا الرائع.{% endif %}
-                </p>
+    <!-- Team Section -->
+    <div class="card shadow-sm border-0 rounded-4 mb-4">
+        <div class="card-body p-4">
+            <h3 class="text-center mb-4"><i class="bi bi-people-fill text-warning"></i> {% if current_lang == 'en' %}Team Members{% else %}أعضاء الفريق{% endif %}</h3>
+            
+            <!-- Supervisor -->
+            <div class="row justify-content-center mb-4">
+                <div class="col-md-8">
+                    <div class="bg-light rounded-3 p-3 text-center">
+                        <i class="bi bi-person-badge fs-1 text-warning"></i>
+                        <h5 class="mt-2">{% if current_lang == 'en' %}Supervisor{% else %}المشرفة{% endif %}</h5>
+                        <p class="fw-bold mb-0">دكتورة عبير الفكي</p>
+                        <p class="text-muted small">Dr. Abir Elfakee</p>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <div class="card shadow-sm border-0 rounded-4 mb-4">
-            <div class="card-body p-4">
-                <h3><i class="bi bi-star-fill text-warning"></i> {% if current_lang == 'en' %}Features{% else %}الميزات{% endif %}</h3>
-                <div class="row g-3 mt-2">
-                    <div class="col-md-6">
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="bi bi-check-circle-fill text-success"></i>
-                            <span>{% if current_lang == 'en' %}Interactive 3D Models{% else %}نماذج ثلاثية الأبعاد تفاعلية{% endif %}</span>
-                        </div>
+            <!-- Students -->
+            <h5 class="text-center mb-3"><i class="bi bi-star-fill text-warning"></i> {% if current_lang == 'en' %}Students{% else %}الطالبات{% endif %}</h5>
+            <div class="row g-3 justify-content-center">
+                <div class="col-md-6 col-lg-4">
+                    <div class="student-card text-center p-3">
+                        <i class="bi bi-person-circle fs-2 text-primary"></i>
+                        <p class="fw-bold mt-2 mb-0">بشرى عايض السبيعي</p>
+                        <small class="text-muted">Bushra Ayed Al-Subaie</small>
                     </div>
-                    <div class="col-md-6">
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="bi bi-check-circle-fill text-success"></i>
-                            <span>{% if current_lang == 'en' %}Augmented Reality Support{% else %}دعم الواقع المعزز{% endif %}</span>
-                        </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="student-card text-center p-3">
+                        <i class="bi bi-person-circle fs-2 text-primary"></i>
+                        <p class="fw-bold mt-2 mb-0">نوره عجيان السبيعي</p>
+                        <small class="text-muted">Nourah Ajian Al-Subaie</small>
                     </div>
-                    <div class="col-md-6">
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="bi bi-check-circle-fill text-success"></i>
-                            <span>{% if current_lang == 'en' %}Audio Narrations{% else %}روايات صوتية{% endif %}</span>
-                        </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="student-card text-center p-3">
+                        <i class="bi bi-person-circle fs-2 text-primary"></i>
+                        <p class="fw-bold mt-2 mb-0">صيته جري السبيعي</p>
+                        <small class="text-muted">Saytah Jari Al-Subaie</small>
                     </div>
-                    <div class="col-md-6">
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="bi bi-check-circle-fill text-success"></i>
-                            <span>{% if current_lang == 'en' %}Bilingual (Arabic/English){% else %}ثنائي اللغة (عربي/إنجليزي){% endif %}</span>
-                        </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="student-card text-center p-3">
+                        <i class="bi bi-person-circle fs-2 text-primary"></i>
+                        <p class="fw-bold mt-2 mb-0">ريم عايض السبيعي</p>
+                        <small class="text-muted">Reem Ayed Al-Subaie</small>
                     </div>
-                    <div class="col-md-6">
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="bi bi-check-circle-fill text-success"></i>
-                            <span>{% if current_lang == 'en' %}QR Code Access{% else %}وصول عبر رمز QR{% endif %}</span>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="bi bi-check-circle-fill text-success"></i>
-                            <span>{% if current_lang == 'en' %}PWA Installation{% else %}تثبيت كتطبيق PWA{% endif %}</span>
-                        </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="student-card text-center p-3">
+                        <i class="bi bi-person-circle fs-2 text-primary"></i>
+                        <p class="fw-bold mt-2 mb-0">علا شبيب السبيعي</p>
+                        <small class="text-muted">Alaa Shabib Al-Subaie</small>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="card shadow-sm border-0 rounded-4">
-            <div class="card-body p-4 text-center">
-                <h3><i class="bi bi-people-fill"></i> {% if current_lang == 'en' %}Our Team{% else %}فريقنا{% endif %}</h3>
-                <p>
-                    {% if current_lang == 'en' %}Developed by 10th Level Computer Science students at the University College of Ranyah{% else %}تم التطوير بواسطة طالبات المستوى العاشر علوم حاسوب في الكلية الجامعية برنية{% endif %}
-                </p>
-                <p class="text-muted small">
-                    <i class="bi bi-envelope"></i> contact@mawari.com
-                </p>
+    <!-- About Project -->
+    <div class="card shadow-sm border-0 rounded-4 mb-4">
+        <div class="card-body p-4">
+            <h3><i class="bi bi-info-circle-fill text-warning"></i> {% if current_lang == 'en' %}About the Project{% else %}عن المشروع{% endif %}</h3>
+            <p>
+                {% if current_lang == 'en' %}Mawari is a smart application inspired by the rich heritage and breathtaking landscapes of AlUla, Saudi Arabia. The application uses Augmented Reality technology to bring ancient history to life, allowing users to explore magnificent Nabataean tombs, ancient artifacts, and the stunning desert environment in an interactive and immersive way.{% else %}مواري هو تطبيق ذكي مستوحى من التراث الغني والمناظر الطبيعية الخلابة للعلا في المملكة العربية السعودية. يستخدم التطبيق تقنية الواقع المعزز لإحياء التاريخ القديم، مما يسمح للمستخدمين باستكشاف المقابر النبطية الرائعة والقطع الأثرية القديمة والبيئة الصحراوية المذهلة بطريقة تفاعلية وغامرة.{% endif %}
+            </p>
+            <p>
+                {% if current_lang == 'en' %}The project combines education and technology to preserve cultural heritage and make it accessible to everyone, anywhere in the world.{% else %}يجمع المشروع بين التعليم والتكنولوجيا للحفاظ على التراث الثقافي وجعله في متناول الجميع في أي مكان حول العالم.{% endif %}
+            </p>
+        </div>
+    </div>
+
+    <!-- Features -->
+    <div class="card shadow-sm border-0 rounded-4 mb-4">
+        <div class="card-body p-4">
+            <h3><i class="bi bi-star-fill text-warning"></i> {% if current_lang == 'en' %}Features{% else %}الميزات{% endif %}</h3>
+            <div class="row g-3 mt-2">
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-check-circle-fill text-success"></i>
+                        <span>{% if current_lang == 'en' %}Interactive 3D Models{% else %}نماذج ثلاثية الأبعاد تفاعلية{% endif %}</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-check-circle-fill text-success"></i>
+                        <span>{% if current_lang == 'en' %}Augmented Reality Support{% else %}دعم الواقع المعزز{% endif %}</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-check-circle-fill text-success"></i>
+                        <span>{% if current_lang == 'en' %}Audio Narrations{% else %}روايات صوتية{% endif %}</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-check-circle-fill text-success"></i>
+                        <span>{% if current_lang == 'en' %}Bilingual (Arabic/English){% else %}ثنائي اللغة (عربي/إنجليزي){% endif %}</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-check-circle-fill text-success"></i>
+                        <span>{% if current_lang == 'en' %}QR Code Access{% else %}وصول عبر رمز QR{% endif %}</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-check-circle-fill text-success"></i>
+                        <span>{% if current_lang == 'en' %}PWA Installation{% else %}تثبيت كتطبيق PWA{% endif %}</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
+    <!-- Version -->
+    <div class="text-center">
+        <p class="text-muted small">
+            <i class="bi bi-code-square"></i> Mawari AR | v1.0
+        </p>
+    </div>
 </div>
+
+<style>
+    .student-card {
+        background: white;
+        border-radius: 12px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        border: 1px solid rgba(218,165,32,0.2);
+    }
+    .student-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+    [data-theme="dark"] .student-card {
+        background: #1e2a2e;
+    }
+</style>
 {% endblock %}
