@@ -46,11 +46,11 @@
 
                 <div class="position-absolute bottom-0 start-0 end-0 p-3 text-center" style="background: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.4), transparent); backdrop-filter: blur(8px); border-radius: 0 0 12px 12px;">
                     <div class="d-flex gap-3 justify-content-center flex-wrap">
-                        <button id="playPauseBtn" class="btn btn-gold btn rounded-pill px-4 py-2" onclick="toggleAudioStory()" style="background: linear-gradient(135deg, #DAA520, #B8860B); border: none; color: white;">
+                        <button id="playPauseBtn" class="btn btn-gold btn-rounded-pill px-4 py-2" onclick="toggleAudioStory()" style="background: linear-gradient(135deg, #DAA520, #B8860B); border: none; color: white;">
                             <i id="audioIcon" class="bi bi-play-circle-fill"></i>
                             {% if current_lang == 'en' %} 🎧 Play Story{% else %} 🎧 استمع للقصة{% endif %}
                         </button>
-                        <button class="btn btn-outline-gold btn rounded-pill px-4 py-2" onclick="scrollToQR()" style="background: rgba(255,255,255,0.15); backdrop-filter: blur(4px); border: 1px solid #DAA520; color: #FFF;">
+                        <button class="btn btn-outline-gold btn-rounded-pill px-4 py-2" onclick="scrollToQR()" style="background: rgba(255,255,255,0.15); backdrop-filter: blur(4px); border: 1px solid #DAA520; color: #FFF;">
                             <i class="bi bi-qr-code"></i> {% if current_lang == 'en' %}📱 AR Mode{% else %}📱 وضع AR{% endif %}
                         </button>
                     </div>
@@ -169,7 +169,6 @@
 
     <!-- TAB 3: DESERT LIFE -->
     <div id="desertTab" class="container my-4" style="display: none;">
-        <h4 class="mb-3 text-center">{% if current_lang == 'en' %}🐪 Desert Life{% else %}🐪 الحياة الصحراوية{% endif %}</h4>
         <div class="row g-3">
             <div class="col-md-6 col-lg-4">
                 <div class="card desert-card h-100" data-model-id="camel">
@@ -295,72 +294,126 @@
     let progressInterval = null;
     let currentStoryText = "";
     let currentStoryTitle = "";
+    let currentModelId = "";
 
     const stories = {
-        qasr_al_farid: {
-            en: "Qasr al-Farid, The Lonely Castle of Hegra, is the most iconic tomb at Saudi Arabia's first UNESCO World Heritage Site. Carved entirely from a single sandstone monolith in the 1st century CE for Lihyan, son of Kuza.",
-            ar: "قصر الفريد، القصر الوحيد في الحجر، هو أشهر مقبرة في أول موقع تراث عالمي لليونسكو في المملكة العربية السعودية. نحت بالكامل من كتلة حجر رملي واحدة في القرن الأول الميلادي لحيان بن كوزا."
-        },
-        roman_oil_lamp: {
-            en: "This Roman oil lamp from Taracco, dating to the 1st-2nd century CE, was essential for daily life. Made of terracotta, these lamps illuminated homes, temples, and tombs.",
-            ar: "هذا المصباح الزيتي الروماني من تاراكو، الذي يعود تاريخه إلى القرن الأول والثاني الميلادي، كان ضرورياً للحياة اليومية. هذه المصابيح الفخارية أضاءت المنازل والمعابد والمقابر."
-        },
-        ancient_pottery: {
-            en: "This Nabataean pottery set represents the famous thin-walled, elegantly painted ceramics that were traded across the ancient world.",
-            ar: "تمثل مجموعة الفخار النبطي هذه الفخار الشهير رقيق الجدران والمزين برسومات أنيقة والذي تم تداوله في جميع أنحاء العالم القديم."
-        },
-        dallah_coffee: {
-            en: "The Dallah is an iconic Arabian coffee pot, symbol of hospitality and generosity in Arab culture.",
-            ar: "الدلة هي وعاء قهوة عربي أيقوني، رمز الكرم والضيافة في الثقافة العربية."
-        },
-        camel: {
-            en: "The Arabian camel, known as the 'Ship of the Desert,' was essential for survival and trade in ancient Arabia.",
-            ar: "الجمل العربي، المعروف بـ'سفينة الصحراء'، كان ضرورياً للبقاء والتجارة في شبه الجزيرة العربية القديمة."
-        },
-        oasis: {
-            en: "Desert oases like those in AlUla were vital lifelines in the harsh desert environment.",
-            ar: "كانت الواحات الصحراوية مثل تلك الموجودة في العلا شريان حياة حيوياً في البيئة الصحراوية القاسية."
-        },
-        tent: {
-            en: "The Arabian tent is the traditional dwelling of Bedouin nomads, woven from goat or camel hair.",
-            ar: "الخيمة العربية هي المسكن التقليدي للبدو الرحل، منسوجة من شعر الماعز أو الإبل."
-        },
-        desert_cliff: {
-            en: "These layered sandstone cliffs tell a geological story spanning millions of years in AlUla.",
-            ar: "تصف منحدرات الحجر الرملي المتطابقة هذه قصة جيولوجية تمتد لملايين السنين في العلا."
-        },
-        desert_rock: {
-            en: "These natural rock formations were shaped by wind and water over thousands of years.",
-            ar: "هذه التكوينات الصخرية الطبيعية شكلتها الرياح والمياه على مدى آلاف السنين."
-        }
+        qasr_al_farid: { en: "Qasr al-Farid, The Lonely Castle of Hegra, is the most iconic tomb at Saudi Arabia's first UNESCO World Heritage Site. Carved entirely from a single sandstone monolith in the 1st century CE for Lihyan, son of Kuza.", ar: "قصر الفريد، القصر الوحيد في الحجر، هو أشهر مقبرة في أول موقع تراث عالمي لليونسكو في المملكة العربية السعودية. نحت بالكامل من كتلة حجر رملي واحدة في القرن الأول الميلادي لحيان بن كوزا." },
+        roman_oil_lamp: { en: "This Roman oil lamp from Taracco, dating to the 1st-2nd century CE, was essential for daily life. Made of terracotta, these lamps illuminated homes, temples, and tombs.", ar: "هذا المصباح الزيتي الروماني من تاراكو، الذي يعود تاريخه إلى القرن الأول والثاني الميلادي، كان ضرورياً للحياة اليومية. هذه المصابيح الفخارية أضاءت المنازل والمعابد والمقابر." },
+        ancient_pottery: { en: "This Nabataean pottery set represents the famous thin-walled, elegantly painted ceramics that were traded across the ancient world.", ar: "تمثل مجموعة الفخار النبطي هذه الفخار الشهير رقيق الجدران والمزين برسومات أنيقة والذي تم تداوله في جميع أنحاء العالم القديم." },
+        dallah_coffee: { en: "The Dallah is an iconic Arabian coffee pot, symbol of hospitality and generosity in Arab culture.", ar: "الدلة هي وعاء قهوة عربي أيقوني، رمز الكرم والضيافة في الثقافة العربية." },
+        camel: { en: "The Arabian camel, known as the 'Ship of the Desert,' was essential for survival and trade in ancient Arabia.", ar: "الجمل العربي، المعروف بـ'سفينة الصحراء'، كان ضرورياً للبقاء والتجارة في شبه الجزيرة العربية القديمة." },
+        oasis: { en: "Desert oases like those in AlUla were vital lifelines in the harsh desert environment.", ar: "كانت الواحات الصحراوية مثل تلك الموجودة في العلا شريان حياة حيوياً في البيئة الصحراوية القاسية." },
+        tent: { en: "The Arabian tent is the traditional dwelling of Bedouin nomads, woven from goat or camel hair.", ar: "الخيمة العربية هي المسكن التقليدي للبدو الرحل، منسوجة من شعر الماعز أو الإبل." },
+        desert_cliff: { en: "These layered sandstone cliffs tell a geological story spanning millions of years in AlUla.", ar: "تصف منحدرات الحجر الرملي المتطابقة هذه قصة جيولوجية تمتد لملايين السنين في العلا." },
+        desert_rock: { en: "These natural rock formations were shaped by wind and water over thousands of years.", ar: "هذه التكوينات الصخرية الطبيعية شكلتها الرياح والمياه على مدى آلاف السنين." }
     };
 
     if ('speechSynthesis' in window) speechSynth = window.speechSynthesis;
 
-    function showTab(tab) {
-        document.getElementById('sitesTab').style.display = 'none';
-        document.getElementById('artifactsTab').style.display = 'none';
-        document.getElementById('desertTab').style.display = 'none';
-        if (tab === 'sites') document.getElementById('sitesTab').style.display = 'block';
-        else if (tab === 'artifacts') document.getElementById('artifactsTab').style.display = 'block';
-        else if (tab === 'desert') document.getElementById('desertTab').style.display = 'block';
+    // ==================== دوال تسجيل الإحصائيات ====================
+    function updateCardStats(modelId, timeSpent, storiesCount) {
+        const card = document.querySelector(`.card[data-model-id="${modelId}"]`);
+        if (card) {
+            const timeSpan = card.querySelector('.time-spent');
+            const storiesSpan = card.querySelector('.stories-count');
+            const progressBar = card.querySelector('.progress-bar');
+            if (timeSpan) {
+                let currentTime = parseInt(timeSpan.innerText) || 0;
+                timeSpan.innerText = currentTime + timeSpent;
+            }
+            if (storiesSpan) {
+                let currentStories = parseInt(storiesSpan.innerText) || 0;
+                storiesSpan.innerText = currentStories + storiesCount;
+            }
+            if (progressBar) {
+                let totalTime = parseInt(timeSpan?.innerText) || timeSpent;
+                let progressPercent = Math.min((totalTime / 60) * 100, 100);
+                progressBar.style.width = `${progressPercent}%`;
+            }
+        }
     }
 
-    function loadModel(modelId, modelName, modelType, modelUrl) {
-        const container = document.getElementById('modelViewerContainer');
-        document.getElementById('qrCodeImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${window.location.origin}${window.location.pathname}`;
-
-        if (modelType === 'sketchfab') {
-            container.innerHTML = `<iframe src="https://sketchfab.com/models/${modelUrl}/embed" frameborder="0" allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen style="width:100%; height:60vh; min-height:450px; background: #0a0a0a; border-radius: 12px;"></iframe>`;
+    function recordExploration(modelId, timeSpent, storiesCount) {
+        let history = JSON.parse(localStorage.getItem('heritageExploredHistory') || '[]');
+        let existingIndex = history.findIndex(item => item.id === modelId);
+        
+        if (existingIndex !== -1) {
+            history[existingIndex].time = (history[existingIndex].time || 0) + timeSpent;
+            history[existingIndex].stories = (history[existingIndex].stories || 0) + storiesCount;
+            history[existingIndex].lastVisited = Date.now();
         } else {
-            container.innerHTML = `<model-viewer src="${modelUrl}" ar ar-modes="webxr scene-viewer quick-look" camera-controls auto-rotate style="width:100%; height:60vh; min-height:450px; background: #1a1a1a; border-radius: 12px;"><button slot="ar-button" style="background: #DAA520; border: none; color: white; padding: 12px 24px; border-radius: 40px;">🕶️ View in AR</button></model-viewer>`;
+            history.push({ id: modelId, name: currentStoryTitle, time: timeSpent, stories: storiesCount, lastVisited: Date.now() });
         }
+        
+        localStorage.setItem('heritageExploredHistory', JSON.stringify(history));
+        updateCardStats(modelId, timeSpent, storiesCount);
+    }
 
-        const story = stories[modelId];
-        currentStoryText = story ? (currentLanguage === 'en' ? story.en : story.ar) : (currentLanguage === 'en' ? modelName : modelName);
-        currentStoryTitle = modelName;
+    // ==================== دوال الصوت والقصة ====================
+    function playSpeech(text, modelId) {
+        if (currentUtterance) speechSynth.cancel();
+        if (progressInterval) clearInterval(progressInterval);
+        
+        currentUtterance = new SpeechSynthesisUtterance(text);
+        currentUtterance.lang = currentSpeechLang;
+        currentUtterance.rate = 0.85;
+        
+        const wordCount = text.split(' ').length;
+        const estimatedDuration = Math.max(5, wordCount / 3);
+        let elapsed = 0;
+        const progressBar = document.getElementById('storyProgress');
+        
+        currentUtterance.onstart = () => {
+            isPlaying = true;
+            updatePlayButton(true);
+            progressBar.style.width = '0%';
+            progressInterval = setInterval(() => {
+                elapsed += 0.1;
+                let percent = (elapsed / estimatedDuration) * 100;
+                if (percent <= 100) progressBar.style.width = `${percent}%`;
+                if (elapsed >= estimatedDuration) clearInterval(progressInterval);
+            }, 100);
+        };
+        
+        currentUtterance.onend = () => {
+            isPlaying = false;
+            updatePlayButton(false);
+            if (progressInterval) clearInterval(progressInterval);
+            progressBar.style.width = '100%';
+            setTimeout(() => { progressBar.style.width = '0%'; }, 500);
+            // تسجيل استماع القصة عند الانتهاء
+            recordExploration(modelId, 0, 1);
+        };
+        
+        speechSynth.speak(currentUtterance);
+    }
 
-        setTimeout(() => { showStoryPanel(); playSpeech(currentStoryText); }, 500);
+    function toggleAudioStory() {
+        if (isPlaying && speechSynth) {
+            speechSynth.cancel();
+            isPlaying = false;
+            if (progressInterval) clearInterval(progressInterval);
+            updatePlayButton(false);
+        } else if (currentStoryText) {
+            playSpeech(currentStoryText, currentModelId);
+        }
+    }
+
+    function updatePlayButton(isPlayingStatus) {
+        const btn = document.getElementById('playPauseBtn');
+        if (isPlayingStatus) {
+            if (currentLanguage === 'en') {
+                btn.innerHTML = '<i class="bi bi-stop-circle-fill"></i> ⏹️ Stop Story';
+            } else {
+                btn.innerHTML = '<i class="bi bi-stop-circle-fill"></i> ⏹️ إيقاف القصة';
+            }
+        } else {
+            if (currentLanguage === 'en') {
+                btn.innerHTML = '<i class="bi bi-play-circle-fill"></i> 🎧 Play Story';
+            } else {
+                btn.innerHTML = '<i class="bi bi-play-circle-fill"></i> 🎧 استمع للقصة';
+            }
+        }
     }
 
     function showStoryPanel() {
@@ -376,37 +429,37 @@
         if (progressInterval) clearInterval(progressInterval);
         document.getElementById('storyPanel').style.transform = 'translateY(100%)';
         setTimeout(() => { document.getElementById('storyPanel').style.display = 'none'; }, 300);
+        updatePlayButton(false);
     }
 
-    function toggleAudioStory() {
-        if (isPlaying && speechSynth) { speechSynth.cancel(); isPlaying = false; }
-        else if (currentStoryText) playSpeech(currentStoryText);
+    // ==================== دوال التحميل والتبويبات ====================
+    function showTab(tab) {
+        document.getElementById('sitesTab').style.display = 'none';
+        document.getElementById('artifactsTab').style.display = 'none';
+        document.getElementById('desertTab').style.display = 'none';
+        if (tab === 'sites') document.getElementById('sitesTab').style.display = 'block';
+        else if (tab === 'artifacts') document.getElementById('artifactsTab').style.display = 'block';
+        else if (tab === 'desert') document.getElementById('desertTab').style.display = 'block';
     }
 
-    function playSpeech(text) {
-        if (currentUtterance) speechSynth.cancel();
-        currentUtterance = new SpeechSynthesisUtterance(text);
-        currentUtterance.lang = currentSpeechLang;
-        currentUtterance.rate = 0.85;
-        currentUtterance.onstart = () => { isPlaying = true; };
-        currentUtterance.onend = () => { isPlaying = false; };
-        speechSynth.speak(currentUtterance);
-    }
-
-    function scrollToQR() { document.getElementById('qrSection').scrollIntoView({ behavior: 'smooth', block: 'center' }); }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        showTab('sites');
-    });
-</script>
-
-<style>
-    body { background: linear-gradient(135deg, #faf8f0, #f0ede5); }
-    .model-card, .artifact-card, .desert-card { transition: transform 0.2s; background: white; border-radius: 16px; cursor: pointer; border: 1px solid rgba(0,0,0,0.05); }
-    .model-card:hover, .artifact-card:hover, .desert-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.15); }
-    .btn-gold:hover, .btn-outline-gold:hover { transform: scale(1.05); filter: brightness(1.1); }
-    @media (max-width: 768px) { iframe, model-viewer { height: 45vh !important; min-height: 350px; } }
-    [dir="rtl"] .text-start { text-align: right !important; }
-    model-viewer { --poster-color: transparent; }
-</style>
-{% endblock %}
+    function loadModel(modelId, modelName, modelType, modelUrl) {
+        const container = document.getElementById('modelViewerContainer');
+        currentModelId = modelId;
+        currentStoryTitle = modelName;
+        
+        // تحديث QR code
+        document.getElementById('qrCodeImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${window.location.origin}${window.location.pathname}`;
+        
+        // تحميل النموذج
+        if (modelType === 'sketchfab') {
+            container.innerHTML = `<iframe src="https://sketchfab.com/models/${modelUrl}/embed" frameborder="0" allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen style="width:100%; height:60vh; min-height:450px; background: #0a0a0a; border-radius: 12px;"></iframe>`;
+        } else {
+            container.innerHTML = `<model-viewer src="${modelUrl}" ar ar-modes="webxr scene-viewer quick-look" camera-controls auto-rotate style="width:100%; height:60vh; min-height:450px; background: #1a1a1a; border-radius: 12px;"><button slot="ar-button" style="background: #DAA520; border: none; color: white; padding: 12px 24px; border-radius: 40px;">🕶️ View in AR</button></model-viewer>`;
+        }
+        
+        // تعيين القصة
+        const story = stories[modelId];
+        currentStoryText = story ? (currentLanguage === 'en' ? story.en : story.ar) : (currentLanguage === 'en' ? modelName : modelName);
+        
+        // عرض لوحة القصة وتشغيل الصوت
+        setTimeout
