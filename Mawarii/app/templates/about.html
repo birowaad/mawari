@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="text-center mb-5">
+            <h1 class="display-5 fw-bold" style="color: #DAA520;">
+                {% if current_lang == 'en' %}About Mawari{% else %}حول مواري{% endif %}
+            </h1>
+            <p class="lead">
+                {% if current_lang == 'en' %}Preserving AlUla's Heritage Through Technology{% else %}الحفاظ على تراث العلا من خلال التكنولوجيا{% endif %}
+            </p>
+        </div>
+
+        <div class="card shadow-sm border-0 rounded-4 mb-4">
+            <div class="card-body p-4">
+                <h3><i class="bi bi-quote"></i> {% if current_lang == 'en' %}Our Story{% else %}قصتنا{% endif %}</h3>
+                <p>
+                    {% if current_lang == 'en' %}Mawari is a web application inspired by the rich heritage and breathtaking landscapes of AlUla, Saudi Arabia. The name "Mawari" reflects the spirit of exploration and cultural appreciation that defines this ancient region.{% else %}مواري هو تطبيق ويب مستوحى من التراث الغني والمناظر الطبيعية الخلابة للعلا في المملكة العربية السعودية. يعكس اسم "مواري" روح الاستكشاف والتقدير الثقافي التي تحدد هذه المنطقة القديمة.{% endif %}
+                </p>
+                <p>
+                    {% if current_lang == 'en' %}Our mission is to make cultural heritage accessible to everyone through immersive Augmented Reality experiences. We believe that technology can bridge the gap between past and present, allowing people worldwide to connect with AlUla's remarkable history.{% else %}مهمتنا هي جعل التراث الثقافي في متناول الجميع من خلال تجارب الواقع المعزز الغامرة. نعتقد أن التكنولوجيا يمكن أن تسد الفجوة بين الماضي والحاضر، مما يسمح للناس في جميع أنحاء العالم بالتواصل مع تاريخ العلا الرائع.{% endif %}
+                </p>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0 rounded-4 mb-4">
+            <div class="card-body p-4">
+                <h3><i class="bi bi-star-fill text-warning"></i> {% if current_lang == 'en' %}Features{% else %}الميزات{% endif %}</h3>
+                <div class="row g-3 mt-2">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            <span>{% if current_lang == 'en' %}Interactive 3D Models{% else %}نماذج ثلاثية الأبعاد تفاعلية{% endif %}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            <span>{% if current_lang == 'en' %}Augmented Reality Support{% else %}دعم الواقع المعزز{% endif %}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            <span>{% if current_lang == 'en' %}Audio Narrations{% else %}روايات صوتية{% endif %}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            <span>{% if current_lang == 'en' %}Bilingual (Arabic/English){% else %}ثنائي اللغة (عربي/إنجليزي){% endif %}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            <span>{% if current_lang == 'en' %}QR Code Access{% else %}وصول عبر رمز QR{% endif %}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            <span>{% if current_lang == 'en' %}PWA Installation{% else %}تثبيت كتطبيق PWA{% endif %}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-body p-4 text-center">
+                <h3><i class="bi bi-people-fill"></i> {% if current_lang == 'en' %}Our Team{% else %}فريقنا{% endif %}</h3>
+                <p>
+                    {% if current_lang == 'en' %}Developed by 10th Level Computer Science students at the University College of Ranyah{% else %}تم التطوير بواسطة طالبات المستوى العاشر علوم حاسوب في الكلية الجامعية برنية{% endif %}
+                </p>
+                <p class="text-muted small">
+                    <i class="bi bi-envelope"></i> contact@mawari.com
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

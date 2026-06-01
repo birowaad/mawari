@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container text-center my-5 py-5">
+    <div class="display-1">📱</div>
+    <h1 class="mt-4">{% if current_lang == 'en' %}You're Offline{% else %}أنت غير متصل{% endif %}</h1>
+    <p class="lead">{% if current_lang == 'en' %}Please check your internet connection and try again{% else %}يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى{% endif %}</p>
+    <p>{% if current_lang == 'en' %}Once connected, you can continue exploring AlUla's heritage in Augmented Reality{% else %}بمجرد الاتصال، يمكنك مواصلة استكشاف تراث العلا بالواقع المعزز{% endif %}</p>
+    <button class="btn btn-warning mt-3 rounded-pill px-4" onclick="location.reload()">
+        <i class="bi bi-arrow-repeat"></i> {% if current_lang == 'en' %}Try Again{% else %}حاول مرة أخرى{% endif %}
+    </button>
+</div>
+{% endblock %}

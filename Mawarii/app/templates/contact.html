@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="text-center mb-5">
+            <h1 class="display-5 fw-bold" style="color: #DAA520;">
+                {% if current_lang == 'en' %}Contact Us{% else %}اتصل بنا{% endif %}
+            </h1>
+            <p class="lead">
+                {% if current_lang == 'en' %}We'd love to hear from you{% else %}نسعد بسماع منك{% endif %}
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 rounded-4 h-100">
+                    <div class="card-body p-4 text-center">
+                        <i class="bi bi-envelope-fill fs-1 text-warning"></i>
+                        <h5 class="mt-3">{% if current_lang == 'en' %}Email{% else %}البريد الإلكتروني{% endif %}</h5>
+                        <p class="mb-0">contact@mawari.com</p>
+                        <p class="text-muted small">support@mawari.com</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 rounded-4 h-100">
+                    <div class="card-body p-4 text-center">
+                        <i class="bi bi-geo-alt-fill fs-1 text-warning"></i>
+                        <h5 class="mt-3">{% if current_lang == 'en' %}Location{% else %}الموقع{% endif %}</h5>
+                        <p class="mb-0">{% if current_lang == 'en' %}University College of Ranyah{% else %}الكلية الجامعية برنية{% endif %}</p>
+                        <p class="text-muted small">{% if current_lang == 'en' %}Saudi Arabia{% else %}المملكة العربية السعودية{% endif %}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0 rounded-4 mt-4">
+            <div class="card-body p-4">
+                <h3 class="mb-4 text-center">
+                    {% if current_lang == 'en' %}Send us a message{% else %}أرسل لنا رسالة{% endif %}
+                </h3>
+                <form method="POST" action="{{ url_for('contact') }}">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">{% if current_lang == 'en' %}Your Name{% else %}الاسم{% endif %}</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">{% if current_lang == 'en' %}Email Address{% else %}البريد الإلكتروني{% endif %}</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="message" class="form-label">{% if current_lang == 'en' %}Message{% else %}الرسالة{% endif %}</label>
+                        <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-warning w-100 py-2 rounded-pill">
+                        <i class="bi bi-send"></i> {% if current_lang == 'en' %}Send Message{% else %}إرسال الرسالة{% endif %}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

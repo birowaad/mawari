@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-body p-5">
+                <div class="text-center mb-4">
+                    <i class="bi bi-box-arrow-in-right fs-1 text-warning"></i>
+                    <h2 class="mt-2">{% if current_lang == 'en' %}Welcome Back{% else %}مرحباً بعودتك{% endif %}</h2>
+                    <p class="text-muted">{% if current_lang == 'en' %}Login to continue your heritage journey{% else %}سجل الدخول لمواصلة رحلتك التراثية{% endif %}</p>
+                </div>
+
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">{% if current_lang == 'en' %}Email Address{% else %}البريد الإلكتروني{% endif %}</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">{% if current_lang == 'en' %}Password{% else %}كلمة المرور{% endif %}</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-warning w-100 py-2 rounded-pill mt-3">
+                        <i class="bi bi-box-arrow-in-right"></i> {% if current_lang == 'en' %}Login{% else %}دخول{% endif %}
+                    </button>
+                </form>
+
+                <hr class="my-4">
+
+                <p class="text-center mb-0">
+                    <a href="{{ url_for('register') }}">{% if current_lang == 'en' %}Don't have an account? Register{% else %}ليس لديك حساب؟ تسجيل{% endif %}</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

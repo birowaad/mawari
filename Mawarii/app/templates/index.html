@@ -1,0 +1,238 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="text-center py-5">
+    <h1 class="display-4 fw-bold" style="color: #DAA520;">
+        {% if current_lang == 'en' %}✨ Discover AlUla Wonders ✨{% else %}✨ اكتشف عجائب العلا ✨{% endif %}
+    </h1>
+    <p class="lead mt-3">
+        {% if current_lang == 'en' %}Experience the ancient heritage of Saudi Arabia through Augmented Reality{% else %}تجربة التراث القديم للمملكة العربية السعودية عبر الواقع المعزز{% endif %}
+    </p>
+    <p class="text-muted mb-4">
+        {% if current_lang == 'en' %}Explore magnificent Nabataean tombs, ancient artifacts, and the breathtaking desert landscape{% else %}استكشف المقابر النبطية الرائعة والقطع الأثرية القديمة والمناظر الصحراوية الخلابة{% endif %}
+    </p>
+    <a href="{{ url_for('heritage') }}" class="btn btn-warning btn-lg mt-2 rounded-pill px-5">
+        <i class="bi bi-vr"></i> {% if current_lang == 'en' %}Start Your Journey{% else %}ابدأ رحلتك{% endif %}
+    </a>
+</div>
+
+<!-- Image Gallery with Hover Effect -->
+<div class="row mt-5 g-4">
+    <div class="col-md-4">
+        <div class="card h-100 text-center p-3 shadow-sm border-0 rounded-4 image-card">
+            <div class="image-container">
+                <img id="img1" src="{{ url_for('static', filename='image/1.jpg') }}"
+                     alt="Historic Rock Formation"
+                     class="hover-image img-fluid rounded-3"
+                     style="height: 200px; width: 100%; object-fit: cover; transition: all 0.3s ease;">
+            </div>
+            <h5 class="mt-3">{% if current_lang == 'en' %}Historic Rock Formation{% else %}تكوينات صخرية تاريخية{% endif %}</h5>
+            <p class="text-muted small">{% if current_lang == 'en' %}Explore ancient sandstone cliffs{% else %}استكشف المنحدرات الرملية القديمة{% endif %}</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 text-center p-3 shadow-sm border-0 rounded-4 image-card">
+            <div class="image-container">
+                <img id="img2" src="{{ url_for('static', filename='image/2.jpg') }}"
+                     alt="Ancient Tomb"
+                     class="hover-image img-fluid rounded-3"
+                     style="height: 200px; width: 100%; object-fit: cover; transition: all 0.3s ease;">
+            </div>
+            <h5 class="mt-3">{% if current_lang == 'en' %}Ancient Tomb{% else %}مقبرة قديمة{% endif %}</h5>
+            <p class="text-muted small">{% if current_lang == 'en' %}Discover Nabataean burial sites{% else %}اكتشف مواقع الدفن النبطية{% endif %}</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 text-center p-3 shadow-sm border-0 rounded-4 image-card">
+            <div class="image-container">
+                <img id="img3" src="{{ url_for('static', filename='image/3.jpg') }}"
+                     alt="Old City Wall"
+                     class="hover-image img-fluid rounded-3"
+                     style="height: 200px; width: 100%; object-fit: cover; transition: all 0.3s ease;">
+            </div>
+            <h5 class="mt-3">{% if current_lang == 'en' %}Old City Wall{% else %}سور المدينة القديم{% endif %}</h5>
+            <p class="text-muted small">{% if current_lang == 'en' %}Ancient defensive walls of AlUla{% else %}أسوار العلا الدفاعية القديمة{% endif %}</p>
+        </div>
+    </div>
+</div>
+
+<!-- Additional Images Row -->
+<div class="row mt-4 g-4">
+    <div class="col-md-3 col-6">
+        <div class="card border-0 shadow-sm image-card">
+            <div class="image-container">
+                <img id="img4" src="{{ url_for('static', filename='image/4.jpg') }}"
+                     alt="AlUla Landscape"
+                     class="hover-image img-fluid rounded-3"
+                     style="height: 160px; width: 100%; object-fit: cover; transition: all 0.3s ease;">
+            </div>
+            <div class="card-body text-center">
+                <p class="small mb-0">{% if current_lang == 'en' %}Desert Oasis{% else %}واحة صحراوية{% endif %}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="card border-0 shadow-sm image-card">
+            <div class="image-container">
+                <img id="img5" src="{{ url_for('static', filename='image/5.jpg') }}"
+                     alt="Nabataean Carvings"
+                     class="hover-image img-fluid rounded-3"
+                     style="height: 160px; width: 100%; object-fit: cover; transition: all 0.3s ease;">
+            </div>
+            <div class="card-body text-center">
+                <p class="small mb-0">{% if current_lang == 'en' %}Ancient Carvings{% else %}نقوش قديمة{% endif %}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="card border-0 shadow-sm image-card">
+            <div class="image-container">
+                <img id="img6" src="{{ url_for('static', filename='image/6.jpg') }}"
+                     alt="Sandstone Formations"
+                     class="hover-image img-fluid rounded-3"
+                     style="height: 160px; width: 100%; object-fit: cover; transition: all 0.3s ease;">
+            </div>
+            <div class="card-body text-center">
+                <p class="small mb-0">{% if current_lang == 'en' %}Rock Formations{% else %}تكوينات صخرية{% endif %}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="card border-0 shadow-sm image-card">
+            <div class="image-container">
+                <img id="img7" src="{{ url_for('static', filename='image/11.jpeg') }}"
+                     alt="AlUla Heritage"
+                     class="hover-image img-fluid rounded-3"
+                     style="height: 160px; width: 100%; object-fit: cover; transition: all 0.3s ease;">
+            </div>
+            <div class="card-body text-center">
+                <p class="small mb-0">{% if current_lang == 'en' %}Mawari Logo{% else %}شعار مواري{% endif %}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="row mt-5 g-4">
+    <div class="col-md-4">
+        <div class="card h-100 text-center p-3 shadow-sm border-0 rounded-4">
+            <i class="bi bi-building fs-1 text-primary"></i>
+            <h5 class="mt-3">{% if current_lang == 'en' %}Archaeological Sites{% else %}المواقع الأثرية{% endif %}</h5>
+            <p class="text-muted small">{% if current_lang == 'en' %}Explore Hegra, Dadan, and ancient Nabataean tombs{% else %}استكشف الحجر ودadan والمقابر النبطية القديمة{% endif %}</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 text-center p-3 shadow-sm border-0 rounded-4">
+            <i class="bi bi-camera-fill fs-1 text-success"></i>
+            <h5 class="mt-3">{% if current_lang == 'en' %}Augmented Reality{% else %}الواقع المعزز{% endif %}</h5>
+            <p class="text-muted small">{% if current_lang == 'en' %}View 3D models in your real environment{% else %}شاهد النماذج ثلاثية الأبعاد في بيئتك الحقيقية{% endif %}</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 text-center p-3 shadow-sm border-0 rounded-4">
+            <i class="bi bi-headphones fs-1 text-info"></i>
+            <h5 class="mt-3">{% if current_lang == 'en' %}Audio Stories{% else %}قصص صوتية{% endif %}</h5>
+            <p class="text-muted small">{% if current_lang == 'en' %}Listen to fascinating historical narrations{% else %}استمع إلى روايات تاريخية رائعة{% endif %}</p>
+        </div>
+    </div>
+</div>
+
+<!-- Call to Action -->
+<div class="row mt-5">
+    <div class="col-12 text-center">
+        <div class="p-5 rounded-4" style="background: linear-gradient(135deg, rgba(218,165,32,0.1), rgba(0,0,0,0.02));">
+            <h3>{% if current_lang == 'en' %}Ready to explore 2,000 years of history?{% else %}هل أنت مستعد لاستكشاف 2000 عام من التاريخ؟{% endif %}</h3>
+            <p class="mb-4">{% if current_lang == 'en' %}Scan QR codes to experience Augmented Reality on your mobile device{% else %}امسح رموز QR لتجربة الواقع المعزز على جهازك المحمول{% endif %}</p>
+            <a href="{{ url_for('heritage') }}" class="btn btn-warning rounded-pill px-5">
+                <i class="bi bi-vr"></i> {% if current_lang == 'en' %}Start Exploring{% else %}ابدأ الاستكشاف{% endif %}
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Image hover effect - change images when hovering
+    // Define alternative images for each main image
+    const imageAlternatives = {
+        '1.jpg': ['1.jpg', '11.jpeg', '4.jpg'],
+        '2.jpg': ['2.jpg', '5.jpg', '6.jpg'],
+        '3.jpg': ['3.jpg', '11.jpeg', '1.jpg'],
+        '4.jpg': ['4.jpg', '1.jpg', '6.jpg'],
+        '5.jpg': ['5.jpg', '2.jpg', '3.jpg'],
+        '6.jpg': ['6.jpg', '4.jpg', '5.jpg'],
+        '11.jpeg': ['11.jpeg', '1.jpg', '2.jpg']
+    };
+
+    // Get all hover images
+    const hoverImages = document.querySelectorAll('.hover-image');
+
+    hoverImages.forEach(img => {
+        let originalSrc = img.src;
+        let currentIndex = 0;
+        let hoverTimeout;
+
+        // Get the filename from the original src
+        const filename = originalSrc.split('/').pop().split('?')[0];
+        const alternatives = imageAlternatives[filename] || [filename, '1.jpg', '11.jpeg'];
+
+        img.addEventListener('mouseenter', function() {
+            // Clear any existing timeout
+            if (hoverTimeout) clearTimeout(hoverTimeout);
+
+            // Start cycling images
+            const cycleImages = setInterval(() => {
+                if (!img.matches(':hover')) {
+                    clearInterval(cycleImages);
+                    return;
+                }
+                currentIndex = (currentIndex + 1) % alternatives.length;
+                const newFilename = alternatives[currentIndex];
+                img.src = "{{ url_for('static', filename='image/') }}".replace('/static/', '') + newFilename;
+            }, 500);
+
+            // Store interval ID to clear later
+            img.cycleInterval = cycleImages;
+        });
+
+        img.addEventListener('mouseleave', function() {
+            // Stop cycling
+            if (img.cycleInterval) {
+                clearInterval(img.cycleInterval);
+                img.cycleInterval = null;
+            }
+            // Return to original image
+            img.src = originalSrc;
+            currentIndex = 0;
+        });
+    });
+</script>
+
+<style>
+    .image-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+        overflow: hidden;
+    }
+    .image-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+    }
+    .hover-image {
+        transition: transform 0.3s ease;
+    }
+    .image-card:hover .hover-image {
+        transform: scale(1.05);
+    }
+    @media (max-width: 768px) {
+        .display-4 {
+            font-size: 2rem;
+        }
+        .lead {
+            font-size: 1rem;
+        }
+        .hover-image {
+            height: 140px !important;
+        }
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container my-5 text-center">
+
+    <h2 class="interactive-text mb-4">{{ title }}</h2>
+    <p class="lead">Point your camera at the surroundings to explore the 3D model in Augmented Reality.</p>
+
+    <!-- AR Model Viewer -->
+    <model-viewer
+        src="{{ url_for('static', filename='models/' + model_file) }}"
+        ar
+        ar-modes="webxr scene-viewer quick-look"
+        camera-controls
+        auto-rotate
+        style="width:100%; height:400px;">
+    </model-viewer>
+
+</div>
+{% endblock %}

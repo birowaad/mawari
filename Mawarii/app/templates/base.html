@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="{{ current_lang }}" {% if is_rtl %}dir="rtl"{% endif %} data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>{{ title }} - Mawari</title>
+
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="theme-color" content="#DAA520">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Mawari AR">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- RTL Support for Arabic -->
+    {% if is_rtl %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    {% endif %}
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+    <style>
+        /* Language Switcher Styles */
+        .lang-switch {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 40px;
+            padding: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        [dir="rtl"] .lang-switch {
+            right: auto;
+            left: 10px;
+        }
+        @media (max-width: 768px) {
+            .lang-switch { top: 5px; right: 5px; }
+            [dir="rtl"] .lang-switch { left: 5px; right: auto; }
+        }
+        .lang-btn {
+            border-radius: 30px !important;
+            padding: 5px 12px !important;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+        .lang-btn.active {
+            background-color: #DAA520 !important;
+            border-color: #DAA520 !important;
+            color: white !important;
+        }
+        .lang-btn:not(.active) {
+            background-color: transparent !important;
+            border-color: #DAA520 !important;
+            color: #DAA520 !important;
+        }
+        .lang-btn:not(.active):hover {
+            background-color: rgba(218,165,32,0.2) !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Language Switcher - Visible on ALL pages -->
+    <div class="lang-switch">
+        <div class="btn-group btn-group-sm" role="group">
+            <a href="{{ url_for('set_language', lang='en') }}" class="btn lang-btn {% if current_lang == 'en' %}active{% endif %}">
+                🇬🇧 EN
+            </a>
+            <a href="{{ url_for('set_language', lang='ar') }}" class="btn lang-btn {% if current_lang == 'ar' %}active{% endif %}">
+                🇸🇦 عربي
+            </a>
+        </div>
+    </div>
+
+    <header class="py-4" style="background-color: var(--btn-bg);">
+        <div class="container d-flex justify-content-between align-items-center flex-wrap">
+            <div>
+                <h1 class="mb-0 d-flex align-items-center" style="color: var(--text-color); font-size: 1.8rem;">
+                    <img src="{{ url_for('static', filename='image/11.jpeg') }}"
+                         alt="Mawari Logo"
+                         style="width:55px; height:55px; object-fit:cover; border-radius:50%; margin-right:5px;">
+                    Mawari
+                </h1>
+                <p class="mb-0" style="color: var(--accent-color); font-style: italic; font-size: 0.9rem;">
+                    {% if current_lang == 'en' %}Inspired by AlUla Heritage & Landscapes{% else %}مستوحى من تراث ومناظر العلا{% endif %}
+                </p>
+            </div>
+            <div>
+                <button class="btn btn-light theme-toggle" onclick="toggleTheme()">
+                    <i class="bi bi-moon-fill"></i> {% if current_lang == 'en' %}Theme{% else %}المظهر{% endif %}
+                </button>
+            </div>
+        </div>
+
+        <!-- NAVIGATION MENU -->
+        <nav class="mt-3">
+            <ul class="nav justify-content-center gap-3">
+                <li class="nav-item"><a href="{{ url_for('index') }}" class="nav-link interactive-text"><i class="bi bi-house-fill"></i> {% if current_lang == 'en' %}Home{% else %}الرئيسية{% endif %}</a></li>
+                <li class="nav-item"><a href="{{ url_for('heritage') }}" class="nav-link interactive-text"><i class="bi bi-map-fill"></i> {% if current_lang == 'en' %}Heritage with AR{% else %}التراث بالواقع المعزز{% endif %}</a></li>
+                {% if 'user_id' in session %}
+                <li class="nav-item"><a href="{{ url_for('dashboard') }}" class="nav-link interactive-text"><i class="bi bi-speedometer2"></i> {% if current_lang == 'en' %}Dashboard{% else %}لوحة التحكم{% endif %}</a></li>
+                <li class="nav-item"><a href="{{ url_for('profile') }}" class="nav-link interactive-text"><i class="bi bi-person-circle"></i> {% if current_lang == 'en' %}Profile{% else %}الملف الشخصي{% endif %}</a></li>
+                <li class="nav-item"><a href="{{ url_for('logout') }}" class="nav-link interactive-text"><i class="bi bi-box-arrow-right"></i> {% if current_lang == 'en' %}Logout{% else %}تسجيل خروج{% endif %}</a></li>
+                {% else %}
+                <li class="nav-item"><a href="{{ url_for('register') }}" class="nav-link interactive-text"><i class="bi bi-person-plus-fill"></i> {% if current_lang == 'en' %}Register{% else %}تسجيل{% endif %}</a></li>
+                <li class="nav-item"><a href="{{ url_for('login') }}" class="nav-link interactive-text"><i class="bi bi-box-arrow-in-right"></i> {% if current_lang == 'en' %}Login{% else %}دخول{% endif %}</a></li>
+                {% endif %}
+                <li class="nav-item"><a href="{{ url_for('about') }}" class="nav-link interactive-text"><i class="bi bi-info-circle-fill"></i> {% if current_lang == 'en' %}About{% else %}حول{% endif %}</a></li>
+                <li class="nav-item"><a href="{{ url_for('contact') }}" class="nav-link interactive-text"><i class="bi bi-envelope-fill"></i> {% if current_lang == 'en' %}Contact Us{% else %}اتصل بنا{% endif %}</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Flash Messages -->
+    <div class="container mt-3">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main class="my-5 container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="py-3" style="background-color: var(--btn-bg); color: var(--text-color); text-align:center;">
+        Team Mawari | {% if current_lang == 'en' %}Developer: 10th Level Computer Science, University College of Ranyah{% else %}المطور: المستوى العاشر علوم حاسوب، الكلية الجامعية برنية{% endif %}
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            html.dataset.theme = html.dataset.theme === 'light' ? 'dark' : 'light';
+        }
+    </script>
+</body>
+</html>

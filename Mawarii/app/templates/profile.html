@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-body p-5">
+                <div class="text-center mb-4">
+                    <i class="bi bi-person-circle fs-1 text-warning"></i>
+                    <h2 class="mt-2">{% if current_lang == 'en' %}Edit Profile{% else %}تعديل الملف الشخصي{% endif %}</h2>
+                    <p class="text-muted">{% if current_lang == 'en' %}Update your personal information{% else %}تحديث معلوماتك الشخصية{% endif %}</p>
+                </div>
+
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">{% if current_lang == 'en' %}Username{% else %}اسم المستخدم{% endif %}</label>
+                        <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">{% if current_lang == 'en' %}Email Address{% else %}البريد الإلكتروني{% endif %}</label>
+                        <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">{% if current_lang == 'en' %}New Password{% else %}كلمة مرور جديدة{% endif %}</label>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="{% if current_lang == 'en' %}Leave blank to keep current{% else %}اتركه فارغاً للإبقاء على الحالي{% endif %}">
+                        <div class="form-text text-muted small">
+                            {% if current_lang == 'en' %}Enter a new password only if you want to change it{% else %}أدخل كلمة مرور جديدة فقط إذا كنت تريد تغييرها{% endif %}
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-warning w-100 py-2 rounded-pill mt-3">
+                        <i class="bi bi-save"></i> {% if current_lang == 'en' %}Update Profile{% else %}تحديث الملف الشخصي{% endif %}
+                    </button>
+                </form>
+
+                <hr class="my-4">
+
+                <div class="text-center">
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary rounded-pill px-4">
+                        <i class="bi bi-arrow-left"></i> {% if current_lang == 'en' %}Back to Dashboard{% else %}العودة للوحة التحكم{% endif %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,318 @@
+/* =======================================
+   GENERAL STYLING
+======================================= */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: all 0.4s ease;
+    min-height: 100vh;
+}
+
+/* Light/Dark theme colors */
+:root[data-theme='light'] {
+    --bg-color: #fff8f0;
+    --text-color: #4b3f2f; /* AlUla brown */
+    --accent-color: #d2996f; /* Sandstone highlight */
+    --btn-bg: #f5d7a1;
+    --btn-hover: #ffd27f;
+}
+
+:root[data-theme='dark'] {
+    --bg-color: #1e1e1e;
+    --text-color: #ffd27f;
+    --accent-color: #f5b46a;
+    --btn-bg: #4b3f2f;
+    --btn-hover: #d2996f;
+}
+
+/* =======================================
+   HEADER & MENU
+======================================= */
+header {
+    padding: 20px 0;
+    background-color: var(--btn-bg);
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: all 0.4s ease;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: var(--text-color);
+}
+
+header p {
+    font-style: italic;
+    color: var(--accent-color);
+    margin-bottom: 15px;
+}
+
+/* Tourist phrases in header or dashboard */
+.tourist-phrases .phrase {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tourist-phrases .phrase:hover {
+    color: var(--accent-color);
+    text-shadow: 0 0 8px var(--accent-color), 0 0 16px var(--accent-color);
+    transform: scale(1.1);
+}
+
+/* Interactive headings */
+.interactive-text {
+    font-weight: bold;
+    transition: all 0.3s ease;
+    cursor: default;
+}
+
+.interactive-text:hover {
+    color: var(--accent-color);
+    text-shadow: 0 0 8px var(--accent-color), 0 0 16px var(--accent-color);
+    transform: scale(1.05);
+}
+
+/* Header buttons / theme toggle */
+.theme-toggle {
+    margin-top: 15px;
+    background-color: var(--btn-bg);
+    border: 2px solid var(--accent-color);
+    transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+    background-color: var(--btn-hover);
+    color: #fff;
+    transform: scale(1.05);
+}
+
+/* =======================================
+   NAVIGATION LINKS / MENU
+======================================= */
+nav a {
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+nav a:hover {
+    color: var(--accent-color);
+    text-shadow: 0 0 8px var(--accent-color);
+}
+
+/* =======================================
+   HOVER IMAGE EFFECT (Stacked Images)
+======================================= */
+.hover-image {
+    position: relative;
+    display: inline-block;
+}
+
+.hover-image .default-img {
+    display: block;
+    transition: all 0.5s ease;
+    border-radius: 10px;
+}
+
+.hover-image .hover-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    border-radius: 10px;
+}
+
+.hover-image:hover .hover-img {
+    opacity: 1;
+}
+
+/* =======================================
+   FORMS (Register/Login)
+======================================= */
+form {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+}
+
+form input {
+    border-radius: 8px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    transition: all 0.3s ease;
+}
+
+form input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 6px var(--accent-color);
+}
+
+form button {
+    border-radius: 8px;
+    padding: 10px;
+    background-color: var(--btn-bg);
+    border: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+form button:hover {
+    background-color: var(--btn-hover);
+    color: #fff;
+    transform: scale(1.05);
+}
+
+/* =======================================
+   DASHBOARD BUTTONS
+======================================= */
+.dashboard-buttons a {
+    display: inline-block;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-weight: bold;
+    color: var(--text-color);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.dashboard-buttons a:hover {
+    background-color: var(--accent-color);
+    color: #fff;
+    transform: scale(1.05);
+    box-shadow: 0 0 10px var(--accent-color);
+}
+
+/* =======================================
+   MODALS
+======================================= */
+.modal-content {
+    border-radius: 12px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
+
+.modal-header, .modal-footer {
+    border: none;
+}
+
+.modal-title {
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+/* =======================================
+   FOOTER
+======================================= */
+footer {
+    text-align: center;
+    padding: 15px 0;
+    background-color: var(--btn-bg);
+    color: var(--text-color);
+    font-weight: bold;
+    margin-top: 50px;
+}
+
+/* =======================================
+   MISC
+======================================= */
+a {
+    text-decoration: none;
+    color: var(--text-color);
+    transition: all 0.3s ease;
+}
+
+a:hover {
+    color: var(--accent-color);
+    text-shadow: 0 0 8px var(--accent-color);
+}
+
+/* Make images responsive */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Responsive containers */
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+}
+.dashboard-card {
+    background-color: #f7f0e5; /* soft sand color */
+    border-radius: 12px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+/* About section */
+.container img {
+    transition: transform 0.3s;
+}
+
+.container img:hover {
+    transform: scale(1.03);
+    cursor: pointer;
+}
+/* ---------- Hover effects for About page ---------- */
+
+/* Image hover: zoom and shadow */
+.hover-image img {
+    transition: transform 0.4s, box-shadow 0.4s;
+}
+
+.hover-image img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.3);
+    cursor: pointer;
+}
+
+/* Text hover: glow + scale */
+.interactive-text {
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.interactive-text:hover {
+    color: #d2996f;
+    text-shadow: 0 0 10px #ffd27f, 0 0 15px #ffd27f;
+    transform: scale(1.05);
+}
+
+/* Fun Facts Cards */
+.fun-fact-card {
+    background-color: #fdf5e6; /* soft sand color */
+    border-radius: 12px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.fun-fact-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+/* 3D reconstruction cards hover */
+.fun-fact-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+/* Optional: icon color for 3D models */
+.card i.bi-cast {
+    color: #d2996f; /* AlUla gold accent */
+}
