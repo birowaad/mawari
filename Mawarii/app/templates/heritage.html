@@ -100,7 +100,7 @@
                             <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
                         </div>
                         <div class="progress mb-2" style="height: 4px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
-                        <button class="btn btn-sm btn-outline-primary w-100 explore-btn" onclick='loadModel("qasr_al_farid", "Qasr al-Farid", "sketchfab", "9b18367aac28420bbc066d65e73b9acd")'>
+                        <button class="btn btn-sm btn-outline-primary w-100 explore-btn" onclick="loadModel('qasr_al_farid', 'Qasr al-Farid', 'sketchfab', '9b18367aac28420bbc066d65e73b9acd')">
                             <i class="bi bi-vr"></i> {% if current_lang == 'en' %}Explore in AR{% else %}استكشف بالواقع المعزز{% endif %}
                         </button>
                     </div>
@@ -124,7 +124,7 @@
                             <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
                         </div>
                         <div class="progress mb-2" style="height: 4px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
-                        <button class="btn btn-sm btn-outline-secondary w-100 explore-btn" onclick='loadModel("roman_oil_lamp", "Roman Oil Lamp", "glb", "/static/models/roman_oil_lamp_tarraco.glb")'>
+                        <button class="btn btn-sm btn-outline-secondary w-100 explore-btn" onclick="loadModel('roman_oil_lamp', 'Roman Oil Lamp', 'glb', '/static/models/roman_oil_lamp_tarraco.glb')">
                             <i class="bi bi-vr"></i> {% if current_lang == 'en' %}View in 3D{% else %}عرض ثلاثي الأبعاد{% endif %}
                         </button>
                     </div>
@@ -141,7 +141,7 @@
                             <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
                         </div>
                         <div class="progress mb-2" style="height: 4px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
-                        <button class="btn btn-sm btn-outline-secondary w-100 explore-btn" onclick='loadModel("ancient_pottery", "Ancient Pottery Set", "glb", "/static/models/ancient_pottery_set.glb")'>
+                        <button class="btn btn-sm btn-outline-secondary w-100 explore-btn" onclick="loadModel('ancient_pottery', 'Ancient Pottery Set', 'glb', '/static/models/ancient_pottery_set.glb')">
                             <i class="bi bi-vr"></i> {% if current_lang == 'en' %}View in 3D{% else %}عرض ثلاثي الأبعاد{% endif %}
                         </button>
                     </div>
@@ -158,7 +158,7 @@
                             <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
                         </div>
                         <div class="progress mb-2" style="height: 4px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
-                        <button class="btn btn-sm btn-outline-secondary w-100 explore-btn" onclick='loadModel("dallah_coffee", "Dallah Coffee Pot", "glb", "/static/models/dallah_arabian_coffee_pot.glb")'>
+                        <button class="btn btn-sm btn-outline-secondary w-100 explore-btn" onclick="loadModel('dallah_coffee', 'Dallah Coffee Pot', 'glb', '/static/models/dallah_arabian_coffee_pot.glb')">
                             <i class="bi bi-vr"></i> {% if current_lang == 'en' %}View in 3D{% else %}عرض ثلاثي الأبعاد{% endif %}
                         </button>
                     </div>
@@ -169,6 +169,7 @@
 
     <!-- TAB 3: DESERT LIFE -->
     <div id="desertTab" class="container my-4" style="display: none;">
+        <h4 class="mb-3 text-center">{% if current_lang == 'en' %}🐪 Desert Life{% else %}🐪 الحياة الصحراوية{% endif %}</h4>
         <div class="row g-3">
             <div class="col-md-6 col-lg-4">
                 <div class="card desert-card h-100" data-model-id="camel">
@@ -181,7 +182,7 @@
                             <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
                         </div>
                         <div class="progress mb-2" style="height: 4px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
-                        <button class="btn btn-sm btn-outline-success w-100 explore-btn" onclick='loadModel("camel", "Arabian Camel", "glb", "/static/models/camel.glb")'>
+                        <button class="btn btn-sm btn-outline-success w-100 explore-btn" onclick="loadModel('camel', 'Arabian Camel', 'glb', '/static/models/camel.glb')">
                             <i class="bi bi-vr"></i> {% if current_lang == 'en' %}View in 3D{% else %}عرض ثلاثي الأبعاد{% endif %}
                         </button>
                     </div>
@@ -198,7 +199,7 @@
                             <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
                         </div>
                         <div class="progress mb-2" style="height: 4px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
-                        <button class="btn btn-sm btn-outline-success w-100 explore-btn" onclick='loadModel("oasis", "Desert Oasis", "glb", "/static/models/osais.glb")'>
+                        <button class="btn btn-sm btn-outline-success w-100 explore-btn" onclick="loadModel('oasis', 'Desert Oasis', 'glb', '/static/models/osais.glb')">
                             <i class="bi bi-vr"></i> {% if current_lang == 'en' %}View in 3D{% else %}عرض ثلاثي الأبعاد{% endif %}
                         </button>
                     </div>
@@ -215,7 +216,7 @@
                             <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
                         </div>
                         <div class="progress mb-2" style="height: 4px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
-                        <button class="btn btn-sm btn-outline-success w-100 explore-btn" onclick='loadModel("tent", "Arabian Tent", "glb", "/static/models/tent_arab.glb")'>
+                        <button class="btn btn-sm btn-outline-success w-100 explore-btn" onclick="loadModel('tent', 'Arabian Tent', 'glb', '/static/models/tent_arab.glb')">
                             <i class="bi bi-vr"></i> {% if current_lang == 'en' %}View in 3D{% else %}عرض ثلاثي الأبعاد{% endif %}
                         </button>
                     </div>
@@ -232,7 +233,7 @@
                             <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
                         </div>
                         <div class="progress mb-2" style="height: 4px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
-                        <button class="btn btn-sm btn-outline-success w-100 explore-btn" onclick='loadModel("desert_cliff", "Western Desert Cliff", "glb", "/static/models/desert_western_cliff_high.glb")'>
+                        <button class="btn btn-sm btn-outline-success w-100 explore-btn" onclick="loadModel('desert_cliff', 'Western Desert Cliff', 'glb', '/static/models/desert_western_cliff_high.glb')">
                             <i class="bi bi-vr"></i> {% if current_lang == 'en' %}View in 3D{% else %}عرض ثلاثي الأبعاد{% endif %}
                         </button>
                     </div>
@@ -249,7 +250,7 @@
                             <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
                         </div>
                         <div class="progress mb-2" style="height: 4px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
-                        <button class="btn btn-sm btn-outline-success w-100 explore-btn" onclick='loadModel("desert_rock", "Western Ledge Rock", "glb", "/static/models/desert_western_ledge_rock.glb")'>
+                        <button class="btn btn-sm btn-outline-success w-100 explore-btn" onclick="loadModel('desert_rock', 'Western Ledge Rock', 'glb', '/static/models/desert_western_ledge_rock.glb')">
                             <i class="bi bi-vr"></i> {% if current_lang == 'en' %}View in 3D{% else %}عرض ثلاثي الأبعاد{% endif %}
                         </button>
                     </div>
@@ -265,7 +266,7 @@
                 <div class="text-center p-4 rounded-4 shadow-sm" style="background: white; border: 1px solid rgba(184,134,11,0.2);">
                     <div class="d-flex align-items-center justify-content-center gap-4 flex-wrap">
                         <div class="qr-wrapper" style="background: white; padding: 10px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-                            <img id="qrCodeImage" src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://sketchfab.com/models/9b18367aac28420bbc066d65e73b9acd" alt="QR Code" style="width: 100px; height: 100px;">
+                            <img id="qrCodeImage" src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data={{ request.url }}" alt="QR Code" style="width: 100px; height: 100px;">
                         </div>
                         <div class="text-start">
                             <span class="badge bg-warning text-dark rounded-pill px-3 py-2 mb-2">
@@ -286,6 +287,7 @@
 <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
 
 <script>
+    // متغيرات الحالة
     let currentLanguage = '{{ current_lang }}';
     let currentSpeechLang = currentLanguage === 'en' ? 'en-US' : 'ar-SA';
     let speechSynth = null;
@@ -296,27 +298,88 @@
     let currentStoryTitle = "";
     let currentModelId = "";
 
+    // القصص المسجلة لكل نموذج
     const stories = {
-        qasr_al_farid: { en: "Qasr al-Farid, The Lonely Castle of Hegra, is the most iconic tomb at Saudi Arabia's first UNESCO World Heritage Site. Carved entirely from a single sandstone monolith in the 1st century CE for Lihyan, son of Kuza.", ar: "قصر الفريد، القصر الوحيد في الحجر، هو أشهر مقبرة في أول موقع تراث عالمي لليونسكو في المملكة العربية السعودية. نحت بالكامل من كتلة حجر رملي واحدة في القرن الأول الميلادي لحيان بن كوزا." },
-        roman_oil_lamp: { en: "This Roman oil lamp from Taracco, dating to the 1st-2nd century CE, was essential for daily life. Made of terracotta, these lamps illuminated homes, temples, and tombs.", ar: "هذا المصباح الزيتي الروماني من تاراكو، الذي يعود تاريخه إلى القرن الأول والثاني الميلادي، كان ضرورياً للحياة اليومية. هذه المصابيح الفخارية أضاءت المنازل والمعابد والمقابر." },
-        ancient_pottery: { en: "This Nabataean pottery set represents the famous thin-walled, elegantly painted ceramics that were traded across the ancient world.", ar: "تمثل مجموعة الفخار النبطي هذه الفخار الشهير رقيق الجدران والمزين برسومات أنيقة والذي تم تداوله في جميع أنحاء العالم القديم." },
-        dallah_coffee: { en: "The Dallah is an iconic Arabian coffee pot, symbol of hospitality and generosity in Arab culture.", ar: "الدلة هي وعاء قهوة عربي أيقوني، رمز الكرم والضيافة في الثقافة العربية." },
-        camel: { en: "The Arabian camel, known as the 'Ship of the Desert,' was essential for survival and trade in ancient Arabia.", ar: "الجمل العربي، المعروف بـ'سفينة الصحراء'، كان ضرورياً للبقاء والتجارة في شبه الجزيرة العربية القديمة." },
-        oasis: { en: "Desert oases like those in AlUla were vital lifelines in the harsh desert environment.", ar: "كانت الواحات الصحراوية مثل تلك الموجودة في العلا شريان حياة حيوياً في البيئة الصحراوية القاسية." },
-        tent: { en: "The Arabian tent is the traditional dwelling of Bedouin nomads, woven from goat or camel hair.", ar: "الخيمة العربية هي المسكن التقليدي للبدو الرحل، منسوجة من شعر الماعز أو الإبل." },
-        desert_cliff: { en: "These layered sandstone cliffs tell a geological story spanning millions of years in AlUla.", ar: "تصف منحدرات الحجر الرملي المتطابقة هذه قصة جيولوجية تمتد لملايين السنين في العلا." },
-        desert_rock: { en: "These natural rock formations were shaped by wind and water over thousands of years.", ar: "هذه التكوينات الصخرية الطبيعية شكلتها الرياح والمياه على مدى آلاف السنين." }
+        qasr_al_farid: {
+            en: "Qasr al-Farid, The Lonely Castle of Hegra, is the most iconic tomb at Saudi Arabia's first UNESCO World Heritage Site. Carved entirely from a single sandstone monolith in the 1st century CE for Lihyan, son of Kuza.",
+            ar: "قصر الفريد، القصر الوحيد في الحجر، هو أشهر مقبرة في أول موقع تراث عالمي لليونسكو في المملكة العربية السعودية. نحت بالكامل من كتلة حجر رملي واحدة في القرن الأول الميلادي لحيان بن كوزا."
+        },
+        roman_oil_lamp: {
+            en: "This Roman oil lamp from Taracco, dating to the 1st-2nd century CE, was essential for daily life. Made of terracotta, these lamps illuminated homes, temples, and tombs.",
+            ar: "هذا المصباح الزيتي الروماني من تاراكو، الذي يعود تاريخه إلى القرن الأول والثاني الميلادي، كان ضرورياً للحياة اليومية. هذه المصابيح الفخارية أضاءت المنازل والمعابد والمقابر."
+        },
+        ancient_pottery: {
+            en: "This Nabataean pottery set represents the famous thin-walled, elegantly painted ceramics that were traded across the ancient world.",
+            ar: "تمثل مجموعة الفخار النبطي هذه الفخار الشهير رقيق الجدران والمزين برسومات أنيقة والذي تم تداوله في جميع أنحاء العالم القديم."
+        },
+        dallah_coffee: {
+            en: "The Dallah is an iconic Arabian coffee pot, symbol of hospitality and generosity in Arab culture.",
+            ar: "الدلة هي وعاء قهوة عربي أيقوني، رمز الكرم والضيافة في الثقافة العربية."
+        },
+        camel: {
+            en: "The Arabian camel, known as the 'Ship of the Desert,' was essential for survival and trade in ancient Arabia.",
+            ar: "الجمل العربي، المعروف بـ'سفينة الصحراء'، كان ضرورياً للبقاء والتجارة في شبه الجزيرة العربية القديمة."
+        },
+        oasis: {
+            en: "Desert oases like those in AlUla were vital lifelines in the harsh desert environment.",
+            ar: "كانت الواحات الصحراوية مثل تلك الموجودة في العلا شريان حياة حيوياً في البيئة الصحراوية القاسية."
+        },
+        tent: {
+            en: "The Arabian tent is the traditional dwelling of Bedouin nomads, woven from goat or camel hair.",
+            ar: "الخيمة العربية هي المسكن التقليدي للبدو الرحل، منسوجة من شعر الماعز أو الإبل."
+        },
+        desert_cliff: {
+            en: "These layered sandstone cliffs tell a geological story spanning millions of years in AlUla.",
+            ar: "تصف منحدرات الحجر الرملي المتطابقة هذه قصة جيولوجية تمتد لملايين السنين في العلا."
+        },
+        desert_rock: {
+            en: "These natural rock formations were shaped by wind and water over thousands of years.",
+            ar: "هذه التكوينات الصخرية الطبيعية شكلتها الرياح والمياه على مدى آلاف السنين."
+        }
     };
 
-    if ('speechSynthesis' in window) speechSynth = window.speechSynthesis;
+    // تهيئة محرك تحويل النص إلى كلام
+    if ('speechSynthesis' in window) {
+        speechSynth = window.speechSynthesis;
+    }
 
-    // ==================== دوال تسجيل الإحصائيات ====================
+    // دوال تبديل التبويبات
+    function showTab(tab) {
+        const sitesTab = document.getElementById('sitesTab');
+        const artifactsTab = document.getElementById('artifactsTab');
+        const desertTab = document.getElementById('desertTab');
+        const tabSites = document.getElementById('tabSitesBtn');
+        const tabArtifacts = document.getElementById('tabArtifactsBtn');
+        const tabDesert = document.getElementById('tabDesertBtn');
+        
+        sitesTab.style.display = 'none';
+        artifactsTab.style.display = 'none';
+        desertTab.style.display = 'none';
+        
+        tabSites.classList.remove('btn-warning');
+        tabArtifacts.classList.remove('btn-warning');
+        tabDesert.classList.remove('btn-warning');
+        
+        if (tab === 'sites') {
+            sitesTab.style.display = 'block';
+            tabSites.classList.add('btn-warning');
+        } else if (tab === 'artifacts') {
+            artifactsTab.style.display = 'block';
+            tabArtifacts.classList.add('btn-warning');
+        } else if (tab === 'desert') {
+            desertTab.style.display = 'block';
+            tabDesert.classList.add('btn-warning');
+        }
+    }
+
+    // دالة تحديث إحصائيات البطاقة
     function updateCardStats(modelId, timeSpent, storiesCount) {
         const card = document.querySelector(`.card[data-model-id="${modelId}"]`);
         if (card) {
             const timeSpan = card.querySelector('.time-spent');
             const storiesSpan = card.querySelector('.stories-count');
             const progressBar = card.querySelector('.progress-bar');
+            
             if (timeSpan) {
                 let currentTime = parseInt(timeSpan.innerText) || 0;
                 timeSpan.innerText = currentTime + timeSpent;
@@ -333,26 +396,44 @@
         }
     }
 
+    // دالة تسجيل الاستكشاف في localStorage
     function recordExploration(modelId, timeSpent, storiesCount) {
-        let history = JSON.parse(localStorage.getItem('heritageExploredHistory') || '[]');
-        let existingIndex = history.findIndex(item => item.id === modelId);
+        let history = localStorage.getItem('heritageExploredHistory');
+        let historyArray = history ? JSON.parse(history) : [];
+        
+        const existingIndex = historyArray.findIndex(item => item.id === modelId);
         
         if (existingIndex !== -1) {
-            history[existingIndex].time = (history[existingIndex].time || 0) + timeSpent;
-            history[existingIndex].stories = (history[existingIndex].stories || 0) + storiesCount;
-            history[existingIndex].lastVisited = Date.now();
+            historyArray[existingIndex].time = (historyArray[existingIndex].time || 0) + timeSpent;
+            historyArray[existingIndex].stories = (historyArray[existingIndex].stories || 0) + storiesCount;
+            historyArray[existingIndex].lastVisited = Date.now();
         } else {
-            history.push({ id: modelId, name: currentStoryTitle, time: timeSpent, stories: storiesCount, lastVisited: Date.now() });
+            historyArray.push({ 
+                id: modelId, 
+                name: currentStoryTitle, 
+                time: timeSpent, 
+                stories: storiesCount, 
+                lastVisited: Date.now() 
+            });
         }
         
-        localStorage.setItem('heritageExploredHistory', JSON.stringify(history));
+        localStorage.setItem('heritageExploredHistory', JSON.stringify(historyArray));
         updateCardStats(modelId, timeSpent, storiesCount);
     }
 
-    // ==================== دوال الصوت والقصة ====================
+    // دالة تشغيل القصة الصوتية
     function playSpeech(text, modelId) {
-        if (currentUtterance) speechSynth.cancel();
-        if (progressInterval) clearInterval(progressInterval);
+        if (!speechSynth) {
+            console.warn("Speech synthesis not supported");
+            return;
+        }
+        
+        if (currentUtterance) {
+            speechSynth.cancel();
+        }
+        if (progressInterval) {
+            clearInterval(progressInterval);
+        }
         
         currentUtterance = new SpeechSynthesisUtterance(text);
         currentUtterance.lang = currentSpeechLang;
@@ -365,7 +446,12 @@
         
         currentUtterance.onstart = () => {
             isPlaying = true;
-            updatePlayButton(true);
+            const playBtn = document.getElementById('playPauseBtn');
+            if (currentLanguage === 'en') {
+                playBtn.innerHTML = '<i class="bi bi-stop-circle-fill"></i> ⏹️ Stop Story';
+            } else {
+                playBtn.innerHTML = '<i class="bi bi-stop-circle-fill"></i> ⏹️ إيقاف القصة';
+            }
             progressBar.style.width = '0%';
             progressInterval = setInterval(() => {
                 elapsed += 0.1;
@@ -377,45 +463,54 @@
         
         currentUtterance.onend = () => {
             isPlaying = false;
-            updatePlayButton(false);
+            const playBtn = document.getElementById('playPauseBtn');
+            if (currentLanguage === 'en') {
+                playBtn.innerHTML = '<i class="bi bi-play-circle-fill"></i> 🎧 Play Story';
+            } else {
+                playBtn.innerHTML = '<i class="bi bi-play-circle-fill"></i> 🎧 استمع للقصة';
+            }
             if (progressInterval) clearInterval(progressInterval);
             progressBar.style.width = '100%';
             setTimeout(() => { progressBar.style.width = '0%'; }, 500);
             // تسجيل استماع القصة عند الانتهاء
-            recordExploration(modelId, 0, 1);
+            if (modelId) {
+                recordExploration(modelId, 0, 1);
+            }
+        };
+        
+        currentUtterance.onerror = (event) => {
+            console.error("Speech synthesis error:", event);
+            isPlaying = false;
+            const playBtn = document.getElementById('playPauseBtn');
+            if (currentLanguage === 'en') {
+                playBtn.innerHTML = '<i class="bi bi-play-circle-fill"></i> 🎧 Play Story';
+            } else {
+                playBtn.innerHTML = '<i class="bi bi-play-circle-fill"></i> 🎧 استمع للقصة';
+            }
+            if (progressInterval) clearInterval(progressInterval);
         };
         
         speechSynth.speak(currentUtterance);
     }
 
+    // دالة تبديل حالة الصوت (تشغيل/إيقاف)
     function toggleAudioStory() {
         if (isPlaying && speechSynth) {
             speechSynth.cancel();
             isPlaying = false;
             if (progressInterval) clearInterval(progressInterval);
-            updatePlayButton(false);
+            const playBtn = document.getElementById('playPauseBtn');
+            if (currentLanguage === 'en') {
+                playBtn.innerHTML = '<i class="bi bi-play-circle-fill"></i> 🎧 Play Story';
+            } else {
+                playBtn.innerHTML = '<i class="bi bi-play-circle-fill"></i> 🎧 استمع للقصة';
+            }
         } else if (currentStoryText) {
             playSpeech(currentStoryText, currentModelId);
         }
     }
 
-    function updatePlayButton(isPlayingStatus) {
-        const btn = document.getElementById('playPauseBtn');
-        if (isPlayingStatus) {
-            if (currentLanguage === 'en') {
-                btn.innerHTML = '<i class="bi bi-stop-circle-fill"></i> ⏹️ Stop Story';
-            } else {
-                btn.innerHTML = '<i class="bi bi-stop-circle-fill"></i> ⏹️ إيقاف القصة';
-            }
-        } else {
-            if (currentLanguage === 'en') {
-                btn.innerHTML = '<i class="bi bi-play-circle-fill"></i> 🎧 Play Story';
-            } else {
-                btn.innerHTML = '<i class="bi bi-play-circle-fill"></i> 🎧 استمع للقصة';
-            }
-        }
-    }
-
+    // دالة عرض لوحة القصة
     function showStoryPanel() {
         const panel = document.getElementById('storyPanel');
         document.getElementById('storyTitle').innerHTML = `📖 ${currentStoryTitle}`;
@@ -424,42 +519,85 @@
         setTimeout(() => { panel.style.transform = 'translateY(0)'; }, 10);
     }
 
+    // دالة إغلاق لوحة القصة
     function closeStoryPanel() {
-        if (isPlaying && speechSynth) speechSynth.cancel();
+        if (isPlaying && speechSynth) {
+            speechSynth.cancel();
+            isPlaying = false;
+        }
         if (progressInterval) clearInterval(progressInterval);
         document.getElementById('storyPanel').style.transform = 'translateY(100%)';
         setTimeout(() => { document.getElementById('storyPanel').style.display = 'none'; }, 300);
-        updatePlayButton(false);
     }
 
-    // ==================== دوال التحميل والتبويبات ====================
-    function showTab(tab) {
-        document.getElementById('sitesTab').style.display = 'none';
-        document.getElementById('artifactsTab').style.display = 'none';
-        document.getElementById('desertTab').style.display = 'none';
-        if (tab === 'sites') document.getElementById('sitesTab').style.display = 'block';
-        else if (tab === 'artifacts') document.getElementById('artifactsTab').style.display = 'block';
-        else if (tab === 'desert') document.getElementById('desertTab').style.display = 'block';
-    }
-
+    // دالة تحميل النموذج ثلاثي الأبعاد
     function loadModel(modelId, modelName, modelType, modelUrl) {
         const container = document.getElementById('modelViewerContainer');
         currentModelId = modelId;
         currentStoryTitle = modelName;
         
-        // تحديث QR code
-        document.getElementById('qrCodeImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${window.location.origin}${window.location.pathname}`;
+        // تحديث QR code باستخدام URL آمن
+        const qrImage = document.getElementById('qrCodeImage');
+        if (qrImage) {
+            const currentUrl = window.location.origin + window.location.pathname;
+            qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(currentUrl)}`;
+        }
         
-        // تحميل النموذج
+        // تحميل النموذج حسب النوع
         if (modelType === 'sketchfab') {
             container.innerHTML = `<iframe src="https://sketchfab.com/models/${modelUrl}/embed" frameborder="0" allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen style="width:100%; height:60vh; min-height:450px; background: #0a0a0a; border-radius: 12px;"></iframe>`;
         } else {
             container.innerHTML = `<model-viewer src="${modelUrl}" ar ar-modes="webxr scene-viewer quick-look" camera-controls auto-rotate style="width:100%; height:60vh; min-height:450px; background: #1a1a1a; border-radius: 12px;"><button slot="ar-button" style="background: #DAA520; border: none; color: white; padding: 12px 24px; border-radius: 40px;">🕶️ View in AR</button></model-viewer>`;
         }
         
-        // تعيين القصة
+        // تعيين القصة المناسبة
         const story = stories[modelId];
-        currentStoryText = story ? (currentLanguage === 'en' ? story.en : story.ar) : (currentLanguage === 'en' ? modelName : modelName);
+        if (story) {
+            currentStoryText = currentLanguage === 'en' ? story.en : story.ar;
+        } else {
+            currentStoryText = currentLanguage === 'en' ? modelName : modelName;
+        }
         
         // عرض لوحة القصة وتشغيل الصوت
-        setTimeout
+        setTimeout(() => {
+            showStoryPanel();
+            playSpeech(currentStoryText, modelId);
+            // تسجيل بداية الاستكشاف (دقيقة واحدة تجريبية)
+            recordExploration(modelId, 1, 0);
+        }, 500);
+    }
+
+    // دالة التمرير إلى قسم QR code
+    function scrollToQR() {
+        const qrSection = document.getElementById('qrSection');
+        if (qrSection) {
+            qrSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+
+    // تهيئة الصفحة عند التحميل
+    document.addEventListener('DOMContentLoaded', () => {
+        showTab('sites');
+        
+        // محاولة تهيئة speech synthesis بشكل آمن
+        try {
+            if ('speechSynthesis' in window) {
+                // طلب أذونات الصوت (لبعض المتصفحات)
+                speechSynth.getVoices();
+            }
+        } catch(e) {
+            console.warn("Speech synthesis initialization warning:", e);
+        }
+    });
+</script>
+
+<style>
+    body { background: linear-gradient(135deg, #faf8f0, #f0ede5); }
+    .model-card, .artifact-card, .desert-card { transition: transform 0.2s; background: white; border-radius: 16px; cursor: pointer; border: 1px solid rgba(0,0,0,0.05); }
+    .model-card:hover, .artifact-card:hover, .desert-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.15); }
+    .btn-gold:hover, .btn-outline-gold:hover { transform: scale(1.05); filter: brightness(1.1); }
+    @media (max-width: 768px) { iframe, model-viewer { height: 45vh !important; min-height: 350px; } }
+    [dir="rtl"] .text-start { text-align: right !important; }
+    model-viewer { --poster-color: transparent; }
+</style>
+{% endblock %}
