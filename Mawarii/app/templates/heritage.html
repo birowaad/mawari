@@ -9,7 +9,7 @@
             {% if current_lang == 'en' %}🏛️ AlUla Heritage Experience{% else %}🏛️ تجربة تراث العلا{% endif %}
         </h1>
         <p class="lead fs-6" style="color: #6c757d;">
-            {% if current_lang == 'en' %}Explore tombs, artifacts & desert life with interactive hotspots{% else %}استكشف المقابر والقطع الأثرية والحياة الصحراوية مع نقاط تفاعلية{% endif %}
+            {% if current_lang == 'en' %}Explore tombs, artifacts & desert life with interactive hotspots & ambient sounds{% else %}استكشف المقابر والقطع الأثرية والحياة الصحراوية مع نقاط تفاعلية ومؤثرات صوتية{% endif %}
         </p>
     </div>
 
@@ -49,25 +49,25 @@
 
                 <!-- Control Panel -->
                 <div class="position-absolute bottom-0 start-0 end-0 p-3 text-center" style="background: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.4), transparent); backdrop-filter: blur(8px); border-radius: 0 0 12px 12px;">
-                    <div class="d-flex gap-3 justify-content-center flex-wrap">
-                        <button id="playPauseBtn" class="btn btn-gold btn-rounded-pill px-4 py-2" onclick="toggleAudioStory()" style="background: linear-gradient(135deg, #DAA520, #B8860B); border: none; color: white;">
+                    <div class="d-flex gap-2 justify-content-center flex-wrap">
+                        <button id="playPauseBtn" class="btn btn-gold btn-sm rounded-pill px-3 py-1" onclick="toggleAudioStory()" style="background: linear-gradient(135deg, #DAA520, #B8860B); border: none; color: white;">
                             <i class="bi bi-play-circle-fill"></i> 🎧 Story
                         </button>
-                        <button id="toggleHotspotsBtn" class="btn btn-outline-gold btn-rounded-pill px-4 py-2" onclick="toggleHotspots()" style="background: rgba(255,255,255,0.15); backdrop-filter: blur(4px); border: 1px solid #DAA520; color: #FFF;">
+                        <button id="toggleHotspotsBtn" class="btn btn-outline-gold btn-sm rounded-pill px-3 py-1" onclick="toggleHotspots()" style="background: rgba(255,255,255,0.15); backdrop-filter: blur(4px); border: 1px solid #DAA520; color: #FFF;">
                             <i class="bi bi-pin-map"></i> 📍 Hotspots
                         </button>
-                        <button id="toggleAmbientBtn" class="btn btn-outline-gold btn-rounded-pill px-4 py-2" onclick="toggleAmbientSound()" style="background: rgba(255,255,255,0.15); backdrop-filter: blur(4px); border: 1px solid #DAA520; color: #FFF;">
-                            <i class="bi bi-volume-up"></i> 🎵 Ambient
+                        <button id="toggleAmbientBtn" class="btn btn-outline-gold btn-sm rounded-pill px-3 py-1" onclick="toggleAmbientSound()" style="background: rgba(255,255,255,0.15); backdrop-filter: blur(4px); border: 1px solid #DAA520; color: #FFF;">
+                            <i class="bi bi-volume-up"></i> 🎵 Ambience
                         </button>
-                        <button class="btn btn-outline-gold btn-rounded-pill px-4 py-2" onclick="scrollToQR()" style="background: rgba(255,255,255,0.15); backdrop-filter: blur(4px); border: 1px solid #DAA520; color: #FFF;">
+                        <button class="btn btn-outline-gold btn-sm rounded-pill px-3 py-1" onclick="scrollToQR()" style="background: rgba(255,255,255,0.15); backdrop-filter: blur(4px); border: 1px solid #DAA520; color: #FFF;">
                             <i class="bi bi-qr-code"></i> 📱 AR
                         </button>
                     </div>
                 </div>
 
-                <div class="position-absolute top-0 end-0 m-3">
-                    <span class="badge bg-dark bg-opacity-75 rounded-pill px-3 py-2" style="backdrop-filter: blur(4px);">
-                        <i class="bi bi-hand-index"></i> Drag to rotate • Scroll to zoom
+                <div class="position-absolute top-0 end-0 m-2">
+                    <span class="badge bg-dark bg-opacity-75 rounded-pill px-2 py-1" style="font-size: 10px; backdrop-filter: blur(4px);">
+                        <i class="bi bi-hand-index"></i> Drag • Scroll
                     </span>
                 </div>
             </div>
@@ -75,19 +75,19 @@
     </div>
 
     <!-- Hotspot Info Panel -->
-    <div id="hotspotPanel" class="position-fixed bottom-0 start-0 end-0 p-3" style="display: none; z-index: 1050; background: linear-gradient(135deg, #fff9f0, #fff5e6); border-top: 4px solid #DAA520; transform: translateY(100%); transition: transform 0.3s ease;">
+    <div id="hotspotPanel" class="position-fixed bottom-0 start-0 end-0 p-2" style="display: none; z-index: 1050; background: linear-gradient(135deg, #fff9f0, #fff5e6); border-top: 3px solid #DAA520; transform: translateY(100%); transition: transform 0.3s ease;">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-12">
-                    <div class="d-flex justify-content-between align-items-start gap-3">
+                    <div class="d-flex justify-content-between align-items-start gap-2">
                         <div class="flex-grow-1">
-                            <h5 id="hotspotTitle" class="text-warning mb-2" style="font-weight: bold;"></h5>
-                            <p id="hotspotDesc" class="text-dark mb-2" style="font-size: 0.9rem; line-height: 1.5;"></p>
-                            <button class="btn btn-sm btn-outline-warning rounded-pill px-3" onclick="playHotspotAudio()">
+                            <h6 id="hotspotTitle" class="text-warning mb-1" style="font-weight: bold; font-size: 0.9rem;"></h6>
+                            <p id="hotspotDesc" class="text-dark mb-1" style="font-size: 0.8rem; line-height: 1.4;"></p>
+                            <button class="btn btn-sm btn-outline-warning rounded-pill px-2 py-0" style="font-size: 0.7rem;" onclick="playHotspotAudio()">
                                 <i class="bi bi-headphones"></i> Listen
                             </button>
                         </div>
-                        <button class="btn-close btn-close-dark" onclick="closeHotspotPanel()"></button>
+                        <button class="btn-close btn-close-dark" style="font-size: 0.7rem;" onclick="closeHotspotPanel()"></button>
                     </div>
                 </div>
             </div>
@@ -95,37 +95,42 @@
     </div>
 
     <!-- Story Panel -->
-    <div id="storyPanel" class="position-fixed bottom-0 start-0 end-0 p-3" style="display: none; z-index: 1050; background: linear-gradient(135deg, #fff9f0, #fff5e6); border-top: 4px solid #DAA520; transform: translateY(100%); transition: transform 0.3s ease;">
+    <div id="storyPanel" class="position-fixed bottom-0 start-0 end-0 p-2" style="display: none; z-index: 1050; background: linear-gradient(135deg, #fff9f0, #fff5e6); border-top: 3px solid #DAA520; transform: translateY(100%); transition: transform 0.3s ease;">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-12">
-                    <div class="d-flex justify-content-between align-items-start gap-3">
+                    <div class="d-flex justify-content-between align-items-start gap-2">
                         <div class="flex-grow-1">
-                            <h5 id="storyTitle" class="text-warning mb-2" style="font-weight: bold;"></h5>
-                            <p id="storyText" class="text-dark mb-2" style="font-size: 0.9rem; line-height: 1.5; max-height: 80px; overflow-y: auto;"></p>
-                            <div class="progress mb-2" style="height: 3px;">
+                            <h6 id="storyTitle" class="text-warning mb-1" style="font-weight: bold; font-size: 0.9rem;"></h6>
+                            <p id="storyText" class="text-dark mb-1" style="font-size: 0.8rem; line-height: 1.4; max-height: 50px; overflow-y: auto;"></p>
+                            <div class="progress" style="height: 2px;">
                                 <div id="storyProgress" class="progress-bar bg-warning" style="width: 0%"></div>
                             </div>
                         </div>
-                        <button class="btn-close btn-close-dark" onclick="closeStoryPanel()"></button>
+                        <button class="btn-close btn-close-dark" style="font-size: 0.7rem;" onclick="closeStoryPanel()"></button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- SITES TAB -->
-    <div id="sitesTab" class="container my-4">
-        <h4 class="mb-3 text-center">🏛️ Archaeological Sites</h4>
-        <div class="row g-3">
+    <!-- ==================== TAB 1: SITES ==================== -->
+    <div id="sitesTab" class="container my-3">
+        <h5 class="mb-2 text-center">{% if current_lang == 'en' %}🏛️ Archaeological Sites{% else %}🏛️ المواقع الأثرية{% endif %}</h5>
+        <div class="row g-2">
             <div class="col-md-6 col-lg-4">
                 <div class="card model-card h-100" data-model-id="qasr_al_farid">
-                    <div class="card-body text-center">
-                        <i class="bi bi-building fs-1 text-primary"></i>
-                        <h6 class="fw-bold mt-2">🏛️ Qasr al-Farid</h6>
-                        <p class="small text-muted">The Lonely Castle | Hegra | 1st Century CE</p>
-                        <button class="btn btn-sm btn-outline-primary w-100 explore-btn" onclick="loadModel('qasr_al_farid')">
-                            <i class="bi bi-vr"></i> Explore in AR
+                    <div class="card-body text-center p-2">
+                        <i class="bi bi-building fs-2 text-primary"></i>
+                        <h6 class="fw-bold mt-1 mb-0">🏛️ Qasr al-Farid</h6>
+                        <p class="small text-muted mb-1">The Lonely Castle | Hegra | 1st Century CE</p>
+                        <div class="model-stats small mb-1">
+                            <span class="badge bg-secondary"><i class="bi bi-clock"></i> <span class="time-spent">0</span> min</span>
+                            <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
+                        </div>
+                        <div class="progress mb-1" style="height: 3px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
+                        <button class="btn btn-sm btn-outline-primary w-100 explore-btn" onclick='loadModel("qasr_al_farid")'>
+                            <i class="bi bi-vr"></i> Explore
                         </button>
                     </div>
                 </div>
@@ -133,17 +138,22 @@
         </div>
     </div>
 
-    <!-- ARTIFACTS TAB -->
-    <div id="artifactsTab" class="container my-4" style="display: none;">
-        <h4 class="mb-3 text-center">🏺 Ancient Artifacts</h4>
-        <div class="row g-3">
+    <!-- ==================== TAB 2: ARTIFACTS ==================== -->
+    <div id="artifactsTab" class="container my-3" style="display: none;">
+        <h5 class="mb-2 text-center">{% if current_lang == 'en' %}🏺 Ancient Artifacts{% else %}🏺 القطع الأثرية{% endif %}</h5>
+        <div class="row g-2">
             <div class="col-md-6 col-lg-4">
                 <div class="card artifact-card h-100" data-model-id="roman_oil_lamp">
-                    <div class="card-body text-center">
-                        <i class="bi bi-cup-straw fs-1 text-warning"></i>
-                        <h6 class="fw-bold mt-2">🪔 Roman Oil Lamp</h6>
-                        <p class="small text-muted">Taracco | 1st-2nd Century CE</p>
-                        <button class="btn btn-sm btn-outline-secondary w-100 explore-btn" onclick="loadModel('roman_oil_lamp')">
+                    <div class="card-body text-center p-2">
+                        <i class="bi bi-cup-straw fs-2 text-warning"></i>
+                        <h6 class="fw-bold mt-1 mb-0">🪔 Roman Oil Lamp</h6>
+                        <p class="small text-muted mb-1">Taracco | 1st-2nd Century CE</p>
+                        <div class="model-stats small mb-1">
+                            <span class="badge bg-secondary"><i class="bi bi-clock"></i> <span class="time-spent">0</span> min</span>
+                            <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
+                        </div>
+                        <div class="progress mb-1" style="height: 3px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
+                        <button class="btn btn-sm btn-outline-secondary w-100 explore-btn" onclick='loadModel("roman_oil_lamp")'>
                             <i class="bi bi-vr"></i> View in 3D
                         </button>
                     </div>
@@ -151,11 +161,16 @@
             </div>
             <div class="col-md-6 col-lg-4">
                 <div class="card artifact-card h-100" data-model-id="ancient_pottery">
-                    <div class="card-body text-center">
-                        <i class="bi bi-brightness-alt-high fs-1 text-info"></i>
-                        <h6 class="fw-bold mt-2">🏺 Ancient Pottery Set</h6>
-                        <p class="small text-muted">Nabataean | 1st Century BCE-1st Century CE</p>
-                        <button class="btn btn-sm btn-outline-secondary w-100 explore-btn" onclick="loadModel('ancient_pottery')">
+                    <div class="card-body text-center p-2">
+                        <i class="bi bi-brightness-alt-high fs-2 text-info"></i>
+                        <h6 class="fw-bold mt-1 mb-0">🏺 Ancient Pottery</h6>
+                        <p class="small text-muted mb-1">Nabataean | 1st Century BCE-1st Century CE</p>
+                        <div class="model-stats small mb-1">
+                            <span class="badge bg-secondary"><i class="bi bi-clock"></i> <span class="time-spent">0</span> min</span>
+                            <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
+                        </div>
+                        <div class="progress mb-1" style="height: 3px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
+                        <button class="btn btn-sm btn-outline-secondary w-100 explore-btn" onclick='loadModel("ancient_pottery")'>
                             <i class="bi bi-vr"></i> View in 3D
                         </button>
                     </div>
@@ -163,11 +178,16 @@
             </div>
             <div class="col-md-6 col-lg-4">
                 <div class="card artifact-card h-100" data-model-id="dallah_coffee">
-                    <div class="card-body text-center">
-                        <i class="bi bi-cup-hot fs-1 text-danger"></i>
-                        <h6 class="fw-bold mt-2">☕ Dallah Coffee Pot</h6>
-                        <p class="small text-muted">Traditional Arabian | Hospitality Symbol</p>
-                        <button class="btn btn-sm btn-outline-secondary w-100 explore-btn" onclick="loadModel('dallah_coffee')">
+                    <div class="card-body text-center p-2">
+                        <i class="bi bi-cup-hot fs-2 text-danger"></i>
+                        <h6 class="fw-bold mt-1 mb-0">☕ Dallah Coffee</h6>
+                        <p class="small text-muted mb-1">Traditional Arabian | Hospitality Symbol</p>
+                        <div class="model-stats small mb-1">
+                            <span class="badge bg-secondary"><i class="bi bi-clock"></i> <span class="time-spent">0</span> min</span>
+                            <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
+                        </div>
+                        <div class="progress mb-1" style="height: 3px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
+                        <button class="btn btn-sm btn-outline-secondary w-100 explore-btn" onclick='loadModel("dallah_coffee")'>
                             <i class="bi bi-vr"></i> View in 3D
                         </button>
                     </div>
@@ -176,17 +196,22 @@
         </div>
     </div>
 
-    <!-- DESERT LIFE TAB -->
-    <div id="desertTab" class="container my-4" style="display: none;">
-        <h4 class="mb-3 text-center">🐪 Desert Life</h4>
-        <div class="row g-3">
+    <!-- ==================== TAB 3: DESERT LIFE ==================== -->
+    <div id="desertTab" class="container my-3" style="display: none;">
+        <h5 class="mb-2 text-center">{% if current_lang == 'en' %}🐪 Desert Life{% else %}🐪 الحياة الصحراوية{% endif %}</h5>
+        <div class="row g-2">
             <div class="col-md-6 col-lg-4">
                 <div class="card desert-card h-100" data-model-id="camel">
-                    <div class="card-body text-center">
-                        <i class="bi bi-eyedropper fs-1 text-success"></i>
-                        <h6 class="fw-bold mt-2">🐪 Arabian Camel</h6>
-                        <p class="small text-muted">Ship of the Desert</p>
-                        <button class="btn btn-sm btn-outline-success w-100 explore-btn" onclick="loadModel('camel')">
+                    <div class="card-body text-center p-2">
+                        <i class="bi bi-eyedropper fs-2 text-success"></i>
+                        <h6 class="fw-bold mt-1 mb-0">🐪 Arabian Camel</h6>
+                        <p class="small text-muted mb-1">Ship of the Desert</p>
+                        <div class="model-stats small mb-1">
+                            <span class="badge bg-secondary"><i class="bi bi-clock"></i> <span class="time-spent">0</span> min</span>
+                            <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
+                        </div>
+                        <div class="progress mb-1" style="height: 3px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
+                        <button class="btn btn-sm btn-outline-success w-100 explore-btn" onclick='loadModel("camel")'>
                             <i class="bi bi-vr"></i> View in 3D
                         </button>
                     </div>
@@ -194,11 +219,16 @@
             </div>
             <div class="col-md-6 col-lg-4">
                 <div class="card desert-card h-100" data-model-id="oasis">
-                    <div class="card-body text-center">
-                        <i class="bi bi-water fs-1 text-info"></i>
-                        <h6 class="fw-bold mt-2">🌴 Desert Oasis</h6>
-                        <p class="small text-muted">AlUla Valley</p>
-                        <button class="btn btn-sm btn-outline-success w-100 explore-btn" onclick="loadModel('oasis')">
+                    <div class="card-body text-center p-2">
+                        <i class="bi bi-water fs-2 text-info"></i>
+                        <h6 class="fw-bold mt-1 mb-0">🌴 Desert Oasis</h6>
+                        <p class="small text-muted mb-1">AlUla Valley</p>
+                        <div class="model-stats small mb-1">
+                            <span class="badge bg-secondary"><i class="bi bi-clock"></i> <span class="time-spent">0</span> min</span>
+                            <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
+                        </div>
+                        <div class="progress mb-1" style="height: 3px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
+                        <button class="btn btn-sm btn-outline-success w-100 explore-btn" onclick='loadModel("oasis")'>
                             <i class="bi bi-vr"></i> View in 3D
                         </button>
                     </div>
@@ -206,11 +236,16 @@
             </div>
             <div class="col-md-6 col-lg-4">
                 <div class="card desert-card h-100" data-model-id="tent">
-                    <div class="card-body text-center">
-                        <i class="bi bi-house-door fs-1 text-secondary"></i>
-                        <h6 class="fw-bold mt-2">🏕️ Arabian Tent</h6>
-                        <p class="small text-muted">Bedouin Dwelling</p>
-                        <button class="btn btn-sm btn-outline-success w-100 explore-btn" onclick="loadModel('tent')">
+                    <div class="card-body text-center p-2">
+                        <i class="bi bi-house-door fs-2 text-secondary"></i>
+                        <h6 class="fw-bold mt-1 mb-0">🏕️ Arabian Tent</h6>
+                        <p class="small text-muted mb-1">Bedouin Dwelling</p>
+                        <div class="model-stats small mb-1">
+                            <span class="badge bg-secondary"><i class="bi bi-clock"></i> <span class="time-spent">0</span> min</span>
+                            <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
+                        </div>
+                        <div class="progress mb-1" style="height: 3px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
+                        <button class="btn btn-sm btn-outline-success w-100 explore-btn" onclick='loadModel("tent")'>
                             <i class="bi bi-vr"></i> View in 3D
                         </button>
                     </div>
@@ -218,11 +253,16 @@
             </div>
             <div class="col-md-6 col-lg-4">
                 <div class="card desert-card h-100" data-model-id="desert_cliff">
-                    <div class="card-body text-center">
-                        <i class="bi bi-mountain fs-1 text-warning"></i>
-                        <h6 class="fw-bold mt-2">⛰️ Western Desert Cliff</h6>
-                        <p class="small text-muted">Sandstone Formation</p>
-                        <button class="btn btn-sm btn-outline-success w-100 explore-btn" onclick="loadModel('desert_cliff')">
+                    <div class="card-body text-center p-2">
+                        <i class="bi bi-mountain fs-2 text-warning"></i>
+                        <h6 class="fw-bold mt-1 mb-0">⛰️ Desert Cliff</h6>
+                        <p class="small text-muted mb-1">Sandstone Formation</p>
+                        <div class="model-stats small mb-1">
+                            <span class="badge bg-secondary"><i class="bi bi-clock"></i> <span class="time-spent">0</span> min</span>
+                            <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
+                        </div>
+                        <div class="progress mb-1" style="height: 3px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
+                        <button class="btn btn-sm btn-outline-success w-100 explore-btn" onclick='loadModel("desert_cliff")'>
                             <i class="bi bi-vr"></i> View in 3D
                         </button>
                     </div>
@@ -230,11 +270,16 @@
             </div>
             <div class="col-md-6 col-lg-4">
                 <div class="card desert-card h-100" data-model-id="desert_rock">
-                    <div class="card-body text-center">
-                        <i class="bi bi-gem fs-1 text-secondary"></i>
-                        <h6 class="fw-bold mt-2">🪨 Western Ledge Rock</h6>
-                        <p class="small text-muted">Natural Formation</p>
-                        <button class="btn btn-sm btn-outline-success w-100 explore-btn" onclick="loadModel('desert_rock')">
+                    <div class="card-body text-center p-2">
+                        <i class="bi bi-gem fs-2 text-secondary"></i>
+                        <h6 class="fw-bold mt-1 mb-0">🪨 Ledge Rock</h6>
+                        <p class="small text-muted mb-1">Natural Formation</p>
+                        <div class="model-stats small mb-1">
+                            <span class="badge bg-secondary"><i class="bi bi-clock"></i> <span class="time-spent">0</span> min</span>
+                            <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
+                        </div>
+                        <div class="progress mb-1" style="height: 3px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
+                        <button class="btn btn-sm btn-outline-success w-100 explore-btn" onclick='loadModel("desert_rock")'>
                             <i class="bi bi-vr"></i> View in 3D
                         </button>
                     </div>
@@ -244,22 +289,19 @@
     </div>
 
     <!-- QR CODE SECTION -->
-    <div id="qrSection" class="container py-4" style="background: linear-gradient(135deg, #f8f9fa, #e9ecef);">
+    <div id="qrSection" class="container py-3" style="background: linear-gradient(135deg, #f8f9fa, #e9ecef);">
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6">
-                <div class="text-center p-4 rounded-4 shadow-sm" style="background: white; border: 1px solid rgba(184,134,11,0.2);">
-                    <div class="d-flex align-items-center justify-content-center gap-4 flex-wrap">
-                        <div class="qr-wrapper" style="background: white; padding: 10px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-                            <img id="qrCodeImage" src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data={{ request.url }}" alt="QR Code" style="width: 100px; height: 100px;">
+                <div class="text-center p-3 rounded-4 shadow-sm" style="background: white; border: 1px solid rgba(184,134,11,0.2);">
+                    <div class="d-flex align-items-center justify-content-center gap-3 flex-wrap">
+                        <div style="background: white; padding: 5px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                            <img id="qrCodeImage" src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data={{ request.url }}" alt="QR Code" style="width: 70px; height: 70px;">
                         </div>
                         <div class="text-start">
-                            <span class="badge bg-warning text-dark rounded-pill px-3 py-2 mb-2">
-                                <i class="bi bi-vr"></i> Augmented Reality Ready
+                            <span class="badge bg-warning text-dark rounded-pill px-2 py-1 mb-1">
+                                <i class="bi bi-vr"></i> AR Ready
                             </span>
-                            <p class="small text-muted mb-0">
-                                <i class="bi bi-hand-index-thumb"></i>
-                                Scan QR code then tap "View in AR"
-                            </p>
+                            <p class="small text-muted mb-0">Scan QR code then tap "View in AR"</p>
                         </div>
                     </div>
                 </div>
@@ -277,31 +319,70 @@
     let speechSynth = null;
     let isPlaying = false;
     let currentUtterance = null;
+    let progressInterval = null;
     let currentStoryText = "";
     let currentStoryTitle = "";
     let hotspotsVisible = false;
-    let ambientEnabled = false;
-    let ambientAudio = null;
     
-    // Hotspots data
-    const hotspots = [
+    // Ambient sound variables
+    let ambientAudio = null;
+    let isAmbientPlaying = false;
+    let currentAmbientType = 'desert';
+    
+    // Ambient sounds paths
+    const ambientSounds = {
+        desert: '/static/audio/wind_desert.mp3',
+        sandstorm: '/static/audio/sandstorm-wind.mp3',
+        whisper: '/static/audio/whisper_of_a_desert.mp3'
+    };
+    
+    // ==================== HOTSPOTS DATA ====================
+    // Hotspots for Qasr al-Farid (Sites)
+    const siteHotspots = [
         { id: 1, x: 50, y: 35, title: "🏛️ Main Facade", desc: "Four partially completed Nabataean columns frame the entrance. Each column is carved with intricate patterns.", audio: "The main facade features four partially completed columns. The symmetry demonstrates the advanced mathematical knowledge of the Nabataean civilization." },
         { id: 2, x: 45, y: 55, title: "🚪 Tomb Entrance", desc: "The sacred doorway leading to the burial chamber of Lihyan, son of Kuza.", audio: "This sacred doorway leads to the burial chamber of Lihyan, son of Kuza. The Nabataeans believed in an afterlife." },
-        { id: 3, x: 30, y: 50, title: "📜 Nabataean Inscriptions", desc: "Ancient writings in Aramaic and Nabataean script.", audio: "These precious inscriptions identify Lihyan, son of Kuza, as the tomb's owner." },
-        { id: 4, x: 65, y: 40, title: "🔲 Partially Completed Columns", desc: "A unique feature showing the top-down carving technique.", audio: "The Nabataeans invented a revolutionary method: carving from the top down, starting at the roof level." }
+        { id: 3, x: 30, y: 50, title: "📜 Nabataean Inscriptions", desc: "Ancient writings in Aramaic and Nabataean script.", audio: "These precious inscriptions identify Lihyan, son of Kuza, as the tomb's owner." }
     ];
     
-    // Stories data
+    // Hotspots for Artifacts
+    const artifactHotspots = [
+        { id: 101, x: 50, y: 45, title: "🏺 Pottery Details", desc: "Thin-walled ceramic with elegant painted designs typical of Nabataean craftsmanship.", audio: "Nabataean pottery is known for its exceptionally thin walls and delicate decorations, traded across the ancient world." },
+        { id: 102, x: 50, y: 55, title: "🪔 Lamp Spout", desc: "The nozzle where the wick was placed to produce light.", audio: "Oil lamps like this one were filled with olive oil, with a wick protruding from this spout to provide light." }
+    ];
+    
+    // Hotspots for Desert Life
+    const desertHotspots = [
+        { id: 201, x: 50, y: 40, title: "🐪 Camel Hump", desc: "Stores fat for energy during long desert journeys.", audio: "The camel's hump stores fat, not water. This allows camels to survive for weeks without food." },
+        { id: 202, x: 50, y: 60, title: "🏜️ Sand Dunes", desc: "Wind-carved sand formations typical of the AlUla desert.", audio: "These sand dunes are constantly reshaped by the wind, creating the ever-changing desert landscape." }
+    ];
+    
+    let currentHotspots = siteHotspots;
+    let currentHotspotAudio = "";
+    
+    // ==================== STORIES DATA ====================
     const stories = {
-        qasr_al_farid: "Qasr al-Farid, The Lonely Castle of Hegra, is the most iconic tomb at Saudi Arabia's first UNESCO World Heritage Site. Carved entirely from a single sandstone monolith in the 1st century CE.",
-        roman_oil_lamp: "This Roman oil lamp from Taracco, dating to the 1st-2nd century CE, was essential for daily life. These lamps illuminated homes, temples, and tombs.",
-        ancient_pottery: "This Nabataean pottery set represents the famous thin-walled, elegantly painted ceramics traded across the ancient world.",
-        dallah_coffee: "The Dallah is an iconic Arabian coffee pot, symbol of hospitality and generosity in Arab culture.",
-        camel: "The Arabian camel, known as the 'Ship of the Desert,' was essential for survival and trade in ancient Arabia.",
-        oasis: "Desert oases like those in AlUla were vital lifelines in the harsh desert environment.",
-        tent: "The Arabian tent is the traditional dwelling of Bedouin nomads, woven from goat or camel hair.",
-        desert_cliff: "These layered sandstone cliffs tell a geological story spanning millions of years in AlUla.",
-        desert_rock: "These natural rock formations were shaped by wind and water over thousands of years."
+        qasr_al_farid: { en: "Qasr al-Farid, The Lonely Castle of Hegra, is the most iconic tomb at Saudi Arabia's first UNESCO World Heritage Site. Carved entirely from a single sandstone monolith in the 1st century CE for Lihyan, son of Kuza.", ar: "قصر الفريد، القصر الوحيد في الحجر، هو أشهر مقبرة في أول موقع تراث عالمي لليونسكو." },
+        roman_oil_lamp: { en: "This Roman oil lamp from Taracco, dating to the 1st-2nd century CE, was essential for daily life. These lamps illuminated homes, temples, and tombs.", ar: "هذا المصباح الزيتي الروماني من تاراكو كان ضرورياً للحياة اليومية." },
+        ancient_pottery: { en: "This Nabataean pottery set represents the famous thin-walled ceramics traded across the ancient world.", ar: "تمثل مجموعة الفخار النبطي هذه الفخار الشهير." },
+        dallah_coffee: { en: "The Dallah is an iconic Arabian coffee pot, symbol of hospitality and generosity in Arab culture.", ar: "الدلة هي وعاء قهوة عربي أيقوني، رمز الكرم والضيافة." },
+        camel: { en: "The Arabian camel, known as the 'Ship of the Desert,' was essential for survival and trade in ancient Arabia.", ar: "الجمل العربي، المعروف بـ'سفينة الصحراء'، كان ضرورياً للبقاء." },
+        oasis: { en: "Desert oases like those in AlUla were vital lifelines in the harsh desert environment.", ar: "كانت الواحات الصحراوية في العلا شريان حياة حيوياً." },
+        tent: { en: "The Arabian tent is the traditional dwelling of Bedouin nomads, woven from goat or camel hair.", ar: "الخيمة العربية هي المسكن التقليدي للبدو الرحل." },
+        desert_cliff: { en: "These layered sandstone cliffs tell a geological story spanning millions of years in AlUla.", ar: "تصف منحدرات الحجر الرملي قصة جيولوجية." },
+        desert_rock: { en: "These natural rock formations were shaped by wind and water over thousands of years.", ar: "هذه التكوينات الصخرية شكلتها الرياح والمياه." }
+    };
+    
+    // ==================== MODEL URLS ====================
+    const modelUrls = {
+        qasr_al_farid: { type: "sketchfab", url: "9b18367aac28420bbc066d65e73b9acd" },
+        roman_oil_lamp: { type: "glb", url: "/static/models/roman_oil_lamp_tarraco.glb" },
+        ancient_pottery: { type: "glb", url: "/static/models/ancient_pottery_set.glb" },
+        dallah_coffee: { type: "glb", url: "/static/models/dallah_arabian_coffee_pot.glb" },
+        camel: { type: "glb", url: "/static/models/camel.glb" },
+        oasis: { type: "glb", url: "/static/models/osais.glb" },
+        tent: { type: "glb", url: "/static/models/tent_arab.glb" },
+        desert_cliff: { type: "glb", url: "/static/models/desert_western_cliff_high.glb" },
+        desert_rock: { type: "glb", url: "/static/models/desert_western_ledge_rock.glb" }
     };
     
     // Initialize speech synthesis
@@ -314,189 +395,112 @@
         document.getElementById('sitesTab').style.display = 'none';
         document.getElementById('artifactsTab').style.display = 'none';
         document.getElementById('desertTab').style.display = 'none';
-        if (tab === 'sites') document.getElementById('sitesTab').style.display = 'block';
-        else if (tab === 'artifacts') document.getElementById('artifactsTab').style.display = 'block';
-        else if (tab === 'desert') document.getElementById('desertTab').style.display = 'block';
+        
+        if (tab === 'sites') {
+            document.getElementById('sitesTab').style.display = 'block';
+            currentHotspots = siteHotspots;
+            updateTabButtons('tabSitesBtn', 'tabArtifactsBtn', 'tabDesertBtn');
+        } else if (tab === 'artifacts') {
+            document.getElementById('artifactsTab').style.display = 'block';
+            currentHotspots = artifactHotspots;
+            updateTabButtons('tabArtifactsBtn', 'tabSitesBtn', 'tabDesertBtn');
+        } else if (tab === 'desert') {
+            document.getElementById('desertTab').style.display = 'block';
+            currentHotspots = desertHotspots;
+            updateTabButtons('tabDesertBtn', 'tabSitesBtn', 'tabArtifactsBtn');
+        }
+        
+        if (hotspotsVisible) {
+            showHotspots();
+        }
+    }
+    
+    function updateTabButtons(activeBtn, btn2, btn3) {
+        document.getElementById(activeBtn).classList.add('btn-warning');
+        document.getElementById(activeBtn).classList.remove('btn-outline-warning');
+        document.getElementById(btn2).classList.add('btn-outline-warning');
+        document.getElementById(btn2).classList.remove('btn-warning');
+        document.getElementById(btn3).classList.add('btn-outline-warning');
+        document.getElementById(btn3).classList.remove('btn-warning');
+    }
+    
+    // ==================== AMBIENT SOUND FUNCTIONS ====================
+    function playAmbientSound(type) {
+        if (ambientAudio) {
+            ambientAudio.pause();
+            ambientAudio = null;
+        }
+        
+        if (!ambientSounds[type]) {
+            console.warn(`Sound file for type "${type}" not found`);
+            return;
+        }
+        
+        ambientAudio = new Audio(ambientSounds[type]);
+        ambientAudio.loop = true;
+        ambientAudio.volume = 0.25;
+        
+        ambientAudio.play().catch(e => console.log("Auto-play prevented"));
+        isAmbientPlaying = true;
+        currentAmbientType = type;
+    }
+    
+    function stopAmbientSound() {
+        if (ambientAudio) {
+            ambientAudio.pause();
+            ambientAudio = null;
+        }
+        isAmbientPlaying = false;
+    }
+    
+    function toggleAmbientSound() {
+        const btn = document.getElementById('toggleAmbientBtn');
+        
+        if (isAmbientPlaying) {
+            stopAmbientSound();
+            if (btn) {
+                btn.innerHTML = '<i class="bi bi-volume-up"></i> 🎵 Ambience';
+                btn.style.background = 'rgba(255,255,255,0.15)';
+            }
+        } else {
+            playAmbientSound(currentAmbientType);
+            if (btn) {
+                btn.innerHTML = '<i class="bi bi-volume-up-fill"></i> 🎵 ON';
+                btn.style.background = 'rgba(218,165,32,0.4)';
+            }
+        }
+    }
+    
+    function updateAmbientByModel(modelId) {
+        let soundType = 'desert';
+        
+        switch(modelId) {
+            case 'camel':
+            case 'tent':
+            case 'desert_cliff':
+            case 'desert_rock':
+                soundType = 'sandstorm';
+                break;
+            case 'roman_oil_lamp':
+            case 'ancient_pottery':
+            case 'dallah_coffee':
+                soundType = 'whisper';
+                break;
+            default:
+                soundType = 'desert';
+        }
+        
+        currentAmbientType = soundType;
+        if (isAmbientPlaying) {
+            playAmbientSound(soundType);
+        }
     }
     
     // ==================== HOTSPOTS FUNCTIONS ====================
     function toggleHotspots() {
         hotspotsVisible = !hotspotsVisible;
-        const overlay = document.getElementById('hotspotsOverlay');
         const btn = document.getElementById('toggleHotspotsBtn');
         
         if (hotspotsVisible) {
-            overlay.innerHTML = '';
-            overlay.style.pointerEvents = 'auto';
-            
-            hotspots.forEach(hotspot => {
-                const marker = document.createElement('div');
-                marker.style.position = 'absolute';
-                marker.style.left = hotspot.x + '%';
-                marker.style.top = hotspot.y + '%';
-                marker.style.transform = 'translate(-50%, -50%)';
-                marker.style.width = '36px';
-                marker.style.height = '36px';
-                marker.style.cursor = 'pointer';
-                marker.style.zIndex = '20';
-                marker.innerHTML = '<div style="width:100%;height:100%;background:#DAA520;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 0 10px rgba(218,165,32,0.8);animation:pulse 1.5s infinite;">📍</div>';
-                marker.onclick = () => showHotspotInfo(hotspot);
-                overlay.appendChild(marker);
-            });
-            btn.style.background = 'rgba(218,165,32,0.4)';
-        } else {
-            overlay.innerHTML = '';
-            overlay.style.pointerEvents = 'none';
-            btn.style.background = 'rgba(255,255,255,0.15)';
-        }
-    }
-    
-    function showHotspotInfo(hotspot) {
-        const panel = document.getElementById('hotspotPanel');
-        document.getElementById('hotspotTitle').innerHTML = hotspot.title;
-        document.getElementById('hotspotDesc').innerHTML = hotspot.desc;
-        window.currentHotspotAudio = hotspot.audio;
-        panel.style.display = 'block';
-        setTimeout(() => { panel.style.transform = 'translateY(0)'; }, 10);
-        setTimeout(() => { playHotspotAudio(); }, 300);
-    }
-    
-    function playHotspotAudio() {
-        if (window.currentHotspotAudio && speechSynth) {
-            if (isPlaying) speechSynth.cancel();
-            const utterance = new SpeechSynthesisUtterance(window.currentHotspotAudio);
-            utterance.lang = currentSpeechLang;
-            utterance.rate = 0.85;
-            speechSynth.speak(utterance);
-        }
-    }
-    
-    function closeHotspotPanel() {
-        const panel = document.getElementById('hotspotPanel');
-        panel.style.transform = 'translateY(100%)';
-        setTimeout(() => { panel.style.display = 'none'; }, 300);
-    }
-    
-    // ==================== AMBIENT SOUND FUNCTIONS ====================
-    function toggleAmbientSound() {
-        ambientEnabled = !ambientEnabled;
-        const btn = document.getElementById('toggleAmbientBtn');
-        
-        if (ambientEnabled) {
-            if (!ambientAudio) {
-                ambientAudio = new Audio();
-                ambientAudio.loop = true;
-                ambientAudio.volume = 0.2;
-                ambientAudio.src = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
-            }
-            ambientAudio.play().catch(e => console.log("Audio play error:", e));
-            btn.style.background = 'rgba(218,165,32,0.4)';
-        } else {
-            if (ambientAudio) {
-                ambientAudio.pause();
-            }
-            btn.style.background = 'rgba(255,255,255,0.15)';
-        }
-    }
-    
-    // ==================== AUDIO STORY FUNCTIONS ====================
-    function playSpeech(text) {
-        if (!speechSynth) return;
-        if (currentUtterance) speechSynth.cancel();
-        
-        currentUtterance = new SpeechSynthesisUtterance(text);
-        currentUtterance.lang = currentSpeechLang;
-        currentUtterance.rate = 0.85;
-        
-        const progressBar = document.getElementById('storyProgress');
-        const wordCount = text.split(' ').length;
-        const duration = Math.max(5, wordCount / 3);
-        let elapsed = 0;
-        let interval;
-        
-        currentUtterance.onstart = () => {
-            isPlaying = true;
-            const btn = document.getElementById('playPauseBtn');
-            btn.innerHTML = '<i class="bi bi-stop-circle-fill"></i> ⏹️ Stop';
-            progressBar.style.width = '0%';
-            interval = setInterval(() => {
-                elapsed += 0.1;
-                let percent = (elapsed / duration) * 100;
-                if (percent <= 100) progressBar.style.width = percent + '%';
-                if (elapsed >= duration) clearInterval(interval);
-            }, 100);
-        };
-        
-        currentUtterance.onend = () => {
-            isPlaying = false;
-            const btn = document.getElementById('playPauseBtn');
-            btn.innerHTML = '<i class="bi bi-play-circle-fill"></i> 🎧 Story';
-            if (interval) clearInterval(interval);
-            progressBar.style.width = '100%';
-            setTimeout(() => { progressBar.style.width = '0%'; }, 500);
-        };
-        
-        speechSynth.speak(currentUtterance);
-    }
-    
-    function toggleAudioStory() {
-        if (isPlaying && speechSynth) {
-            speechSynth.cancel();
-            isPlaying = false;
-            const btn = document.getElementById('playPauseBtn');
-            btn.innerHTML = '<i class="bi bi-play-circle-fill"></i> 🎧 Story';
-        } else if (currentStoryText) {
-            playSpeech(currentStoryText);
-        }
-    }
-    
-    function showStoryPanel() {
-        const panel = document.getElementById('storyPanel');
-        document.getElementById('storyTitle').innerHTML = `📖 ${currentStoryTitle}`;
-        document.getElementById('storyText').innerHTML = currentStoryText;
-        panel.style.display = 'block';
-        setTimeout(() => { panel.style.transform = 'translateY(0)'; }, 10);
-    }
-    
-    function closeStoryPanel() {
-        if (isPlaying && speechSynth) speechSynth.cancel();
-        document.getElementById('storyPanel').style.transform = 'translateY(100%)';
-        setTimeout(() => { document.getElementById('storyPanel').style.display = 'none'; }, 300);
-    }
-    
-    // ==================== LOAD MODEL ====================
-    function loadModel(modelId) {
-        currentStoryTitle = modelId.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-        currentStoryText = stories[modelId] || "Explore this heritage item from AlUla.";
-        
-        showStoryPanel();
-        playSpeech(currentStoryText);
-        
-        // Hide hotspots when loading new model
-        if (hotspotsVisible) {
-            toggleHotspots();
-        }
-    }
-    
-    function scrollToQR() {
-        document.getElementById('qrSection').scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-    
-    // Add pulse animation style
-    const style = document.createElement('style');
-    style.textContent = `@keyframes pulse { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.5); opacity: 0; } }`;
-    document.head.appendChild(style);
-    
-    // Initialize
-    document.addEventListener('DOMContentLoaded', () => {
-        showTab('sites');
-    });
-</script>
-
-<style>
-    body { background: linear-gradient(135deg, #faf8f0, #f0ede5); }
-    .model-card, .artifact-card, .desert-card { transition: transform 0.2s; background: white; border-radius: 16px; cursor: pointer; border: 1px solid rgba(0,0,0,0.05); }
-    .model-card:hover, .artifact-card:hover, .desert-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.15); }
-    @media (max-width: 768px) { iframe { height: 45vh !important; min-height: 350px; } }
-</style>
-{% endblock %}
+            showHotspots();
+            btn.style.background = 'rgba(218
