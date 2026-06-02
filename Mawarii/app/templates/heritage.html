@@ -503,4 +503,233 @@
         
         if (hotspotsVisible) {
             showHotspots();
-            btn.style.background = 'rgba(218
+            btn.style.background = 'rgba(218,165,32,0.4)';
+        } else {
+            hideHotspots();
+            btn.style.background = 'rgba(255,255,255,0.15)';
+        }
+    }
+    
+    function showHotspots() {
+        const overlay = document.getElementById('hotspotsOverlay');
+        overlay.innerHTML = '';
+        overlay.style.pointerEvents = 'auto';
+        
+        currentHotspots.forEach(hotspot => {
+            const marker = document.createElement('div');
+            marker.style.position = 'absolute';
+            marker.style.left = hotspot.x + '%';
+            marker.style.top = hotspot.y + '%';
+            marker.style.transform = 'translate(-50%, -50%)';
+            marker.style.width = '30px';
+            marker.style.height = '30px';
+            marker.style.cursor = 'pointer';
+            marker.style.zIndex = '20';
+            marker.innerHTML = '<div style="width:100%;height:100%;background:#DAA520;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 0 8px rgba(218,165,32,0.8);animation:pulse 1.5s infinite;">📍</div>';
+            marker.onclick = () => showHotspotInfo(hotspot);
+            overlay.appendChild(marker);
+        });
+    }
+    
+    function hideHotspots() {
+        const overlay = document.getElementById('hotspotsOverlay');
+        overlay.innerHTML = '';
+        overlay.style.pointerEvents = 'none';
+    }
+    
+    function showHotspotInfo(hotspot) {
+        const panel = document.getElementById('hotspotPanel');
+        document.getElementById('hotspotTitle').innerHTML = hotspot.title;
+        document.getElementById('hotspotDesc').innerHTML = hotspot.desc;
+        currentHotspotAudio = hotspot.audio;
+        panel.style.display = 'block';
+        setTimeout(() => { panel.style.transform = 'translateY(0)'; }, 10);
+        setTimeout(() => { playHotspotAudio(); }, 300);
+    }
+    
+    function playHotspotAudio() {
+        if (currentHotspotAudio && speechSynth) {
+            if (isPlaying) speechSynth.cancel();
+            const utterance = new SpeechSynthesisUtterance(currentHotspotAudio);
+            utterance.lang = currentSpeechLang;
+            utterance.rate = 0.85;
+            speechSynth.speak(utterance);
+        }
+    }
+    
+    function closeHotspotPanel() {
+        const panel = document.getElementById('hotspotPanel');
+        panel.style.transform = 'translateY(100%)';
+        setTimeout(() => { panel.style.display = 'none'; }, 300);
+    }
+    
+    // ==================== CARD STATS FUNCTIONS ====================
+    function updateCardStats(modelId, timeSpent, storiesCount) {
+        const card = document.querySelector(`.card[data-model-id="${modelId}"]`);
+        if (card) {
+            const timeSpan = card.querySelector('.time-spent');
+            const storiesSpan = card.querySelector('.stories-count');
+            const progressBar = card.querySelector('.progress-bar');
+            if (timeSpan) {
+                let currentTime = parseInt(timeSpan.innerText) || 0;
+                timeSpan.innerText = currentTime + timeSpent;
+            }
+            if (storiesSpan) {
+                let currentStories = parseInt(storiesSpan.innerText) || 0;
+                storiesSpan.innerText = currentStories + storiesCount;
+            }
+            if (progressBar) {
+                let totalTime = parseInt(timeSpan?.innerText) || timeSpent;
+                let progressPercent = Math.min((totalTime / 60) * 100, 100);
+                progressBar.style.width = `${progressPercent}%`;
+            }
+        }
+    }
+    
+    function recordExploration(modelId, timeSpent, storiesCount) {
+        let history = localStorage.getItem('heritageExploredHistory');
+        let historyArray = history ? JSON.parse(history) : [];
+        const existingIndex = historyArray.findIndex(item => item.id === modelId);
+        if (existingIndex !== -1) {
+            historyArray[existingIndex].time = (historyArray[existingIndex].time || 0) + timeSpent;
+            historyArray[existingIndex].stories = (historyArray[existingIndex].stories || 0) + storiesCount;
+            historyArray[existingIndex].lastVisited = Date.now();
+        } else {
+            historyArray.push({ id: modelId, name: currentStoryTitle, time: timeSpent, stories: storiesCount, lastVisited: Date.now() });
+        }
+        localStorage.setItem('heritageExploredHistory', JSON.stringify(historyArray));
+        updateCardStats(modelId, timeSpent, storiesCount);
+    }
+    
+    // ==================== AUDIO STORY FUNCTIONS ====================
+    function playSpeech(text, modelId) {
+        if (!speechSynth) return;
+        if (currentUtterance) speechSynth.cancel();
+        if (progressInterval) clearInterval(progressInterval);
+        
+        currentUtterance = new SpeechSynthesisUtterance(text);
+        currentUtterance.lang = currentSpeechLang;
+        currentUtterance.rate = 0.85;
+        
+        const wordCount = text.split(' ').length;
+        const estimatedDuration = Math.max(5, wordCount / 3);
+        let elapsed = 0;
+        const progressBar = document.getElementById('storyProgress');
+        
+        currentUtterance.onstart = () => {
+            isPlaying = true;
+            const playBtn = document.getElementById('playPauseBtn');
+            playBtn.innerHTML = '<i class="bi bi-stop-circle-fill"></i> ⏹️ Stop';
+            progressBar.style.width = '0%';
+            progressInterval = setInterval(() => {
+                elapsed += 0.1;
+                let percent = (elapsed / estimatedDuration) * 100;
+                if (percent <= 100) progressBar.style.width = `${percent}%`;
+                if (elapsed >= estimatedDuration) clearInterval(progressInterval);
+            }, 100);
+        };
+        
+        currentUtterance.onend = () => {
+            isPlaying = false;
+            const playBtn = document.getElementById('playPauseBtn');
+            playBtn.innerHTML = '<i class="bi bi-play-circle-fill"></i> 🎧 Story';
+            if (progressInterval) clearInterval(progressInterval);
+            progressBar.style.width = '100%';
+            setTimeout(() => { progressBar.style.width = '0%'; }, 500);
+            if (modelId) recordExploration(modelId, 0, 1);
+        };
+        
+        speechSynth.speak(currentUtterance);
+    }
+    
+    function toggleAudioStory() {
+        if (isPlaying && speechSynth) {
+            speechSynth.cancel();
+            isPlaying = false;
+            if (progressInterval) clearInterval(progressInterval);
+            const playBtn = document.getElementById('playPauseBtn');
+            playBtn.innerHTML = '<i class="bi bi-play-circle-fill"></i> 🎧 Story';
+        } else if (currentStoryText) {
+            playSpeech(currentStoryText, currentModelId);
+        }
+    }
+    
+    function showStoryPanel() {
+        const panel = document.getElementById('storyPanel');
+        document.getElementById('storyTitle').innerHTML = `📖 ${currentStoryTitle}`;
+        document.getElementById('storyText').innerHTML = currentStoryText;
+        panel.style.display = 'block';
+        setTimeout(() => { panel.style.transform = 'translateY(0)'; }, 10);
+    }
+    
+    function closeStoryPanel() {
+        if (isPlaying && speechSynth) speechSynth.cancel();
+        if (progressInterval) clearInterval(progressInterval);
+        document.getElementById('storyPanel').style.transform = 'translateY(100%)';
+        setTimeout(() => { document.getElementById('storyPanel').style.display = 'none'; }, 300);
+    }
+    
+    // ==================== LOAD MODEL ====================
+    let currentModelId = "";
+    
+    function loadModel(modelId) {
+        const container = document.getElementById('modelContainer');
+        currentModelId = modelId;
+        currentStoryTitle = modelId.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        
+        const story = stories[modelId];
+        currentStoryText = story ? (currentLanguage === 'en' ? story.en : story.ar) : (currentLanguage === 'en' ? currentStoryTitle : currentStoryTitle);
+        
+        const model = modelUrls[modelId];
+        if (!model) return;
+        
+        if (model.type === 'sketchfab') {
+            container.innerHTML = `<iframe src="https://sketchfab.com/models/${model.url}/embed" frameborder="0" allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen style="width:100%; height:60vh; min-height:450px; background: #0a0a0a; border-radius: 12px;"></iframe>`;
+        } else {
+            container.innerHTML = `<model-viewer src="${model.url}" ar ar-modes="webxr scene-viewer quick-look" camera-controls auto-rotate style="width:100%; height:60vh; min-height:450px; background: #1a1a1a; border-radius: 12px;"><button slot="ar-button" style="background: #DAA520; border: none; color: white; padding: 8px 16px; border-radius: 30px; font-size: 12px;">🕶️ View in AR</button></model-viewer>`;
+        }
+        
+        // Update hotspots based on model type
+        if (modelId === 'qasr_al_farid') {
+            currentHotspots = siteHotspots;
+        } else if (modelId === 'roman_oil_lamp' || modelId === 'ancient_pottery' || modelId === 'dallah_coffee') {
+            currentHotspots = artifactHotspots;
+        } else {
+            currentHotspots = desertHotspots;
+        }
+        
+        if (hotspotsVisible) {
+            showHotspots();
+        }
+        
+        updateAmbientByModel(modelId);
+        
+        setTimeout(() => {
+            showStoryPanel();
+            playSpeech(currentStoryText, modelId);
+            recordExploration(modelId, 1, 0);
+        }, 500);
+    }
+    
+    function scrollToQR() {
+        document.getElementById('qrSection').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    
+    // Add pulse animation style
+    const style = document.createElement('style');
+    style.textContent = `@keyframes pulse { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.5); opacity: 0; } }`;
+    document.head.appendChild(style);
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+        showTab('sites');
+    });
+</script>
+
+<style>
+    body { background: linear-gradient(135deg, #faf8f0, #f0ede5); }
+    .model-card, .artifact-card, .desert-card { transition: transform 0.2s; background: white; border-radius: 12px; cursor: pointer; border: 1px solid rgba(0,0,0,0.05); }
+    .model-card:hover, .artifact-card:hover, .desert-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+    @media (max-width: 768px) { iframe, model-viewer { height: 45vh !important; min-height: 350px; } }
+</style>
+{% endblock %}
