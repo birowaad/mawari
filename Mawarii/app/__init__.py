@@ -1,5 +1,5 @@
 # app/__init__.py
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
@@ -8,49 +8,117 @@ from flask import send_file
 import io
 import os
 import json
+from datetime import datetime
 
 # Initialize extensions
 db = SQLAlchemy()
 login_manager = LoginManager()
 
 
-# User model
+# ===========================================================
+# User model (defined here for circular import avoidance)
+# ===========================================================
 class User(db.Model):
+    __tablename__ = 'users'
+    
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
-    password = db.Column(db.String(200), nullable=False)
+    password_hash = db.Column(db.String(200), nullable=False)
+    role = db.Column(db.String(50), default='user')
+    is_active = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
     interests = db.Column(db.String(500), default='')
     experience_level = db.Column(db.String(50), default='beginner')
     preferences = db.Column(db.Text, default='{}')
     
     def set_password(self, password):
-        self.password = generate_password_hash(password)
+        self.password_hash = generate_password_hash(password)
     
     def check_password(self, password):
-        return check_password_hash(self.password, password)
+        return check_password_hash(self.password_hash, password)
+    
+    def is_admin(self):
+        return self.role == 'admin'
     
     def get_preferences(self):
-        return json.loads(self.preferences) if self.preferences else {}
+        try:
+            return json.loads(self.preferences) if self.preferences else {}
+        except:
+            return {}
     
     def set_preferences(self, prefs_dict):
         self.preferences = json.dumps(prefs_dict)
+    
+    def get_interests_list(self):
+        return [i.strip() for i in self.interests.split(',') if i.strip()] if self.interests else []
     
     # Flask-Login required properties
     @property
     def is_authenticated(self):
         return True
     
-    @property
-    def is_active(self):
-        return True
-    
-    @property
-    def is_anonymous(self):
-        return False
-    
     def get_id(self):
         return str(self.id)
+
+
+class Model3D(db.Model):
+    __tablename__ = 'models_3d'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(150), nullable=False)
+    description = db.Column(db.Text)
+    category = db.Column(db.String(50), nullable=False)
+    file_path = db.Column(db.String(500), nullable=False)
+    thumbnail_path = db.Column(db.String(500))
+    tags = db.Column(db.String(500), default='')
+    story_en = db.Column(db.Text)
+    story_ar = db.Column(db.Text)
+    is_active = db.Column(db.Boolean, default=True)
+    display_order = db.Column(db.Integer, default=0)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    def get_tags_list(self):
+        return [t.strip() for t in self.tags.split(',') if t.strip()]
+
+
+class UserInteraction(db.Model):
+    __tablename__ = 'user_interactions'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    model_id = db.Column(db.Integer, db.ForeignKey('models_3d.id'), nullable=False)
+    interaction_type = db.Column(db.String(50), nullable=False)
+    duration_seconds = db.Column(db.Integer, default=0)
+    completion_percentage = db.Column(db.Float, default=0.0)
+    metadata = db.Column(db.Text, default='{}')
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    def get_metadata(self):
+        try:
+            return json.loads(self.metadata) if self.metadata else {}
+        except:
+            return {}
+    
+    def set_metadata(self, data_dict):
+        self.metadata = json.dumps(data_dict)
+    
+    @classmethod
+    def log_interaction(cls, db_session, user_id, model_id, interaction_type, duration=0, completion=0, **kwargs):
+        interaction = cls(
+            user_id=user_id,
+            model_id=model_id,
+            interaction_type=interaction_type,
+            duration_seconds=duration,
+            completion_percentage=completion
+        )
+        if kwargs:
+            interaction.set_metadata(kwargs)
+        db_session.add(interaction)
+        db_session.commit()
+        return interaction
 
 
 @login_manager.user_loader
@@ -72,24 +140,46 @@ def create_app():
     login_manager.login_view = 'login'
     login_manager.login_message = 'Please log in to access this page.'
     
-    # ========== RECREATE DATABASE ==========
+    # ========== Create database tables ==========
     with app.app_context():
-        # Drop all existing tables
-        db.drop_all()
-        print("✅ Dropped all existing tables")
-        
-        # Create all tables with new schema
         db.create_all()
-        print("✅ Created all tables with new schema (interests, experience_level, preferences)")
-        
-        # Verify columns exist
-        import sqlite3
-        conn = sqlite3.connect('users.db')
-        cursor = conn.cursor()
-        cursor.execute("PRAGMA table_info(user)")
-        columns = cursor.fetchall()
-        print("📋 User table columns:", [col[1] for col in columns])
-        conn.close()
+        print("✅ Database tables created successfully!")
+
+    # ===========================================================
+    # Helper Functions for Interaction Logging
+    # ===========================================================
+    
+    def log_interaction(user_id, model_id, interaction_type, duration=0, completion=0, **kwargs):
+        """تسجيل تفاعل المستخدم مع مجسم معين"""
+        try:
+            UserInteraction.log_interaction(
+                db.session, user_id, model_id, interaction_type, duration, completion, **kwargs
+            )
+            print(f"✅ Logged: {interaction_type} | user:{user_id} | model:{model_id}")
+            return True
+        except Exception as e:
+            print(f"❌ Error logging interaction: {e}")
+            return False
+    
+    def log_view_interaction(user_id, model_id, duration=0):
+        """تسجيل مشاهدة مجسم"""
+        return log_interaction(user_id, model_id, 'view', duration)
+    
+    def log_listen_interaction(user_id, model_id, duration=0, completion=100):
+        """تسجيل الاستماع إلى قصة"""
+        return log_interaction(user_id, model_id, 'listen', duration, completion)
+    
+    def log_explore_interaction(user_id, model_id, duration=0):
+        """تسجيل استكشاف مجسم (بدء الجولة)"""
+        return log_interaction(user_id, model_id, 'explore', duration)
+    
+    def log_hotspot_interaction(user_id, model_id, hotspot_id, hotspot_name):
+        """تسجيل النقر على نقطة تفاعلية"""
+        return log_interaction(user_id, model_id, 'hotspot_click', metadata={'hotspot_id': hotspot_id, 'hotspot_name': hotspot_name})
+    
+    def log_share_interaction(user_id, model_id, platform='social'):
+        """تسجيل مشاركة مجسم"""
+        return log_interaction(user_id, model_id, 'share', metadata={'platform': platform})
 
     # ===========================================================
     # Language Settings
@@ -308,82 +398,65 @@ def create_app():
     def edit_preferences():
         return render_template('preferences.html', title='Edit Preferences')
 
-        # ===========================================================
-    # Recommendation & AI Agent API Endpoints
+    # ===========================================================
+    # API Endpoints for Interaction Logging
     # ===========================================================
     
-    from app.recommendation_engine import RecommendationEngine
-    from app.ai_agent import AIAgent
-    
-    # تهيئة محرك التوصيات
-    @app.before_first_request
-    def init_recommendation_engine():
-        from app.models import Model3D
-        models = Model3D.query.filter_by(is_active=True).all()
-        models_data = [{'id': m.id, 'name': m.name, 'tags': m.tags, 'description': m.description} for m in models]
-        app.recommendation_engine = RecommendationEngine(models_data)
-        app.recommendation_engine.build_index()
-        app.ai_agent = AIAgent(db, app.recommendation_engine)
-        print("✅ AI Recommendation Engine and Agent initialized!")
-    
-    @app.route('/api/recommendations/v2')
+    @app.route('/api/log/interaction', methods=['POST'])
     @login_required
-    def get_recommendations_v2():
-        """API متقدمة للتوصيات باستخدام TF-IDF و Cosine Similarity"""
-        user = current_user
-        user_interests = [i.strip() for i in user.interests.split(',') if i.strip()] if user.interests else []
+    def api_log_interaction():
+        """API endpoint لتسجيل التفاعلات من الواجهة الأمامية"""
+        data = request.get_json()
         
-        recommendations = app.recommendation_engine.get_recommendations(
-            user_interests, 
-            user.experience_level,
-            top_n=6
+        model_id = data.get('model_id')
+        interaction_type = data.get('type')
+        duration = data.get('duration', 0)
+        completion = data.get('completion', 0)
+        metadata = data.get('metadata', {})
+        
+        if not model_id or not interaction_type:
+            return jsonify({'error': 'Missing required fields'}), 400
+        
+        success = log_interaction(
+            current_user.id, model_id, interaction_type, 
+            duration, completion, **metadata
         )
         
-        return {
-            'user_interests': user_interests,
-            'user_experience_level': user.experience_level,
-            'recommendations': recommendations,
-            'algorithm': 'TF-IDF + Cosine Similarity'
-        }
+        if success:
+            return jsonify({'status': 'success', 'message': 'Interaction logged'})
+        return jsonify({'status': 'error', 'message': 'Failed to log interaction'}), 500
     
-    @app.route('/api/agent/insights')
+    @app.route('/api/log/view', methods=['POST'])
     @login_required
-    def get_agent_insights():
-        """الحصول على رؤى من الوكيل الذكي"""
-        insights = app.ai_agent.get_insights(current_user.id)
-        return insights
-    
-    @app.route('/api/agent/learning-path')
-    @login_required
-    def get_learning_path():
-        """الحصول على مسار تعلم مخصص"""
-        path = app.ai_agent.generate_learning_path(current_user.id, num_steps=5)
-        return {'learning_path': path}
-    
-    @app.route('/api/agent/contextual')
-    @login_required
-    def get_contextual_recommendations():
-        """توصيات سياقية بناءً على الوقت الحالي"""
-        current_model = request.args.get('current_model')
-        recommendations = app.ai_agent.get_contextual_recommendations(
-            current_user.id, 
-            current_model_id=current_model
-        )
-        return {'recommendations': recommendations}
-    
-    @app.route('/api/metrics/evaluate')
-    @login_required
-    def evaluate_recommendations():
-        """تقييم أداء محرك التوصيات (للمدير فقط)"""
-        if not current_user.is_admin():
-            return {'error': 'Unauthorized'}, 403
+    def api_log_view():
+        data = request.get_json()
+        model_id = data.get('model_id')
+        duration = data.get('duration', 0)
         
-        # بيانات اختبار (يمكن تحميلها من ملف)
-        test_data = [
-            {'interests': ['architecture', 'history'], 'expected_models': [1, 2, 3]},
-            {'interests': ['nature', 'landscape'], 'expected_models': [4, 5, 6]},
-        ]
+        if log_view_interaction(current_user.id, model_id, duration):
+            return jsonify({'status': 'success'})
+        return jsonify({'status': 'error'}), 500
+    
+    @app.route('/api/log/listen', methods=['POST'])
+    @login_required
+    def api_log_listen():
+        data = request.get_json()
+        model_id = data.get('model_id')
+        duration = data.get('duration', 0)
+        completion = data.get('completion', 100)
         
-        metrics = app.recommendation_engine.evaluate_recommendations(test_data)
-        return metrics
+        if log_listen_interaction(current_user.id, model_id, duration, completion):
+            return jsonify({'status': 'success'})
+        return jsonify({'status': 'error'}), 500
+    
+    @app.route('/api/log/explore', methods=['POST'])
+    @login_required
+    def api_log_explore():
+        data = request.get_json()
+        model_id = data.get('model_id')
+        
+        if log_explore_interaction(current_user.id, model_id):
+            return jsonify({'status': 'success'})
+        return jsonify({'status': 'error'}), 500
+
     return app
