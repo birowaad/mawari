@@ -23,7 +23,6 @@ class User(db.Model):
     interests = db.Column(db.String(500), default='')
     experience_level = db.Column(db.String(50), default='beginner')
     preferences = db.Column(db.Text, default='{}')
-    is_active = db.Column(db.Boolean, default=True)  # <-- IMPORTANT: Add this line
     
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -37,8 +36,18 @@ class User(db.Model):
     def set_preferences(self, prefs_dict):
         self.preferences = json.dumps(prefs_dict)
     
-    def is_admin(self):
-        return self.role == 'admin' if hasattr(self, 'role') else False
+    # ========== Flask-Login Required Properties ==========
+    @property
+    def is_authenticated(self):
+        return True
+    
+    @property
+    def is_active(self):
+        return True
+    
+    @property
+    def is_anonymous(self):
+        return False
     
     def get_id(self):
         return str(self.id)
@@ -63,11 +72,10 @@ def create_app():
     login_manager.login_view = 'login'
     login_manager.login_message = 'Please log in to access this page.'
     
-    # ========== IMPORTANT: Drop and recreate database with new columns ==========
+    # ========== Create database tables ==========
     with app.app_context():
-        db.drop_all()      # This deletes the old database (users will be lost)
-        db.create_all()    # This creates new database with interests, experience_level, preferences, is_active
-        print("✅ Database recreated successfully with User interests, experience_level, preferences, is_active columns!")
+        db.create_all()
+        print("✅ Database tables created successfully!")
 
     # ===========================================================
     # Language Settings
@@ -151,7 +159,7 @@ def create_app():
                 flash("Email already exists", "danger")
                 return redirect(url_for('register'))
 
-            new_user = User(username=username, email=email, is_active=True)
+            new_user = User(username=username, email=email)
             new_user.set_password(password)
             db.session.add(new_user)
             db.session.commit()
@@ -192,12 +200,11 @@ def create_app():
 
     @app.route('/dashboard')
     def dashboard():
-        if not current_user.is_authenticated and 'user_id' not in session:
+        if not current_user.is_authenticated:
             flash("Please log in to access the dashboard.", "warning")
             return redirect(url_for('login'))
         
-        username = session.get('username') or (current_user.username if current_user.is_authenticated else 'Guest')
-        return render_template('dashboard.html', title="Dashboard", username=username)
+        return render_template('dashboard.html', title="Dashboard", username=current_user.username)
 
     @app.route('/profile', methods=['GET', 'POST'])
     def profile():
