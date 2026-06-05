@@ -108,25 +108,31 @@
             </div>
         </div>
 
-        <!-- NAVIGATION MENU -->
-        <nav class="mt-3">
-            <ul class="nav justify-content-center gap-3">
-                <li class="nav-item"><a href="{{ url_for('index') }}" class="nav-link interactive-text"><i class="bi bi-house-fill"></i> {% if current_lang == 'en' %}Home{% else %}الرئيسية{% endif %}</a></li>
-                <li class="nav-item"><a href="{{ url_for('heritage') }}" class="nav-link interactive-text"><i class="bi bi-map-fill"></i> {% if current_lang == 'en' %}Heritage with AR{% else %}التراث بالواقع المعزز{% endif %}</a></li>
-                {% if 'user_id' in session %}
-                <li class="nav-item"><a href="{{ url_for('dashboard') }}" class="nav-link interactive-text"><i class="bi bi-speedometer2"></i> {% if current_lang == 'en' %}Dashboard{% else %}لوحة التحكم{% endif %}</a></li>
-                <li class="nav-item"><a href="{{ url_for('profile') }}" class="nav-link interactive-text"><i class="bi bi-person-circle"></i> {% if current_lang == 'en' %}Profile{% else %}الملف الشخصي{% endif %}</a></li>
-                <!-- NEW: Preferences link in navigation -->
-                <li class="nav-item"><a href="{{ url_for('edit_preferences') }}" class="nav-link interactive-text"><i class="bi bi-sliders2"></i> {% if current_lang == 'en' %}Preferences{% else %}التفضيلات{% endif %}</a></li>
-                <li class="nav-item"><a href="{{ url_for('logout') }}" class="nav-link interactive-text"><i class="bi bi-box-arrow-right"></i> {% if current_lang == 'en' %}Logout{% else %}تسجيل خروج{% endif %}</a></li>
-                {% else %}
-                <li class="nav-item"><a href="{{ url_for('register') }}" class="nav-link interactive-text"><i class="bi bi-person-plus-fill"></i> {% if current_lang == 'en' %}Register{% else %}تسجيل{% endif %}</a></li>
-                <li class="nav-item"><a href="{{ url_for('login') }}" class="nav-link interactive-text"><i class="bi bi-box-arrow-in-right"></i> {% if current_lang == 'en' %}Login{% else %}دخول{% endif %}</a></li>
-                {% endif %}
-                <li class="nav-item"><a href="{{ url_for('about') }}" class="nav-link interactive-text"><i class="bi bi-info-circle-fill"></i> {% if current_lang == 'en' %}About{% else %}حول{% endif %}</a></li>
-                <li class="nav-item"><a href="{{ url_for('contact') }}" class="nav-link interactive-text"><i class="bi bi-envelope-fill"></i> {% if current_lang == 'en' %}Contact Us{% else %}اتصل بنا{% endif %}</a></li>
-            </ul>
-        </nav>
+      <!-- NAVIGATION MENU -->
+<nav class="mt-3">
+    <ul class="nav justify-content-center gap-3">
+        <li class="nav-item"><a href="{{ url_for('index') }}" class="nav-link interactive-text"><i class="bi bi-house-fill"></i> <span class="en-text">Home</span><span class="ar-text" style="display: none;">الرئيسية</span></a></li>
+        <li class="nav-item"><a href="{{ url_for('heritage') }}" class="nav-link interactive-text"><i class="bi bi-map-fill"></i> <span class="en-text">Heritage with AR</span><span class="ar-text" style="display: none;">التراث بالواقع المعزز</span></a></li>
+        
+        <!-- الرابط الجديد للجولة السياحية -->
+        <li class="nav-item"><a href="{{ url_for('virtual_city_tour') }}" class="nav-link interactive-text">
+            <i class="bi bi-building"></i> 
+            <span class="en-text">🏙️ Virtual City Tour</span>
+            <span class="ar-text" style="display: none;">🏙️ جولة المدينة الافتراضية</span>
+        </a></li>
+        
+        {% if 'user_id' in session %}
+        <li class="nav-item"><a href="{{ url_for('dashboard') }}" class="nav-link interactive-text"><i class="bi bi-speedometer2"></i> <span class="en-text">Dashboard</span><span class="ar-text" style="display: none;">لوحة التحكم</span></a></li>
+        <li class="nav-item"><a href="{{ url_for('profile') }}" class="nav-link interactive-text"><i class="bi bi-person-circle"></i> <span class="en-text">Profile</span><span class="ar-text" style="display: none;">الملف الشخصي</span></a></li>
+        <li class="nav-item"><a href="{{ url_for('logout') }}" class="nav-link interactive-text"><i class="bi bi-box-arrow-right"></i> <span class="en-text">Logout</span><span class="ar-text" style="display: none;">تسجيل خروج</span></a></li>
+        {% else %}
+        <li class="nav-item"><a href="{{ url_for('register') }}" class="nav-link interactive-text"><i class="bi bi-person-plus-fill"></i> <span class="en-text">Register</span><span class="ar-text" style="display: none;">تسجيل</span></a></li>
+        <li class="nav-item"><a href="{{ url_for('login') }}" class="nav-link interactive-text"><i class="bi bi-box-arrow-in-right"></i> <span class="en-text">Login</span><span class="ar-text" style="display: none;">دخول</span></a></li>
+        {% endif %}
+        <li class="nav-item"><a href="{{ url_for('about') }}" class="nav-link interactive-text"><i class="bi bi-info-circle-fill"></i> <span class="en-text">About</span><span class="ar-text" style="display: none;">حول</span></a></li>
+        <li class="nav-item"><a href="{{ url_for('contact') }}" class="nav-link interactive-text"><i class="bi bi-envelope-fill"></i> <span class="en-text">Contact Us</span><span class="ar-text" style="display: none;">اتصل بنا</span></a></li>
+    </ul>
+</nav>
     </header>
 
     <!-- Flash Messages -->
