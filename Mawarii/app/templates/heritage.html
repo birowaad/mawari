@@ -9,17 +9,42 @@
             {% if current_lang == 'en' %}🏛️ AlUla Heritage Experience{% else %}🏛️ تجربة تراث العلا{% endif %}
         </h1>
         <p class="lead fs-6" style="color: #6c757d;">
-            {% if current_lang == 'en' %}Explore tombs, artifacts & desert life with interactive hotspots{% else %}استكشف المقابر والقطع الأثرية والحياة الصحراوية مع نقاط تفاعلية{% endif %}
+            {% if current_lang == 'en' %}Explore tombs, artifacts & desert life with AI-powered recommendations{% else %}استكشف المقابر والقطع الأثرية والحياة الصحراوية مع توصيات الذكاء الاصطناعي{% endif %}
         </p>
     </div>
 
-    <!-- Edit Preferences Button - Top Right -->
+    <!-- Edit Preferences Button -->
     <div class="container">
         <div class="text-end mb-3">
             <a href="{{ url_for('edit_preferences') }}" class="btn btn-outline-warning btn-sm rounded-pill">
                 <i class="bi bi-sliders2"></i> 
                 {% if current_lang == 'en' %}Edit Your Preferences{% else %}تعديل تفضيلاتك{% endif %}
             </a>
+        </div>
+    </div>
+
+    <!-- =========================================================== -->
+    <!-- AI RECOMMENDATIONS SECTION - NEW -->
+    <!-- =========================================================== -->
+    <div id="aiRecommendationsSection" class="container my-4" style="display: none;">
+        <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+            <div class="card-header bg-gradient" style="background: linear-gradient(135deg, #DAA520, #B8860B); color: white;">
+                <h5 class="mb-0 py-2">
+                    <i class="bi bi-robot"></i> 
+                    <span class="en-text">🤖 AI-Powered Recommendations For You</span>
+                    <span class="ar-text" style="display: none;">🤖 توصيات الذكاء الاصطناعي لك</span>
+                </h5>
+            </div>
+            <div class="card-body bg-light">
+                <div id="aiRecommendationsRow" class="row g-3">
+                    <div class="col-12 text-center py-3">
+                        <div class="spinner-border text-warning" role="status">
+                            <span class="visually-hidden">Loading AI recommendations...</span>
+                        </div>
+                        <p class="mt-2 text-muted">Loading personalized recommendations...</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -127,174 +152,24 @@
     <!-- ==================== TAB 1: SITES ==================== -->
     <div id="sitesTab" class="container my-3">
         <h5 class="mb-2 text-center">{% if current_lang == 'en' %}🏛️ Archaeological Sites{% else %}🏛️ المواقع الأثرية{% endif %}</h5>
-        <div class="row g-2">
-            <div class="col-md-6 col-lg-4">
-                <div class="card model-card h-100" data-model-id="qasr_al_farid">
-                    <div class="card-body text-center p-2">
-                        <i class="bi bi-building fs-2 text-primary"></i>
-                        <h6 class="fw-bold mt-1 mb-0">🏛️ Qasr al-Farid</h6>
-                        <p class="small text-muted mb-1">The Lonely Castle | Hegra | 1st Century CE</p>
-                        <div class="model-stats small mb-1">
-                            <span class="badge bg-secondary"><i class="bi bi-clock"></i> <span class="time-spent">0</span> min</span>
-                            <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
-                        </div>
-                        <div class="progress mb-1" style="height: 3px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
-                        <button class="btn btn-sm btn-outline-primary w-100 explore-btn" onclick='loadModel("qasr_al_farid")'>
-                            <i class="bi bi-vr"></i> Explore
-                        </button>
-                    </div>
-                </div>
-            </div>
+        <div class="row g-2" id="sitesRow">
+            <!-- Sites will be loaded here -->
         </div>
     </div>
 
     <!-- ==================== TAB 2: ARTIFACTS ==================== -->
     <div id="artifactsTab" class="container my-3" style="display: none;">
         <h5 class="mb-2 text-center">{% if current_lang == 'en' %}🏺 Ancient Artifacts{% else %}🏺 القطع الأثرية{% endif %}</h5>
-        <div class="row g-2">
-            <div class="col-md-6 col-lg-4">
-                <div class="card artifact-card h-100" data-model-id="roman_oil_lamp">
-                    <div class="card-body text-center p-2">
-                        <i class="bi bi-cup-straw fs-2 text-warning"></i>
-                        <h6 class="fw-bold mt-1 mb-0">🪔 Roman Oil Lamp</h6>
-                        <p class="small text-muted mb-1">Taracco | 1st-2nd Century CE</p>
-                        <div class="model-stats small mb-1">
-                            <span class="badge bg-secondary"><i class="bi bi-clock"></i> <span class="time-spent">0</span> min</span>
-                            <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
-                        </div>
-                        <div class="progress mb-1" style="height: 3px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
-                        <button class="btn btn-sm btn-outline-secondary w-100 explore-btn" onclick='loadModel("roman_oil_lamp")'>
-                            <i class="bi bi-vr"></i> View in 3D
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="card artifact-card h-100" data-model-id="ancient_pottery">
-                    <div class="card-body text-center p-2">
-                        <i class="bi bi-brightness-alt-high fs-2 text-info"></i>
-                        <h6 class="fw-bold mt-1 mb-0">🏺 Ancient Pottery</h6>
-                        <p class="small text-muted mb-1">Nabataean | 1st Century BCE-1st Century CE</p>
-                        <div class="model-stats small mb-1">
-                            <span class="badge bg-secondary"><i class="bi bi-clock"></i> <span class="time-spent">0</span> min</span>
-                            <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
-                        </div>
-                        <div class="progress mb-1" style="height: 3px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
-                        <button class="btn btn-sm btn-outline-secondary w-100 explore-btn" onclick='loadModel("ancient_pottery")'>
-                            <i class="bi bi-vr"></i> View in 3D
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="card artifact-card h-100" data-model-id="dallah_coffee">
-                    <div class="card-body text-center p-2">
-                        <i class="bi bi-cup-hot fs-2 text-danger"></i>
-                        <h6 class="fw-bold mt-1 mb-0">☕ Dallah Coffee</h6>
-                        <p class="small text-muted mb-1">Traditional Arabian | Hospitality Symbol</p>
-                        <div class="model-stats small mb-1">
-                            <span class="badge bg-secondary"><i class="bi bi-clock"></i> <span class="time-spent">0</span> min</span>
-                            <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
-                        </div>
-                        <div class="progress mb-1" style="height: 3px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
-                        <button class="btn btn-sm btn-outline-secondary w-100 explore-btn" onclick='loadModel("dallah_coffee")'>
-                            <i class="bi bi-vr"></i> View in 3D
-                        </button>
-                    </div>
-                </div>
-            </div>
+        <div class="row g-2" id="artifactsRow">
+            <!-- Artifacts will be loaded here -->
         </div>
     </div>
 
     <!-- ==================== TAB 3: DESERT LIFE ==================== -->
     <div id="desertTab" class="container my-3" style="display: none;">
         <h5 class="mb-2 text-center">{% if current_lang == 'en' %}🐪 Desert Life{% else %}🐪 الحياة الصحراوية{% endif %}</h5>
-        <div class="row g-2">
-            <div class="col-md-6 col-lg-4">
-                <div class="card desert-card h-100" data-model-id="camel">
-                    <div class="card-body text-center p-2">
-                        <i class="bi bi-eyedropper fs-2 text-success"></i>
-                        <h6 class="fw-bold mt-1 mb-0">🐪 Arabian Camel</h6>
-                        <p class="small text-muted mb-1">Ship of the Desert</p>
-                        <div class="model-stats small mb-1">
-                            <span class="badge bg-secondary"><i class="bi bi-clock"></i> <span class="time-spent">0</span> min</span>
-                            <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
-                        </div>
-                        <div class="progress mb-1" style="height: 3px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
-                        <button class="btn btn-sm btn-outline-success w-100 explore-btn" onclick='loadModel("camel")'>
-                            <i class="bi bi-vr"></i> View in 3D
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="card desert-card h-100" data-model-id="oasis">
-                    <div class="card-body text-center p-2">
-                        <i class="bi bi-water fs-2 text-info"></i>
-                        <h6 class="fw-bold mt-1 mb-0">🌴 Desert Oasis</h6>
-                        <p class="small text-muted mb-1">AlUla Valley</p>
-                        <div class="model-stats small mb-1">
-                            <span class="badge bg-secondary"><i class="bi bi-clock"></i> <span class="time-spent">0</span> min</span>
-                            <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
-                        </div>
-                        <div class="progress mb-1" style="height: 3px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
-                        <button class="btn btn-sm btn-outline-success w-100 explore-btn" onclick='loadModel("oasis")'>
-                            <i class="bi bi-vr"></i> View in 3D
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="card desert-card h-100" data-model-id="tent">
-                    <div class="card-body text-center p-2">
-                        <i class="bi bi-house-door fs-2 text-secondary"></i>
-                        <h6 class="fw-bold mt-1 mb-0">🏕️ Arabian Tent</h6>
-                        <p class="small text-muted mb-1">Bedouin Dwelling</p>
-                        <div class="model-stats small mb-1">
-                            <span class="badge bg-secondary"><i class="bi bi-clock"></i> <span class="time-spent">0</span> min</span>
-                            <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
-                        </div>
-                        <div class="progress mb-1" style="height: 3px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
-                        <button class="btn btn-sm btn-outline-success w-100 explore-btn" onclick='loadModel("tent")'>
-                            <i class="bi bi-vr"></i> View in 3D
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="card desert-card h-100" data-model-id="desert_cliff">
-                    <div class="card-body text-center p-2">
-                        <i class="bi bi-mountain fs-2 text-warning"></i>
-                        <h6 class="fw-bold mt-1 mb-0">⛰️ Desert Cliff</h6>
-                        <p class="small text-muted mb-1">Sandstone Formation</p>
-                        <div class="model-stats small mb-1">
-                            <span class="badge bg-secondary"><i class="bi bi-clock"></i> <span class="time-spent">0</span> min</span>
-                            <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
-                        </div>
-                        <div class="progress mb-1" style="height: 3px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
-                        <button class="btn btn-sm btn-outline-success w-100 explore-btn" onclick='loadModel("desert_cliff")'>
-                            <i class="bi bi-vr"></i> View in 3D
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="card desert-card h-100" data-model-id="desert_rock">
-                    <div class="card-body text-center p-2">
-                        <i class="bi bi-gem fs-2 text-secondary"></i>
-                        <h6 class="fw-bold mt-1 mb-0">🪨 Ledge Rock</h6>
-                        <p class="small text-muted mb-1">Natural Formation</p>
-                        <div class="model-stats small mb-1">
-                            <span class="badge bg-secondary"><i class="bi bi-clock"></i> <span class="time-spent">0</span> min</span>
-                            <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
-                        </div>
-                        <div class="progress mb-1" style="height: 3px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
-                        <button class="btn btn-sm btn-outline-success w-100 explore-btn" onclick='loadModel("desert_rock")'>
-                            <i class="bi bi-vr"></i> View in 3D
-                        </button>
-                    </div>
-                </div>
-            </div>
+        <div class="row g-2" id="desertRow">
+            <!-- Desert items will be loaded here -->
         </div>
     </div>
 
@@ -333,43 +208,42 @@
     let currentStoryText = "";
     let currentStoryTitle = "";
     let hotspotsVisible = false;
+    let currentModelId = "";
     
     // Ambient sound variables
     let ambientAudio = null;
     let isAmbientPlaying = false;
     let currentAmbientType = 'desert';
     
-    // Ambient sounds paths
     const ambientSounds = {
         desert: '/static/audio/wind_desert.mp3',
         sandstorm: '/static/audio/sandstorm-wind.mp3',
         whisper: '/static/audio/whisper_of_a_desert.mp3'
     };
     
-    // ==================== HOTSPOTS DATA ====================
-    const siteHotspots = [
-        { id: 1, x: 50, y: 35, title: "🏛️ Main Facade", desc: "Four partially completed Nabataean columns frame the entrance.", audio: "The main facade features four partially completed columns. The symmetry demonstrates the advanced mathematical knowledge of the Nabataean civilization." },
-        { id: 2, x: 45, y: 55, title: "🚪 Tomb Entrance", desc: "The sacred doorway leading to the burial chamber of Lihyan, son of Kuza.", audio: "This sacred doorway leads to the burial chamber of Lihyan, son of Kuza. The Nabataeans believed in an afterlife." },
-        { id: 3, x: 30, y: 50, title: "📜 Nabataean Inscriptions", desc: "Ancient writings in Aramaic and Nabataean script.", audio: "These precious inscriptions identify Lihyan, son of Kuza, as the tomb's owner." }
-    ];
+    // ==================== HERITAGE ITEMS DATA ====================
+    const heritageItems = {
+        sites: [
+            { id: 'qasr_al_farid', name: 'Qasr al-Farid', icon: '🏛️', color: 'primary', type: 'sketchfab', url: '9b18367aac28420bbc066d65e73b9acd', description: 'The Lonely Castle | Hegra | 1st Century CE' }
+        ],
+        artifacts: [
+            { id: 'roman_oil_lamp', name: 'Roman Oil Lamp', icon: '🪔', color: 'warning', type: 'glb', url: '/static/models/roman_oil_lamp_tarraco.glb', description: 'Taracco | 1st-2nd Century CE' },
+            { id: 'ancient_pottery', name: 'Ancient Pottery', icon: '🏺', color: 'info', type: 'glb', url: '/static/models/ancient_pottery_set.glb', description: 'Nabataean | 1st Century BCE-1st Century CE' },
+            { id: 'dallah_coffee', name: 'Dallah Coffee', icon: '☕', color: 'danger', type: 'glb', url: '/static/models/dallah_arabian_coffee_pot.glb', description: 'Traditional Arabian | Hospitality Symbol' }
+        ],
+        desert: [
+            { id: 'camel', name: 'Arabian Camel', icon: '🐪', color: 'success', type: 'glb', url: '/static/models/camel.glb', description: 'Ship of the Desert' },
+            { id: 'oasis', name: 'Desert Oasis', icon: '🌴', color: 'info', type: 'glb', url: '/static/models/osais.glb', description: 'AlUla Valley' },
+            { id: 'tent', name: 'Arabian Tent', icon: '🏕️', color: 'secondary', type: 'glb', url: '/static/models/tent_arab.glb', description: 'Bedouin Dwelling' },
+            { id: 'desert_cliff', name: 'Desert Cliff', icon: '⛰️', color: 'warning', type: 'glb', url: '/static/models/desert_western_cliff_high.glb', description: 'Sandstone Formation' },
+            { id: 'desert_rock', name: 'Ledge Rock', icon: '🪨', color: 'secondary', type: 'glb', url: '/static/models/desert_western_ledge_rock.glb', description: 'Natural Formation' }
+        ]
+    };
     
-    const artifactHotspots = [
-        { id: 101, x: 50, y: 45, title: "🏺 Pottery Details", desc: "Thin-walled ceramic with elegant painted designs.", audio: "Nabataean pottery is known for its exceptionally thin walls and delicate decorations." },
-        { id: 102, x: 50, y: 55, title: "🪔 Lamp Spout", desc: "The nozzle where the wick was placed to produce light.", audio: "Oil lamps like this one were filled with olive oil, with a wick protruding from this spout." }
-    ];
-    
-    const desertHotspots = [
-        { id: 201, x: 50, y: 40, title: "🐪 Camel Hump", desc: "Stores fat for energy during long desert journeys.", audio: "The camel's hump stores fat, not water. This allows camels to survive for weeks without food." },
-        { id: 202, x: 50, y: 60, title: "🏜️ Sand Dunes", desc: "Wind-carved sand formations typical of the AlUla desert.", audio: "These sand dunes are constantly reshaped by the wind, creating the ever-changing desert landscape." }
-    ];
-    
-    let currentHotspots = siteHotspots;
-    let currentHotspotAudio = "";
-    
-    // ==================== STORIES DATA ====================
+    // Stories
     const stories = {
         qasr_al_farid: { en: "Qasr al-Farid, The Lonely Castle of Hegra, is the most iconic tomb at Saudi Arabia's first UNESCO World Heritage Site. Carved entirely from a single sandstone monolith in the 1st century CE for Lihyan, son of Kuza.", ar: "قصر الفريد، القصر الوحيد في الحجر، هو أشهر مقبرة في أول موقع تراث عالمي لليونسكو." },
-        roman_oil_lamp: { en: "This Roman oil lamp from Taracco, dating to the 1st-2nd century CE, was essential for daily life. These lamps illuminated homes, temples, and tombs.", ar: "هذا المصباح الزيتي الروماني من تاراكو كان ضرورياً للحياة اليومية." },
+        roman_oil_lamp: { en: "This Roman oil lamp from Taracco, dating to the 1st-2nd century CE, was essential for daily life.", ar: "هذا المصباح الزيتي الروماني من تاراكو كان ضرورياً للحياة اليومية." },
         ancient_pottery: { en: "This Nabataean pottery set represents the famous thin-walled ceramics traded across the ancient world.", ar: "تمثل مجموعة الفخار النبطي هذه الفخار الشهير." },
         dallah_coffee: { en: "The Dallah is an iconic Arabian coffee pot, symbol of hospitality and generosity in Arab culture.", ar: "الدلة هي وعاء قهوة عربي أيقوني، رمز الكرم والضيافة." },
         camel: { en: "The Arabian camel, known as the 'Ship of the Desert,' was essential for survival and trade in ancient Arabia.", ar: "الجمل العربي، المعروف بـ'سفينة الصحراء'، كان ضرورياً للبقاء." },
@@ -379,22 +253,113 @@
         desert_rock: { en: "These natural rock formations were shaped by wind and water over thousands of years.", ar: "هذه التكوينات الصخرية شكلتها الرياح والمياه." }
     };
     
-    // ==================== MODEL URLS ====================
-    const modelUrls = {
-        qasr_al_farid: { type: "sketchfab", url: "9b18367aac28420bbc066d65e73b9acd" },
-        roman_oil_lamp: { type: "glb", url: "/static/models/roman_oil_lamp_tarraco.glb" },
-        ancient_pottery: { type: "glb", url: "/static/models/ancient_pottery_set.glb" },
-        dallah_coffee: { type: "glb", url: "/static/models/dallah_arabian_coffee_pot.glb" },
-        camel: { type: "glb", url: "/static/models/camel.glb" },
-        oasis: { type: "glb", url: "/static/models/osais.glb" },
-        tent: { type: "glb", url: "/static/models/tent_arab.glb" },
-        desert_cliff: { type: "glb", url: "/static/models/desert_western_cliff_high.glb" },
-        desert_rock: { type: "glb", url: "/static/models/desert_western_ledge_rock.glb" }
-    };
-    
     // Initialize speech synthesis
     if ('speechSynthesis' in window) {
         speechSynth = window.speechSynthesis;
+    }
+    
+    // ==================== LOAD AI RECOMMENDATIONS ====================
+    async function loadAIRecommendations() {
+        try {
+            const response = await fetch('/api/recommendations/v2');
+            const data = await response.json();
+            
+            const section = document.getElementById('aiRecommendationsSection');
+            const row = document.getElementById('aiRecommendationsRow');
+            
+            if (data.recommendations && data.recommendations.length > 0) {
+                section.style.display = 'block';
+                
+                row.innerHTML = data.recommendations.slice(0, 3).map(rec => `
+                    <div class="col-md-4">
+                        <div class="card h-100 border-warning shadow-sm">
+                            <div class="card-body text-center">
+                                <div class="position-absolute top-0 end-0 m-2">
+                                    <span class="badge bg-warning">${rec.similarity_score}% match</span>
+                                </div>
+                                <i class="bi bi-star-fill text-warning fs-1"></i>
+                                <h6 class="mt-2 fw-bold">${rec.name}</h6>
+                                <p class="small text-muted">AI Recommended</p>
+                                <button class="btn btn-sm btn-warning w-100 explore-btn" onclick='loadModelById(${rec.id}, "${rec.name}")'>
+                                    <i class="bi bi-vr"></i> Explore Now
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        } catch (error) {
+            console.error('Error loading AI recommendations:', error);
+        }
+    }
+    
+    // ==================== LOAD HERITAGE ITEMS ====================
+    function loadHeritageItems() {
+        // Load sites
+        const sitesRow = document.getElementById('sitesRow');
+        sitesRow.innerHTML = heritageItems.sites.map(item => `
+            <div class="col-md-6 col-lg-4">
+                <div class="card model-card h-100" data-model-id="${item.id}">
+                    <div class="card-body text-center p-2">
+                        <i class="bi bi-building fs-2 text-${item.color}"></i>
+                        <h6 class="fw-bold mt-1 mb-0">${item.icon} ${item.name}</h6>
+                        <p class="small text-muted mb-1">${item.description}</p>
+                        <div class="model-stats small mb-1">
+                            <span class="badge bg-secondary"><i class="bi bi-clock"></i> <span class="time-spent">0</span> min</span>
+                            <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
+                        </div>
+                        <div class="progress mb-1" style="height: 3px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
+                        <button class="btn btn-sm btn-outline-${item.color} w-100 explore-btn" onclick='loadModel("${item.id}", "${item.name}", "${item.type}", "${item.url}")'>
+                            <i class="bi bi-vr"></i> Explore
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+        
+        // Load artifacts
+        const artifactsRow = document.getElementById('artifactsRow');
+        artifactsRow.innerHTML = heritageItems.artifacts.map(item => `
+            <div class="col-md-6 col-lg-4">
+                <div class="card artifact-card h-100" data-model-id="${item.id}">
+                    <div class="card-body text-center p-2">
+                        <i class="bi bi-cup-straw fs-2 text-${item.color}"></i>
+                        <h6 class="fw-bold mt-1 mb-0">${item.icon} ${item.name}</h6>
+                        <p class="small text-muted mb-1">${item.description}</p>
+                        <div class="model-stats small mb-1">
+                            <span class="badge bg-secondary"><i class="bi bi-clock"></i> <span class="time-spent">0</span> min</span>
+                            <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
+                        </div>
+                        <div class="progress mb-1" style="height: 3px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
+                        <button class="btn btn-sm btn-outline-${item.color} w-100 explore-btn" onclick='loadModel("${item.id}", "${item.name}", "${item.type}", "${item.url}")'>
+                            <i class="bi bi-vr"></i> View in 3D
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+        
+        // Load desert items
+        const desertRow = document.getElementById('desertRow');
+        desertRow.innerHTML = heritageItems.desert.map(item => `
+            <div class="col-md-6 col-lg-4">
+                <div class="card desert-card h-100" data-model-id="${item.id}">
+                    <div class="card-body text-center p-2">
+                        <i class="bi bi-eyedropper fs-2 text-${item.color}"></i>
+                        <h6 class="fw-bold mt-1 mb-0">${item.icon} ${item.name}</h6>
+                        <p class="small text-muted mb-1">${item.description}</p>
+                        <div class="model-stats small mb-1">
+                            <span class="badge bg-secondary"><i class="bi bi-clock"></i> <span class="time-spent">0</span> min</span>
+                            <span class="badge bg-info ms-1"><i class="bi bi-headphones"></i> <span class="stories-count">0</span></span>
+                        </div>
+                        <div class="progress mb-1" style="height: 3px;"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
+                        <button class="btn btn-sm btn-outline-${item.color} w-100 explore-btn" onclick='loadModel("${item.id}", "${item.name}", "${item.type}", "${item.url}")'>
+                            <i class="bi bi-vr"></i> View in 3D
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
     }
     
     // ==================== TAB FUNCTIONS ====================
@@ -405,172 +370,66 @@
         
         if (tab === 'sites') {
             document.getElementById('sitesTab').style.display = 'block';
-            currentHotspots = siteHotspots;
-            updateTabButtons('tabSitesBtn', 'tabArtifactsBtn', 'tabDesertBtn');
+            document.getElementById('tabSitesBtn').classList.add('btn-warning');
+            document.getElementById('tabSitesBtn').classList.remove('btn-outline-warning');
+            document.getElementById('tabArtifactsBtn').classList.add('btn-outline-warning');
+            document.getElementById('tabArtifactsBtn').classList.remove('btn-warning');
+            document.getElementById('tabDesertBtn').classList.add('btn-outline-warning');
+            document.getElementById('tabDesertBtn').classList.remove('btn-warning');
         } else if (tab === 'artifacts') {
             document.getElementById('artifactsTab').style.display = 'block';
-            currentHotspots = artifactHotspots;
-            updateTabButtons('tabArtifactsBtn', 'tabSitesBtn', 'tabDesertBtn');
+            document.getElementById('tabArtifactsBtn').classList.add('btn-warning');
+            document.getElementById('tabArtifactsBtn').classList.remove('btn-outline-warning');
+            document.getElementById('tabSitesBtn').classList.add('btn-outline-warning');
+            document.getElementById('tabSitesBtn').classList.remove('btn-warning');
+            document.getElementById('tabDesertBtn').classList.add('btn-outline-warning');
+            document.getElementById('tabDesertBtn').classList.remove('btn-warning');
         } else if (tab === 'desert') {
             document.getElementById('desertTab').style.display = 'block';
-            currentHotspots = desertHotspots;
-            updateTabButtons('tabDesertBtn', 'tabSitesBtn', 'tabArtifactsBtn');
-        }
-        
-        if (hotspotsVisible) {
-            showHotspots();
+            document.getElementById('tabDesertBtn').classList.add('btn-warning');
+            document.getElementById('tabDesertBtn').classList.remove('btn-outline-warning');
+            document.getElementById('tabSitesBtn').classList.add('btn-outline-warning');
+            document.getElementById('tabSitesBtn').classList.remove('btn-warning');
+            document.getElementById('tabArtifactsBtn').classList.add('btn-outline-warning');
+            document.getElementById('tabArtifactsBtn').classList.remove('btn-warning');
         }
     }
     
-    function updateTabButtons(activeBtn, btn2, btn3) {
-        document.getElementById(activeBtn).classList.add('btn-warning');
-        document.getElementById(activeBtn).classList.remove('btn-outline-warning');
-        document.getElementById(btn2).classList.add('btn-outline-warning');
-        document.getElementById(btn2).classList.remove('btn-warning');
-        document.getElementById(btn3).classList.add('btn-outline-warning');
-        document.getElementById(btn3).classList.remove('btn-warning');
-    }
-    
-    // ==================== AMBIENT SOUND FUNCTIONS ====================
-    function playAmbientSound(type) {
-        if (ambientAudio) {
-            ambientAudio.pause();
-            ambientAudio = null;
-        }
+    // ==================== LOAD MODEL ====================
+    function loadModel(modelId, modelName, modelType, modelUrl) {
+        const container = document.getElementById('modelContainer');
+        currentModelId = modelId;
+        currentStoryTitle = modelName;
         
-        if (!ambientSounds[type]) {
-            console.warn(`Sound file for type "${type}" not found`);
-            return;
-        }
+        const story = stories[modelId];
+        currentStoryText = story ? (currentLanguage === 'en' ? story.en : story.ar) : (currentLanguage === 'en' ? modelName : modelName);
         
-        ambientAudio = new Audio(ambientSounds[type]);
-        ambientAudio.loop = true;
-        ambientAudio.volume = 0.25;
-        
-        ambientAudio.play().catch(e => console.log("Auto-play prevented"));
-        isAmbientPlaying = true;
-        currentAmbientType = type;
-    }
-    
-    function stopAmbientSound() {
-        if (ambientAudio) {
-            ambientAudio.pause();
-            ambientAudio = null;
-        }
-        isAmbientPlaying = false;
-    }
-    
-    function toggleAmbientSound() {
-        const btn = document.getElementById('toggleAmbientBtn');
-        
-        if (isAmbientPlaying) {
-            stopAmbientSound();
-            if (btn) {
-                btn.innerHTML = '<i class="bi bi-volume-up"></i> 🎵 Ambience';
-                btn.style.background = 'rgba(255,255,255,0.15)';
-            }
+        if (modelType === 'sketchfab') {
+            container.innerHTML = `<iframe src="https://sketchfab.com/models/${modelUrl}/embed" frameborder="0" allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen style="width:100%; height:60vh; min-height:450px; background: #0a0a0a; border-radius: 12px;"></iframe>`;
         } else {
-            playAmbientSound(currentAmbientType);
-            if (btn) {
-                btn.innerHTML = '<i class="bi bi-volume-up-fill"></i> 🎵 ON';
-                btn.style.background = 'rgba(218,165,32,0.4)';
-            }
-        }
-    }
-    
-    function updateAmbientByModel(modelId) {
-        let soundType = 'desert';
-        
-        switch(modelId) {
-            case 'camel':
-            case 'tent':
-            case 'desert_cliff':
-            case 'desert_rock':
-                soundType = 'sandstorm';
-                break;
-            case 'roman_oil_lamp':
-            case 'ancient_pottery':
-            case 'dallah_coffee':
-                soundType = 'whisper';
-                break;
-            default:
-                soundType = 'desert';
+            container.innerHTML = `<model-viewer src="${modelUrl}" ar ar-modes="webxr scene-viewer quick-look" camera-controls auto-rotate style="width:100%; height:60vh; min-height:450px; background: #1a1a1a; border-radius: 12px;"><button slot="ar-button" style="background: #DAA520; border: none; color: white; padding: 8px 16px; border-radius: 30px; font-size: 12px;">🕶️ View in AR</button></model-viewer>`;
         }
         
-        currentAmbientType = soundType;
-        if (isAmbientPlaying) {
-            playAmbientSound(soundType);
+        setTimeout(() => {
+            showStoryPanel();
+            playSpeech(currentStoryText, modelId);
+            recordExploration(modelId, 1, 0);
+        }, 500);
+    }
+    
+    function loadModelById(modelId, modelName) {
+        // Find model details
+        let modelDetails = null;
+        for (let category in heritageItems) {
+            modelDetails = heritageItems[category].find(m => m.id == modelId);
+            if (modelDetails) break;
+        }
+        if (modelDetails) {
+            loadModel(modelDetails.id, modelDetails.name, modelDetails.type, modelDetails.url);
         }
     }
     
-    // ==================== HOTSPOTS FUNCTIONS ====================
-    function toggleHotspots() {
-        hotspotsVisible = !hotspotsVisible;
-        const btn = document.getElementById('toggleHotspotsBtn');
-        
-        if (hotspotsVisible) {
-            showHotspots();
-            btn.style.background = 'rgba(218,165,32,0.4)';
-        } else {
-            hideHotspots();
-            btn.style.background = 'rgba(255,255,255,0.15)';
-        }
-    }
-    
-    function showHotspots() {
-        const overlay = document.getElementById('hotspotsOverlay');
-        overlay.innerHTML = '';
-        overlay.style.pointerEvents = 'auto';
-        
-        currentHotspots.forEach(hotspot => {
-            const marker = document.createElement('div');
-            marker.style.position = 'absolute';
-            marker.style.left = hotspot.x + '%';
-            marker.style.top = hotspot.y + '%';
-            marker.style.transform = 'translate(-50%, -50%)';
-            marker.style.width = '30px';
-            marker.style.height = '30px';
-            marker.style.cursor = 'pointer';
-            marker.style.zIndex = '20';
-            marker.innerHTML = '<div style="width:100%;height:100%;background:#DAA520;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 0 8px rgba(218,165,32,0.8);animation:pulse 1.5s infinite;">📍</div>';
-            marker.onclick = () => showHotspotInfo(hotspot);
-            overlay.appendChild(marker);
-        });
-    }
-    
-    function hideHotspots() {
-        const overlay = document.getElementById('hotspotsOverlay');
-        overlay.innerHTML = '';
-        overlay.style.pointerEvents = 'none';
-    }
-    
-    function showHotspotInfo(hotspot) {
-        const panel = document.getElementById('hotspotPanel');
-        document.getElementById('hotspotTitle').innerHTML = hotspot.title;
-        document.getElementById('hotspotDesc').innerHTML = hotspot.desc;
-        currentHotspotAudio = hotspot.audio;
-        panel.style.display = 'block';
-        setTimeout(() => { panel.style.transform = 'translateY(0)'; }, 10);
-        setTimeout(() => { playHotspotAudio(); }, 300);
-    }
-    
-    function playHotspotAudio() {
-        if (currentHotspotAudio && speechSynth) {
-            if (isPlaying) speechSynth.cancel();
-            const utterance = new SpeechSynthesisUtterance(currentHotspotAudio);
-            utterance.lang = currentSpeechLang;
-            utterance.rate = 0.85;
-            speechSynth.speak(utterance);
-        }
-    }
-    
-    function closeHotspotPanel() {
-        const panel = document.getElementById('hotspotPanel');
-        panel.style.transform = 'translateY(100%)';
-        setTimeout(() => { panel.style.display = 'none'; }, 300);
-    }
-    
-    // ==================== CARD STATS FUNCTIONS ====================
+    // ==================== RECORD EXPLORATION ====================
     function updateCardStats(modelId, timeSpent, storiesCount) {
         const card = document.querySelector(`.card[data-model-id="${modelId}"]`);
         if (card) {
@@ -676,60 +535,56 @@
         setTimeout(() => { document.getElementById('storyPanel').style.display = 'none'; }, 300);
     }
     
-    // ==================== LOAD MODEL ====================
-    let currentModelId = "";
-    
-    function loadModel(modelId) {
-        const container = document.getElementById('modelContainer');
-        currentModelId = modelId;
-        currentStoryTitle = modelId.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-        
-        const story = stories[modelId];
-        currentStoryText = story ? (currentLanguage === 'en' ? story.en : story.ar) : (currentLanguage === 'en' ? currentStoryTitle : currentStoryTitle);
-        
-        const model = modelUrls[modelId];
-        if (!model) return;
-        
-        if (model.type === 'sketchfab') {
-            container.innerHTML = `<iframe src="https://sketchfab.com/models/${model.url}/embed" frameborder="0" allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen style="width:100%; height:60vh; min-height:450px; background: #0a0a0a; border-radius: 12px;"></iframe>`;
+    // ==================== OTHER FUNCTIONS ====================
+    function toggleAmbientSound() {
+        isAmbientPlaying = !isAmbientPlaying;
+        const btn = document.getElementById('toggleAmbientBtn');
+        if (isAmbientPlaying) {
+            if (!ambientAudio) {
+                ambientAudio = new Audio(ambientSounds.desert);
+                ambientAudio.loop = true;
+                ambientAudio.volume = 0.2;
+            }
+            ambientAudio.play();
+            btn.innerHTML = '<i class="bi bi-volume-up-fill"></i> 🎵 ON';
+            btn.style.background = 'rgba(218,165,32,0.4)';
         } else {
-            container.innerHTML = `<model-viewer src="${model.url}" ar ar-modes="webxr scene-viewer quick-look" camera-controls auto-rotate style="width:100%; height:60vh; min-height:450px; background: #1a1a1a; border-radius: 12px;"><button slot="ar-button" style="background: #DAA520; border: none; color: white; padding: 8px 16px; border-radius: 30px; font-size: 12px;">🕶️ View in AR</button></model-viewer>`;
+            if (ambientAudio) ambientAudio.pause();
+            btn.innerHTML = '<i class="bi bi-volume-up"></i> 🎵 Ambience';
+            btn.style.background = 'rgba(255,255,255,0.15)';
         }
-        
-        // Update hotspots based on model type
-        if (modelId === 'qasr_al_farid') {
-            currentHotspots = siteHotspots;
-        } else if (modelId === 'roman_oil_lamp' || modelId === 'ancient_pottery' || modelId === 'dallah_coffee') {
-            currentHotspots = artifactHotspots;
-        } else {
-            currentHotspots = desertHotspots;
-        }
-        
-        if (hotspotsVisible) {
-            showHotspots();
-        }
-        
-        updateAmbientByModel(modelId);
-        
-        setTimeout(() => {
-            showStoryPanel();
-            playSpeech(currentStoryText, modelId);
-            recordExploration(modelId, 1, 0);
-        }, 500);
     }
     
     function scrollToQR() {
         document.getElementById('qrSection').scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
     
-    // Add pulse animation style
-    const style = document.createElement('style');
-    style.textContent = `@keyframes pulse { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.5); opacity: 0; } }`;
-    document.head.appendChild(style);
+    function toggleHotspots() {
+        hotspotsVisible = !hotspotsVisible;
+        const overlay = document.getElementById('hotspotsOverlay');
+        const btn = document.getElementById('toggleHotspotsBtn');
+        if (hotspotsVisible) {
+            overlay.innerHTML = '<div class="alert alert-info m-3">Hotspots feature coming soon! Click on the 3D model to explore.</div>';
+            btn.style.background = 'rgba(218,165,32,0.4)';
+        } else {
+            overlay.innerHTML = '';
+            btn.style.background = 'rgba(255,255,255,0.15)';
+        }
+    }
+    
+    function playHotspotAudio() {
+        alert('Hotspot audio coming soon!');
+    }
+    
+    function closeHotspotPanel() {
+        document.getElementById('hotspotPanel').style.display = 'none';
+    }
     
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
+        loadHeritageItems();
         showTab('sites');
+        loadAIRecommendations();
     });
 </script>
 
@@ -737,6 +592,7 @@
     body { background: linear-gradient(135deg, #faf8f0, #f0ede5); }
     .model-card, .artifact-card, .desert-card { transition: transform 0.2s; background: white; border-radius: 12px; cursor: pointer; border: 1px solid rgba(0,0,0,0.05); }
     .model-card:hover, .artifact-card:hover, .desert-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+    .btn-gold:hover, .btn-outline-gold:hover { transform: scale(1.05); filter: brightness(1.1); }
     @media (max-width: 768px) { iframe, model-viewer { height: 45vh !important; min-height: 350px; } }
 </style>
 {% endblock %}
