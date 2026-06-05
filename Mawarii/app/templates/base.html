@@ -263,20 +263,6 @@
             }
         }
         
-        /* User Menu */
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #DAA520, #B8860B);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
-        
         /* Responsive */
         @media (max-width: 991px) {
             .navbar-modern {
@@ -332,137 +318,136 @@
                 </div>
             </div>
             
-            <!-- Navigation Menu with Dropdowns -->
+            <!-- Navigation Menu with Dropdowns - Bilingual -->
             <div class="mt-3">
                 <ul class="nav justify-content-center gap-2 flex-wrap">
-                    <!-- Home -->
+                    
+                    <!-- Home / الرئيسية -->
                     <li class="nav-item">
                         <a href="{{ url_for('index') }}" class="nav-link-modern {% if request.endpoint == 'index' %}active{% endif %}">
                             <i class="bi bi-house-fill"></i> 
-                            <span class="en-text">Home</span><span class="ar-text" style="display: none;">الرئيسية</span>
+                            {% if current_lang == 'en' %}Home{% else %}الرئيسية{% endif %}
                         </a>
                     </li>
                     
-                    <!-- Heritage Dropdown -->
+                    <!-- Heritage Experience / تجربة التراث - Dropdown -->
                     <li class="nav-item dropdown-modern">
                         <button class="dropdown-toggle" data-bs-toggle="dropdown">
                             <i class="bi bi-map-fill"></i> 
-                            <span class="en-text">Heritage Experience</span>
-                            <span class="ar-text" style="display: none;">تجربة التراث</span>
+                            {% if current_lang == 'en' %}Heritage Experience{% else %}تجربة التراث{% endif %}
                             <i class="bi bi-chevron-down ms-1"></i>
                         </button>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="{{ url_for('heritage') }}" class="dropdown-item">
                                     <i class="bi bi-vr"></i> 
-                                    <span class="en-text">AR Heritage Explorer</span>
-                                    <span class="ar-text" style="display: none;">مستكشف التراث بالواقع المعزز</span>
+                                    {% if current_lang == 'en' %}AR Heritage Explorer{% else %}مستكشف التراث بالواقع المعزز{% endif %}
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ url_for('virtual_city_tour') }}" class="dropdown-item">
                                     <i class="bi bi-building"></i> 
-                                    <span class="en-text">Virtual City Tour</span>
-                                    <span class="ar-text" style="display: none;">جولة المدينة الافتراضية</span>
+                                    {% if current_lang == 'en' %}Virtual City Tour{% else %}جولة المدينة الافتراضية{% endif %}
                                 </a>
                             </li>
                         </ul>
                     </li>
                     
-                    <!-- User Dropdown (for logged in users) -->
+                    <!-- User Menu for Logged In Users / قائمة المستخدم -->
                     {% if 'user_id' in session or current_user.is_authenticated %}
                     <li class="nav-item dropdown-modern">
                         <button class="dropdown-toggle" data-bs-toggle="dropdown">
                             <i class="bi bi-person-circle"></i> 
-                            <span class="en-text">My Account</span>
-                            <span class="ar-text" style="display: none;">حسابي</span>
+                            {% if current_lang == 'en' %}My Account{% else %}حسابي{% endif %}
                             <i class="bi bi-chevron-down ms-1"></i>
                         </button>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="{{ url_for('dashboard') }}" class="dropdown-item">
                                     <i class="bi bi-speedometer2"></i> 
-                                    <span class="en-text">Dashboard</span>
-                                    <span class="ar-text" style="display: none;">لوحة التحكم</span>
+                                    {% if current_lang == 'en' %}Dashboard{% else %}لوحة التحكم{% endif %}
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ url_for('profile') }}" class="dropdown-item">
                                     <i class="bi bi-person-gear"></i> 
-                                    <span class="en-text">Edit Profile</span>
-                                    <span class="ar-text" style="display: none;">تعديل الملف الشخصي</span>
+                                    {% if current_lang == 'en' %}Edit Profile{% else %}تعديل الملف الشخصي{% endif %}
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ url_for('edit_preferences') }}" class="dropdown-item">
                                     <i class="bi bi-sliders2"></i> 
-                                    <span class="en-text">My Preferences</span>
-                                    <span class="ar-text" style="display: none;">تفضيلاتي</span>
+                                    {% if current_lang == 'en' %}My Preferences{% else %}تفضيلاتي{% endif %}
                                 </a>
                             </li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <a href="{{ url_for('logout') }}" class="dropdown-item text-danger">
                                     <i class="bi bi-box-arrow-right"></i> 
-                                    <span class="en-text">Logout</span>
-                                    <span class="ar-text" style="display: none;">تسجيل خروج</span>
+                                    {% if current_lang == 'en' %}Logout{% else %}تسجيل خروج{% endif %}
                                 </a>
                             </li>
                         </ul>
                     </li>
+                    
+                    <!-- Guest Menu / قائمة الزوار -->
                     {% else %}
-                    <!-- Auth Dropdown (for guests) -->
                     <li class="nav-item dropdown-modern">
                         <button class="dropdown-toggle" data-bs-toggle="dropdown">
                             <i class="bi bi-box-arrow-in-right"></i> 
-                            <span class="en-text">Join Us</span>
-                            <span class="ar-text" style="display: none;">انضم إلينا</span>
+                            {% if current_lang == 'en' %}Join Us{% else %}انضم إلينا{% endif %}
                             <i class="bi bi-chevron-down ms-1"></i>
                         </button>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="{{ url_for('login') }}" class="dropdown-item">
                                     <i class="bi bi-box-arrow-in-right"></i> 
-                                    <span class="en-text">Login</span>
-                                    <span class="ar-text" style="display: none;">دخول</span>
+                                    {% if current_lang == 'en' %}Login{% else %}دخول{% endif %}
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ url_for('register') }}" class="dropdown-item">
                                     <i class="bi bi-person-plus-fill"></i> 
-                                    <span class="en-text">Register</span>
-                                    <span class="ar-text" style="display: none;">تسجيل</span>
+                                    {% if current_lang == 'en' %}Register{% else %}تسجيل{% endif %}
                                 </a>
                             </li>
                         </ul>
                     </li>
                     {% endif %}
                     
-                    <!-- About Dropdown -->
+                    <!-- Info / معلومات - Dropdown -->
                     <li class="nav-item dropdown-modern">
                         <button class="dropdown-toggle" data-bs-toggle="dropdown">
                             <i class="bi bi-info-circle-fill"></i> 
-                            <span class="en-text">Info</span>
-                            <span class="ar-text" style="display: none;">معلومات</span>
+                            {% if current_lang == 'en' %}Info{% else %}معلومات{% endif %}
                             <i class="bi bi-chevron-down ms-1"></i>
                         </button>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="{{ url_for('about') }}" class="dropdown-item">
                                     <i class="bi bi-quote"></i> 
-                                    <span class="en-text">About Mawari</span>
-                                    <span class="ar-text" style="display: none;">عن مواري</span>
+                                    {% if current_lang == 'en' %}About Mawari{% else %}عن مواري{% endif %}
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ url_for('contact') }}" class="dropdown-item">
                                     <i class="bi bi-envelope-fill"></i> 
-                                    <span class="en-text">Contact Us</span>
-                                    <span class="ar-text" style="display: none;">اتصل بنا</span>
+                                    {% if current_lang == 'en' %}Contact Us{% else %}اتصل بنا{% endif %}
                                 </a>
                             </li>
                         </ul>
                     </li>
+                    
+                    <!-- Admin Dashboard (Visible only to admins) / لوحة تحكم المشرف -->
+                    {% if current_user.is_authenticated and current_user.is_admin() %}
+                    <li class="nav-item">
+                        <a href="{{ url_for('admin_dashboard') }}" class="nav-link-modern">
+                            <i class="bi bi-shield-lock-fill"></i> 
+                            {% if current_lang == 'en' %}Admin{% else %}المشرف{% endif %}
+                        </a>
+                    </li>
+                    {% endif %}
+                    
                 </ul>
             </div>
         </div>
@@ -495,31 +480,32 @@
                 <div class="col-md-4 mb-3">
                     <h5><i class="bi bi-gem"></i> Mawari</h5>
                     <p class="small opacity-75">
-                        <span class="en-text">Preserving AlUla's heritage through Augmented Reality</span>
-                        <span class="ar-text" style="display: none;">الحفاظ على تراث العلا من خلال الواقع المعزز</span>
+                        {% if current_lang == 'en' %}Preserving AlUla's heritage through Augmented Reality{% else %}الحفاظ على تراث العلا من خلال الواقع المعزز{% endif %}
                     </p>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <h5><i class="bi bi-link-45deg"></i> <span class="en-text">Quick Links</span><span class="ar-text" style="display: none;">روابط سريعة</span></h5>
+                    <h5><i class="bi bi-link-45deg"></i> 
+                        {% if current_lang == 'en' %}Quick Links{% else %}روابط سريعة{% endif %}
+                    </h5>
                     <ul class="list-unstyled small">
-                        <li><a href="{{ url_for('heritage') }}" class="text-decoration-none opacity-75">🎨 <span class="en-text">AR Experience</span><span class="ar-text" style="display: none;">تجربة الواقع المعزز</span></a></li>
-                        <li><a href="{{ url_for('virtual_city_tour') }}" class="text-decoration-none opacity-75">🏙️ <span class="en-text">Virtual Tour</span><span class="ar-text" style="display: none;">جولة افتراضية</span></a></li>
-                        <li><a href="{{ url_for('about') }}" class="text-decoration-none opacity-75">📖 <span class="en-text">Our Story</span><span class="ar-text" style="display: none;">قصتنا</span></a></li>
+                        <li><a href="{{ url_for('heritage') }}" class="text-decoration-none opacity-75">🎨 {% if current_lang == 'en' %}AR Experience{% else %}تجربة الواقع المعزز{% endif %}</a></li>
+                        <li><a href="{{ url_for('virtual_city_tour') }}" class="text-decoration-none opacity-75">🏙️ {% if current_lang == 'en' %}Virtual Tour{% else %}جولة افتراضية{% endif %}</a></li>
+                        <li><a href="{{ url_for('about') }}" class="text-decoration-none opacity-75">📖 {% if current_lang == 'en' %}Our Story{% else %}قصتنا{% endif %}</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <h5><i class="bi bi-people-fill"></i> <span class="en-text">Team</span><span class="ar-text" style="display: none;">الفريق</span></h5>
+                    <h5><i class="bi bi-people-fill"></i> 
+                        {% if current_lang == 'en' %}Team{% else %}الفريق{% endif %}
+                    </h5>
                     <p class="small opacity-75">
-                        <span class="en-text">10th Level Computer Science</span><br>
-                        <span class="ar-text" style="display: none;">المستوى العاشر علوم حاسوب</span>
-                        <span class="en-text">University College of Ranyah</span>
-                        <span class="ar-text" style="display: none;">الكلية الجامعية برنية</span>
+                        {% if current_lang == 'en' %}10th Level Computer Science{% else %}المستوى العاشر علوم حاسوب{% endif %}<br>
+                        {% if current_lang == 'en' %}University College of Ranyah{% else %}الكلية الجامعية برنية{% endif %}
                     </p>
                 </div>
             </div>
             <hr class="opacity-25">
             <p class="small mb-0 opacity-50">
-                &copy; 2025 Mawari. <span class="en-text">All rights reserved.</span><span class="ar-text" style="display: none;">جميع الحقوق محفوظة.</span>
+                &copy; 2025 Mawari. {% if current_lang == 'en' %}All rights reserved.{% else %}جميع الحقوق محفوظة.{% endif %}
             </p>
         </div>
     </footer>
