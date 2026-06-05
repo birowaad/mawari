@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="display-5 fw-bold" style="color: #DAA520;">
+                <i class="bi bi-people-fill"></i> 
+                {% if current_lang == 'en' %}User Management{% else %}إدارة المستخدمين{% endif %}
+            </h1>
+            <p class="text-muted">
+                {% if current_lang == 'en' %}Manage registered users, their roles, and permissions{% else %}إدارة المستخدمين المسجلين وأدوارهم وصلاحياتهم{% endif %}
+            </p>
+        </div>
+        <div>
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> 
+                {% if current_lang == 'en' %}Back{% else %}رجوع{% endif %}
+            </a>
+        </div>
+    </div>
+
+    <!-- Users Table -->
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>{% if current_lang == 'en' %}Username{% else %}اسم المستخدم{% endif %}</th>
+                            <th>{% if current_lang == 'en' %}Email{% else %}البريد الإلكتروني{% endif %}</th>
+                            <th>{% if current_lang == 'en' %}Role{% else %}الدور{% endif %}</th>
+                            <th>{% if current_lang == 'en' %}Interests{% else %}الاهتمامات{% endif %}</th>
+                            <th>{% if current_lang == 'en' %}Joined{% else %}تاريخ التسجيل{% endif %}</th>
+                            <th>{% if current_lang == 'en' %}Actions{% else %}الإجراءات{% endif %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td><strong>{{ user.username }}</strong></td>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                {% if user.role == 'admin' %}
+                                    <span class="badge bg-warning text-dark">Admin</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">User</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if user.interests %}
+                                    <span class="badge bg-info">{{ user.interests[:30] }}{% if user.interests|length > 30 %}...{% endif %}</span>
+                                {% else %}
+                                    <span class="badge bg-light text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ user.created_at.strftime('%Y-%m-%d') if user.created_at else '-' }}</td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    {% if user.id != current_user.id %}
+                                        <form method="POST" action="{{ url_for('admin_toggle_admin', user_id=user.id) }}" style="display: inline;">
+                                            <button type="submit" class="btn btn-outline-warning" 
+                                                    onclick="return confirm('{% if current_lang == 'en' %}Change user role?{% else %}تغيير دور المستخدم؟{% endif %}')">
+                                                <i class="bi bi-shield"></i>
+                                            </button>
+                                        </form>
+                                        <form method="POST" action="{{ url_for('admin_delete_user', user_id=user.id) }}" style="display: inline;">
+                                            <button type="submit" class="btn btn-outline-danger" 
+                                                    onclick="return confirm('{% if current_lang == 'en' %}Delete this user? This action cannot be undone.{% else %}حذف هذا المستخدم؟ هذا الإجراء لا يمكن التراجع عنه.{% endif %}')">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    {% else %}
+                                        <button class="btn btn-outline-secondary" disabled>
+                                            <i class="bi bi-person-circle"></i>
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="7" class="text-center text-muted py-4">
+                                <i class="bi bi-info-circle"></i> {% if current_lang == 'en' %}No users found{% else %}لا يوجد مستخدمين{% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
