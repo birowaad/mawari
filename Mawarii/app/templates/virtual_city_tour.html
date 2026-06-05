@@ -1,316 +1,216 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container-fluid px-0">
+<div class="container my-4">
 
     <!-- Header -->
-    <div class="text-center py-3" style="background: linear-gradient(135deg, #1a1a2e, #16213e); color: white;">
-        <div class="d-flex justify-content-between align-items-center px-4">
-            <div>
-                <span class="badge bg-warning text-dark">
-                    <i class="bi bi-trophy-fill"></i> 
-                    <span id="userPoints">0</span> 
-                    {% if current_lang == 'en' %}Points{% else %}نقطة{% endif %}
-                </span>
-            </div>
-            <div>
-                <h1 class="display-6 fw-bold">
-                    {% if current_lang == 'en' %}🏙️ AlUla Virtual Heritage Tour{% else %}🏙️ جولة تراث العلا الافتراضية{% endif %}
-                </h1>
-                <p>
-                    {% if current_lang == 'en' %}Explore Ancient Sites, Earn Points & Discover Hidden Treasures{% else %}استكشف المواقع القديمة، اجمع النقاط، واكتشف الكنوز المخفية{% endif %}
-                </p>
-            </div>
-            <div>
-                <span class="badge bg-gradient" style="background: linear-gradient(135deg, #DAA520, #B8860B);">
-                    <i class="bi bi-robot"></i> 
-                    {% if current_lang == 'en' %}AI Agent Active{% else %}الوكيل الذكي نشط{% endif %}
-                </span>
-            </div>
+    <div class="text-center mb-4">
+        <h1 class="display-5 fw-bold" style="color: #DAA520;">
+            🏙️ AlUla Virtual Heritage Tour
+        </h1>
+        <p>Explore Ancient Sites, Earn Points & Discover Hidden Treasures</p>
+        <div class="d-flex justify-content-center gap-3">
+            <span class="badge bg-warning text-dark p-2">
+                <i class="bi bi-trophy-fill"></i> Points: <span id="userPoints">0</span>
+            </span>
+            <span class="badge bg-info text-dark p-2">
+                <i class="bi bi-robot"></i> AI Agent Active
+            </span>
         </div>
     </div>
 
     <!-- Main 3D Viewer -->
-    <div class="row mx-0 py-3" style="background: #1a1a2e;">
-        <div class="col-12">
-            <div class="position-relative">
-                <div class="bg-dark p-2 rounded-4">
-                    <div id="modelViewerContainer" style="height: 450px; background: #0a0a0a; border-radius: 12px;">
-                        <model-viewer
-                            id="mainViewer"
-                            src="https://threejs.org/examples/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf"
-                            ar
-                            ar-modes="webxr scene-viewer quick-look"
-                            camera-controls
-                            auto-rotate
-                            style="width:100%; height:450px; background: #1a1a1a; border-radius: 12px;">
-                            <button slot="ar-button" style="background: #DAA520; border: none; color: white; padding: 8px 16px; border-radius: 30px;">
-                                {% if current_lang == 'en' %}🕶️ View in AR{% else %}🕶️ عرض بالواقع المعزز{% endif %}
-                            </button>
-                        </model-viewer>
-                    </div>
-                </div>
-                
-                <!-- Floating Points Panel -->
-                <div class="position-absolute top-0 start-0 m-3">
-                    <div class="card bg-dark bg-opacity-75 text-white p-2">
-                        <small><i class="bi bi-star-fill text-warning"></i> 
-                            {% if current_lang == 'en' %}Points:{% else %}النقاط:{% endif %} 
-                            <span id="floatingPoints">0</span>
-                        </small>
-                        <small><i class="bi bi-trophy-fill text-warning"></i> 
-                            {% if current_lang == 'en' %}Level:{% else %}المستوى:{% endif %} 
-                            <span id="userLevel">Explorer</span>
-                        </small>
-                    </div>
-                </div>
+    <div class="card shadow-lg border-0 rounded-4 mb-4">
+        <div class="card-body p-0">
+            <div id="modelViewerContainer" style="height: 400px; background: #1a1a1a; border-radius: 16px; overflow: hidden;">
+                <model-viewer
+                    id="mainViewer"
+                    src="https://threejs.org/examples/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf"
+                    ar
+                    ar-modes="webxr scene-viewer quick-look"
+                    camera-controls
+                    auto-rotate
+                    style="width:100%; height:400px; background: #1a1a1a;">
+                    <button slot="ar-button" style="background: #DAA520; border: none; color: white; padding: 8px 16px; border-radius: 30px;">🕶️ View in AR</button>
+                </model-viewer>
             </div>
         </div>
     </div>
 
     <!-- Heritage Locations Grid -->
-    <div class="container my-4">
-        <h3 class="text-center mb-4">
-            <i class="bi bi-geo-alt-fill text-warning"></i> 
-            {% if current_lang == 'en' %}🏛️ Explore AlUla's Heritage Sites{% else %}🏛️ اكتشف مواقع تراث العلا{% endif %}
-        </h3>
-        <div class="row g-4" id="locationsGrid">
-            <!-- Location 1: Qasr al-Farid -->
-            <div class="col-md-4 location-card" data-location-id="1" data-points="50">
-                <div class="card h-100 shadow-sm border-0 rounded-4">
-                    <div class="card-body text-center">
-                        <div class="position-relative">
-                            <i class="bi bi-building fs-1 text-primary"></i>
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">50 pts</span>
-                        </div>
-                        <h5 class="mt-2">🏛️ Qasr al-Farid</h5>
-                        <p class="small text-muted">The Lonely Castle of Hegra | 1st Century CE</p>
-                        <div class="d-flex justify-content-center gap-2 mb-2">
-                            <span class="badge bg-info"><i class="bi bi-clock"></i> 5 min</span>
-                            <span class="badge bg-success"><i class="bi bi-star"></i> UNESCO</span>
-                        </div>
-                        <button class="btn btn-sm btn-warning explore-location w-100" onclick="exploreLocation(1, 'Qasr al-Farid', 50)">
-                            <i class="bi bi-vr"></i> {% if current_lang == 'en' %}Explore & Earn Points{% else %}استكشف واكسب النقاط{% endif %}
-                        </button>
-                        <div class="mt-2">
-                            <small class="text-muted completed-badge" style="display: none;">✅ {% if current_lang == 'en' %}Completed{% else %}مكتمل{% endif %}</small>
-                        </div>
-                    </div>
+    <div class="row g-4 mb-4">
+        <!-- Site 1 -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm text-center p-3" data-id="1" data-points="50">
+                <i class="bi bi-building fs-1 text-primary"></i>
+                <h5 class="mt-2">🏛️ Qasr al-Farid</h5>
+                <p class="small text-muted">The Lonely Castle | 1st Century CE</p>
+                <div class="mb-2">
+                    <span class="badge bg-info">5 min</span>
+                    <span class="badge bg-warning ms-1">50 pts</span>
+                </div>
+                <button class="btn btn-sm btn-warning explore-btn" onclick="exploreLocation(1, 'Qasr al-Farid', 50, this)">
+                    <i class="bi bi-vr"></i> Explore & Earn Points
+                </button>
+                <div class="mt-2 completed-badge" style="display: none;">
+                    <span class="badge bg-success">✅ Completed</span>
                 </div>
             </div>
+        </div>
 
-            <!-- Location 2: AlUla Old Town -->
-            <div class="col-md-4 location-card" data-location-id="2" data-points="40">
-                <div class="card h-100 shadow-sm border-0 rounded-4">
-                    <div class="card-body text-center">
-                        <div class="position-relative">
-                            <i class="bi bi-shop fs-1 text-success"></i>
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">40 pts</span>
-                        </div>
-                        <h5 class="mt-2">🏘️ AlUla Old Town</h5>
-                        <p class="small text-muted">Ancient Mudbrick Village | 12th Century</p>
-                        <div class="d-flex justify-content-center gap-2 mb-2">
-                            <span class="badge bg-info"><i class="bi bi-clock"></i> 6 min</span>
-                            <span class="badge bg-success"><i class="bi bi-star"></i> Heritage Site</span>
-                        </div>
-                        <button class="btn btn-sm btn-warning explore-location w-100" onclick="exploreLocation(2, 'AlUla Old Town', 40)">
-                            <i class="bi bi-vr"></i> {% if current_lang == 'en' %}Explore & Earn Points{% else %}استكشف واكسب النقاط{% endif %}
-                        </button>
-                        <div class="mt-2">
-                            <small class="text-muted completed-badge" style="display: none;">✅ {% if current_lang == 'en' %}Completed{% else %}مكتمل{% endif %}</small>
-                        </div>
-                    </div>
+        <!-- Site 2 -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm text-center p-3" data-id="2" data-points="40">
+                <i class="bi bi-shop fs-1 text-success"></i>
+                <h5 class="mt-2">🏘️ AlUla Old Town</h5>
+                <p class="small text-muted">Ancient Mudbrick Village | 12th Century</p>
+                <div class="mb-2">
+                    <span class="badge bg-info">6 min</span>
+                    <span class="badge bg-warning ms-1">40 pts</span>
+                </div>
+                <button class="btn btn-sm btn-warning explore-btn" onclick="exploreLocation(2, 'AlUla Old Town', 40, this)">
+                    <i class="bi bi-vr"></i> Explore & Earn Points
+                </button>
+                <div class="mt-2 completed-badge" style="display: none;">
+                    <span class="badge bg-success">✅ Completed</span>
                 </div>
             </div>
+        </div>
 
-            <!-- Location 3: Hegra Tombs -->
-            <div class="col-md-4 location-card" data-location-id="3" data-points="60">
-                <div class="card h-100 shadow-sm border-0 rounded-4">
-                    <div class="card-body text-center">
-                        <div class="position-relative">
-                            <i class="bi bi-tree-fill fs-1 text-danger"></i>
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">60 pts</span>
-                        </div>
-                        <h5 class="mt-2">🗿 Hegra Tombs</h5>
-                        <p class="small text-muted">Nabataean Necropolis | UNESCO Site</p>
-                        <div class="d-flex justify-content-center gap-2 mb-2">
-                            <span class="badge bg-info"><i class="bi bi-clock"></i> 8 min</span>
-                            <span class="badge bg-success"><i class="bi bi-star"></i> World Heritage</span>
-                        </div>
-                        <button class="btn btn-sm btn-warning explore-location w-100" onclick="exploreLocation(3, 'Hegra Tombs', 60)">
-                            <i class="bi bi-vr"></i> {% if current_lang == 'en' %}Explore & Earn Points{% else %}استكشف واكسب النقاط{% endif %}
-                        </button>
-                        <div class="mt-2">
-                            <small class="text-muted completed-badge" style="display: none;">✅ {% if current_lang == 'en' %}Completed{% else %}مكتمل{% endif %}</small>
-                        </div>
-                    </div>
+        <!-- Site 3 -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm text-center p-3" data-id="3" data-points="60">
+                <i class="bi bi-tree-fill fs-1 text-danger"></i>
+                <h5 class="mt-2">🗿 Hegra Tombs</h5>
+                <p class="small text-muted">Nabataean Necropolis | UNESCO Site</p>
+                <div class="mb-2">
+                    <span class="badge bg-info">8 min</span>
+                    <span class="badge bg-warning ms-1">60 pts</span>
+                </div>
+                <button class="btn btn-sm btn-warning explore-btn" onclick="exploreLocation(3, 'Hegra Tombs', 60, this)">
+                    <i class="bi bi-vr"></i> Explore & Earn Points
+                </button>
+                <div class="mt-2 completed-badge" style="display: none;">
+                    <span class="badge bg-success">✅ Completed</span>
                 </div>
             </div>
+        </div>
 
-            <!-- Location 4: Dadan Lion Tombs -->
-            <div class="col-md-4 location-card" data-location-id="4" data-points="45">
-                <div class="card h-100 shadow-sm border-0 rounded-4">
-                    <div class="card-body text-center">
-                        <div class="position-relative">
-                            <i class="bi bi-crop fs-1 text-warning"></i>
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">45 pts</span>
-                        </div>
-                        <h5 class="mt-2">🦁 Dadan Lion Tombs</h5>
-                        <p class="small text-muted">Lihyanite Royal Tombs | 6th Century BCE</p>
-                        <div class="d-flex justify-content-center gap-2 mb-2">
-                            <span class="badge bg-info"><i class="bi bi-clock"></i> 7 min</span>
-                            <span class="badge bg-success"><i class="bi bi-star"></i> Archaeological</span>
-                        </div>
-                        <button class="btn btn-sm btn-warning explore-location w-100" onclick="exploreLocation(4, 'Dadan Lion Tombs', 45)">
-                            <i class="bi bi-vr"></i> {% if current_lang == 'en' %}Explore & Earn Points{% else %}استكشف واكسب النقاط{% endif %}
-                        </button>
-                        <div class="mt-2">
-                            <small class="text-muted completed-badge" style="display: none;">✅ {% if current_lang == 'en' %}Completed{% else %}مكتمل{% endif %}</small>
-                        </div>
-                    </div>
+        <!-- Site 4 -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm text-center p-3" data-id="4" data-points="45">
+                <i class="bi bi-crop fs-1 text-warning"></i>
+                <h5 class="mt-2">🦁 Dadan Lion Tombs</h5>
+                <p class="small text-muted">Lihyanite Royal Tombs | 6th Century BCE</p>
+                <div class="mb-2">
+                    <span class="badge bg-info">7 min</span>
+                    <span class="badge bg-warning ms-1">45 pts</span>
+                </div>
+                <button class="btn btn-sm btn-warning explore-btn" onclick="exploreLocation(4, 'Dadan Lion Tombs', 45, this)">
+                    <i class="bi bi-vr"></i> Explore & Earn Points
+                </button>
+                <div class="mt-2 completed-badge" style="display: none;">
+                    <span class="badge bg-success">✅ Completed</span>
                 </div>
             </div>
+        </div>
 
-            <!-- Location 5: Jabal Ikmah -->
-            <div class="col-md-4 location-card" data-location-id="5" data-points="35">
-                <div class="card h-100 shadow-sm border-0 rounded-4">
-                    <div class="card-body text-center">
-                        <div class="position-relative">
-                            <i class="bi bi-mountain fs-1 text-secondary"></i>
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">35 pts</span>
-                        </div>
-                        <h5 class="mt-2">📜 Jabal Ikmah</h5>
-                        <p class="small text-muted">Open Library of Inscriptions</p>
-                        <div class="d-flex justify-content-center gap-2 mb-2">
-                            <span class="badge bg-info"><i class="bi bi-clock"></i> 4 min</span>
-                            <span class="badge bg-success"><i class="bi bi-star"></i> Historical</span>
-                        </div>
-                        <button class="btn btn-sm btn-warning explore-location w-100" onclick="exploreLocation(5, 'Jabal Ikmah', 35)">
-                            <i class="bi bi-vr"></i> {% if current_lang == 'en' %}Explore & Earn Points{% else %}استكشف واكسب النقاط{% endif %}
-                        </button>
-                        <div class="mt-2">
-                            <small class="text-muted completed-badge" style="display: none;">✅ {% if current_lang == 'en' %}Completed{% else %}مكتمل{% endif %}</small>
-                        </div>
-                    </div>
+        <!-- Site 5 -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm text-center p-3" data-id="5" data-points="35">
+                <i class="bi bi-mountain fs-1 text-secondary"></i>
+                <h5 class="mt-2">📜 Jabal Ikmah</h5>
+                <p class="small text-muted">Open Library of Inscriptions</p>
+                <div class="mb-2">
+                    <span class="badge bg-info">4 min</span>
+                    <span class="badge bg-warning ms-1">35 pts</span>
+                </div>
+                <button class="btn btn-sm btn-warning explore-btn" onclick="exploreLocation(5, 'Jabal Ikmah', 35, this)">
+                    <i class="bi bi-vr"></i> Explore & Earn Points
+                </button>
+                <div class="mt-2 completed-badge" style="display: none;">
+                    <span class="badge bg-success">✅ Completed</span>
                 </div>
             </div>
+        </div>
 
-            <!-- Location 6: Desert Oasis -->
-            <div class="col-md-4 location-card" data-location-id="6" data-points="30">
-                <div class="card h-100 shadow-sm border-0 rounded-4">
-                    <div class="card-body text-center">
-                        <div class="position-relative">
-                            <i class="bi bi-water fs-1 text-primary"></i>
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">30 pts</span>
-                        </div>
-                        <h5 class="mt-2">🌴 Desert Oasis</h5>
-                        <p class="small text-muted">Natural Spring in AlUla Valley</p>
-                        <div class="d-flex justify-content-center gap-2 mb-2">
-                            <span class="badge bg-info"><i class="bi bi-clock"></i> 3 min</span>
-                            <span class="badge bg-success"><i class="bi bi-star"></i> Nature</span>
-                        </div>
-                        <button class="btn btn-sm btn-warning explore-location w-100" onclick="exploreLocation(6, 'Desert Oasis', 30)">
-                            <i class="bi bi-vr"></i> {% if current_lang == 'en' %}Explore & Earn Points{% else %}استكشف واكسب النقاط{% endif %}
-                        </button>
-                        <div class="mt-2">
-                            <small class="text-muted completed-badge" style="display: none;">✅ {% if current_lang == 'en' %}Completed{% else %}مكتمل{% endif %}</small>
-                        </div>
-                    </div>
+        <!-- Site 6 -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm text-center p-3" data-id="6" data-points="30">
+                <i class="bi bi-water fs-1 text-primary"></i>
+                <h5 class="mt-2">🌴 Desert Oasis</h5>
+                <p class="small text-muted">Natural Spring in AlUla Valley</p>
+                <div class="mb-2">
+                    <span class="badge bg-info">3 min</span>
+                    <span class="badge bg-warning ms-1">30 pts</span>
+                </div>
+                <button class="btn btn-sm btn-warning explore-btn" onclick="exploreLocation(6, 'Desert Oasis', 30, this)">
+                    <i class="bi bi-vr"></i> Explore & Earn Points
+                </button>
+                <div class="mt-2 completed-badge" style="display: none;">
+                    <span class="badge bg-success">✅ Completed</span>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- AI Recommendations Panel -->
-    <div class="container my-4">
-        <div class="card shadow-lg border-0 rounded-4">
-            <div class="card-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-                <h5 class="mb-0 py-2">
-                    <i class="bi bi-robot"></i> 
-                    {% if current_lang == 'en' %}🤖 AI Heritage Assistant{% else %}🤖 مساعد التراث الذكي{% endif %}
-                </h5>
-            </div>
-            <div class="card-body" id="aiRecommendationsPanel">
-                <div class="text-center py-4">
-                    <div class="spinner-border text-primary" role="status"></div>
-                    <p class="mt-2 text-muted">
-                        {% if current_lang == 'en' %}Analyzing your preferences...{% else %}جاري تحليل تفضيلاتك...{% endif %}
-                    </p>
-                </div>
+    <div class="card shadow-lg border-0 rounded-4 mb-4">
+        <div class="card-header bg-warning bg-opacity-25">
+            <h5 class="mb-0"><i class="bi bi-robot"></i> 🤖 AI Heritage Assistant</h5>
+        </div>
+        <div class="card-body" id="aiPanel">
+            <div class="text-center py-3">
+                <div class="spinner-border text-warning" role="status"></div>
+                <p class="mt-2">Loading recommendations...</p>
             </div>
         </div>
     </div>
 
-    <!-- Progress & Achievements -->
-    <div class="container my-4">
-        <div class="row g-4">
-            <div class="col-md-6">
-                <div class="card shadow-sm border-0 rounded-4">
-                    <div class="card-header bg-transparent border-0 pt-3">
-                        <h5><i class="bi bi-bar-chart-steps text-warning"></i> 
-                            {% if current_lang == 'en' %}📊 Your Heritage Journey{% else %}📊 رحلتك التراثية{% endif %}
-                        </h5>
+    <!-- Progress -->
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body">
+                    <h5><i class="bi bi-bar-chart-steps"></i> Your Progress</h5>
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between">
+                            <small>Exploration Progress</small>
+                            <small id="progressPercent" class="text-warning">0%</small>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div id="progressBar" class="progress-bar bg-warning" style="width: 0%"></div>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <div class="d-flex justify-content-between">
-                                <small>{% if current_lang == 'en' %}Exploration Progress{% else %}تقدم الاستكشاف{% endif %}</small>
-                                <small id="completionPercent" class="text-warning fw-bold">0%</small>
-                            </div>
-                            <div class="progress" style="height: 10px;">
-                                <div id="completionBar" class="progress-bar bg-warning" style="width: 0%; border-radius: 10px;"></div>
-                            </div>
+                    <div>
+                        <div class="d-flex justify-content-between">
+                            <small>Total Points</small>
+                            <small id="totalPoints" class="text-success">0</small>
                         </div>
-                        <div class="mb-3">
-                            <div class="d-flex justify-content-between">
-                                <small>{% if current_lang == 'en' %}Points Collected{% else %}النقاط المجمعة{% endif %}</small>
-                                <small id="totalPointsDisplay" class="text-success fw-bold">0</small>
-                            </div>
-                            <div class="progress" style="height: 10px;">
-                                <div id="pointsBar" class="progress-bar bg-success" style="width: 0%; border-radius: 10px;"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="d-flex justify-content-between">
-                                <small>{% if current_lang == 'en' %}Next Level Goal{% else %}هدف المستوى التالي{% endif %}</small>
-                                <small id="nextLevelPoints" class="text-info fw-bold">100</small>
-                            </div>
-                            <div class="progress" style="height: 10px;">
-                                <div id="levelBar" class="progress-bar bg-info" style="width: 0%; border-radius: 10px;"></div>
-                            </div>
+                        <div class="progress" style="height: 8px;">
+                            <div id="pointsProgress" class="progress-bar bg-success" style="width: 0%"></div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="card shadow-sm border-0 rounded-4">
-                    <div class="card-header bg-transparent border-0 pt-3">
-                        <h5><i class="bi bi-trophy-fill text-warning"></i> 
-                            {% if current_lang == 'en' %}🏆 Achievements Unlocked{% else %}🏆 الإنجازات المفتوحة{% endif %}
-                        </h5>
-                    </div>
-                    <div class="card-body" id="achievementsList">
-                        <div class="text-center text-muted py-3">
-                            <i class="bi bi-info-circle"></i>
-                            {% if current_lang == 'en' %}Complete heritage sites to unlock achievements!{% else %}أكمل استكشاف المواقع التراثية لفتح الإنجازات!{% endif %}
-                        </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body">
+                    <h5><i class="bi bi-trophy-fill text-warning"></i> Achievements</h5>
+                    <div id="achievementsList">
+                        <p class="text-muted text-center small">Complete sites to unlock achievements!</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Research Data Export -->
-    <div class="container my-4">
-        <div class="alert alert-info text-center">
-            <i class="bi bi-graph-up"></i>
-            <strong>📊 {% if current_lang == 'en' %}Research Data Collection:{% else %}جمع البيانات البحثية:{% endif %}</strong>
-            {% if current_lang == 'en' %}Your interactions help improve AI heritage recommendations.{% else %}تفاعلاتك تساعد في تحسين توصيات الذكاء الاصطناعي للتراث.{% endif %}
-            <button class="btn btn-sm btn-outline-primary ms-2 rounded-pill" onclick="exportUserData()">
-                <i class="bi bi-download"></i> 
-                {% if current_lang == 'en' %}Export My Data (CSV){% else %}تصدير بياناتي (CSV){% endif %}
-            </button>
-        </div>
+    <!-- Export Button -->
+    <div class="mt-4 text-center">
+        <button class="btn btn-outline-primary rounded-pill" onclick="exportData()">
+            <i class="bi bi-download"></i> Export My Data (CSV)
+        </button>
     </div>
 </div>
 
@@ -318,28 +218,211 @@
 
 <script>
     // User data
-    let userData = {
-        userId: '{{ current_user.id if current_user.is_authenticated else "guest_" + Date.now() }}',
-        username: '{{ current_user.username if current_user.is_authenticated else "Guest" }}',
-        points: 0,
-        completedLocations: [],
-        explorationHistory: [],
-        achievements: [],
-        startTime: Date.now()
+    let userPoints = 0;
+    let completedSites = [];
+    let achievements = [];
+    let startTime = Date.now();
+    
+    // Site names
+    const siteNames = {
+        1: 'Qasr al-Farid',
+        2: 'AlUla Old Town',
+        3: 'Hegra Tombs',
+        4: 'Dadan Lion Tombs',
+        5: 'Jabal Ikmah',
+        6: 'Desert Oasis'
     };
     
-    let currentLanguage = '{{ current_lang }}';
+    // Load saved data
+    function loadData() {
+        const saved = localStorage.getItem('tourData');
+        if (saved) {
+            const data = JSON.parse(saved);
+            userPoints = data.points || 0;
+            completedSites = data.completed || [];
+            achievements = data.achievements || [];
+        }
+        updateUI();
+        markCompletedSites();
+    }
     
-    // Function to show toast
-    function showToast(message, type) {
-        let toast = document.getElementById('tourToast');
+    // Save data
+    function saveData() {
+        localStorage.setItem('tourData', JSON.stringify({
+            points: userPoints,
+            completed: completedSites,
+            achievements: achievements,
+            lastSaved: Date.now()
+        }));
+    }
+    
+    // Mark completed sites in UI
+    function markCompletedSites() {
+        completedSites.forEach(id => {
+            const cards = document.querySelectorAll('.card[data-id]');
+            cards.forEach(card => {
+                if (parseInt(card.getAttribute('data-id')) === id) {
+                    const btn = card.querySelector('.explore-btn');
+                    const badge = card.querySelector('.completed-badge');
+                    if (btn) {
+                        btn.disabled = true;
+                        btn.textContent = '✅ Completed';
+                        btn.classList.remove('btn-warning');
+                        btn.classList.add('btn-secondary');
+                    }
+                    if (badge) badge.style.display = 'block';
+                }
+            });
+        });
+    }
+    
+    // Explore location
+    function exploreLocation(id, name, points, btnElement) {
+        if (completedSites.includes(id)) {
+            alert('You already explored this site!');
+            return;
+        }
+        
+        // Update 3D viewer
+        const container = document.getElementById('modelViewerContainer');
+        container.innerHTML = `<model-viewer src="https://threejs.org/examples/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf" ar ar-modes="webxr scene-viewer quick-look" camera-controls auto-rotate style="width:100%; height:400px; background: #1a1a1a;"><button slot="ar-button" style="background: #DAA520; border: none; color: white; padding: 8px 16px; border-radius: 30px;">🕶️ View in AR</button></model-viewer>`;
+        
+        // Add points
+        userPoints += points;
+        completedSites.push(id);
+        
+        // Check achievements
+        checkAchievements();
+        
+        // Update UI
+        updateUI();
+        saveData();
+        
+        // Update button
+        const card = btnElement.closest('.card');
+        const badge = card.querySelector('.completed-badge');
+        btnElement.disabled = true;
+        btnElement.textContent = '✅ Completed';
+        btnElement.classList.remove('btn-warning');
+        btnElement.classList.add('btn-secondary');
+        if (badge) badge.style.display = 'block';
+        
+        // Show message
+        showMessage(`🎉 +${points} points for exploring ${name}!`, 'success');
+        
+        // Update AI recommendations
+        updateAIRecommendations();
+    }
+    
+    // Check achievements
+    function checkAchievements() {
+        const count = completedSites.length;
+        
+        if (count >= 1 && !achievements.includes('explorer')) {
+            achievements.push('explorer');
+            userPoints += 10;
+            showMessage('🏆 Achievement Unlocked: First Explorer! (+10 pts)', 'achievement');
+        }
+        if (count >= 3 && !achievements.includes('seeker')) {
+            achievements.push('seeker');
+            userPoints += 25;
+            showMessage('🏆 Achievement Unlocked: Heritage Seeker! (+25 pts)', 'achievement');
+        }
+        if (count >= 6 && !achievements.includes('master')) {
+            achievements.push('master');
+            userPoints += 50;
+            showMessage('🏆 Achievement Unlocked: Master Historian! (+50 pts)', 'achievement');
+        }
+        if (userPoints >= 100 && !achievements.includes('collector')) {
+            achievements.push('collector');
+            userPoints += 15;
+            showMessage('🏆 Achievement Unlocked: Point Collector! (+15 pts)', 'achievement');
+        }
+    }
+    
+    // Update UI
+    function updateUI() {
+        document.getElementById('userPoints').textContent = userPoints;
+        document.getElementById('totalPoints').textContent = userPoints;
+        
+        const percent = (completedSites.length / 6) * 100;
+        document.getElementById('progressPercent').textContent = `${Math.round(percent)}%`;
+        document.getElementById('progressBar').style.width = `${percent}%`;
+        
+        const pointsPercent = Math.min((userPoints / 300) * 100, 100);
+        document.getElementById('pointsProgress').style.width = `${pointsPercent}%`;
+        
+        // Update achievements display
+        const achievementsDiv = document.getElementById('achievementsList');
+        if (achievements.length > 0) {
+            let html = '<div class="d-flex flex-wrap gap-2">';
+            if (achievements.includes('explorer')) html += '<span class="badge bg-success p-2">🚀 First Explorer</span>';
+            if (achievements.includes('seeker')) html += '<span class="badge bg-success p-2">🗺️ Heritage Seeker</span>';
+            if (achievements.includes('master')) html += '<span class="badge bg-success p-2">📜 Master Historian</span>';
+            if (achievements.includes('collector')) html += '<span class="badge bg-success p-2">💰 Point Collector</span>';
+            html += '</div>';
+            achievementsDiv.innerHTML = html;
+        }
+    }
+    
+    // Update AI recommendations
+    function updateAIRecommendations() {
+        const remaining = [1,2,3,4,5,6].filter(id => !completedSites.includes(id));
+        const count = completedSites.length;
+        const panel = document.getElementById('aiPanel');
+        
+        if (remaining.length === 0) {
+            panel.innerHTML = `
+                <div class="alert alert-success text-center mb-0">
+                    <i class="bi bi-trophy-fill fs-2"></i>
+                    <h5>Congratulations!</h5>
+                    <p>You've completed all heritage sites!</p>
+                    <p>Total Points: ${userPoints} | Achievements: ${achievements.length}/4</p>
+                </div>
+            `;
+            return;
+        }
+        
+        const nextId = remaining[0];
+        const nextName = siteNames[nextId];
+        const pointsMap = {1:50,2:40,3:60,4:45,5:35,6:30};
+        const nextPoints = pointsMap[nextId];
+        
+        let message = '';
+        if (count === 0) {
+            message = `🌟 Welcome! Start your journey at <strong>${nextName}</strong> to earn ${nextPoints} points.`;
+        } else if (count === 2) {
+            message = `📚 Great progress! <strong>${nextName}</strong> is ${nextPoints} points away.`;
+        } else if (count === 4) {
+            message = `🔥 Almost there! Complete <strong>${nextName}</strong> to become a Master Historian!`;
+        } else {
+            message = `🤖 We recommend <strong>${nextName}</strong> next (${nextPoints} points).`;
+        }
+        
+        panel.innerHTML = `
+            <div class="row align-items-center">
+                <div class="col-md-9">
+                    <p class="mb-1 fw-bold">${message}</p>
+                    <small class="text-muted"><i class="bi bi-lightbulb"></i> You've explored ${count}/6 sites. Keep going!</small>
+                </div>
+                <div class="col-md-3 text-md-end mt-2 mt-md-0">
+                    <span class="badge bg-warning text-dark">${userPoints} pts</span>
+                    <span class="badge bg-info ms-1">${count}/6</span>
+                </div>
+            </div>
+        `;
+    }
+    
+    // Show message
+    function showMessage(msg, type) {
+        let toast = document.getElementById('tourMsg');
         if (!toast) {
             toast = document.createElement('div');
-            toast.id = 'tourToast';
+            toast.id = 'tourMsg';
             toast.style.position = 'fixed';
             toast.style.bottom = '20px';
             toast.style.right = '20px';
-            toast.style.zIndex = '1100';
+            toast.style.zIndex = '9999';
             toast.style.padding = '12px 20px';
             toast.style.borderRadius = '8px';
             toast.style.color = 'white';
@@ -351,250 +434,68 @@
         else if (type === 'achievement') toast.style.background = 'linear-gradient(135deg, #DAA520, #B8860B)';
         else toast.style.background = '#17a2b8';
         
-        toast.textContent = message;
+        toast.textContent = msg;
         toast.style.display = 'block';
         setTimeout(() => { toast.style.display = 'none'; }, 3000);
     }
     
-    // Explore location
-    function exploreLocation(locationId, locationName, points) {
-        if (userData.completedLocations.includes(locationId)) {
-            showToast('⚠️ ' + (currentLanguage === 'en' ? 'Already explored!' : 'تم الاستكشاف مسبقاً!'), 'warning');
-            return;
-        }
+    // Export data
+    function exportData() {
+        const data = {
+            user_id: '{{ current_user.id if current_user.is_authenticated else "guest" }}',
+            total_points: userPoints,
+            completed_sites: completedSites,
+            achievements: achievements,
+            total_time_seconds: Math.floor((Date.now() - startTime) / 1000)
+        };
         
-        // Update container
-        const container = document.getElementById('modelViewerContainer');
-        container.innerHTML = `<model-viewer src="https://threejs.org/examples/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf" ar ar-modes="webxr scene-viewer quick-look" camera-controls auto-rotate style="width:100%; height:450px; background: #1a1a1a; border-radius: 12px;"><button slot="ar-button" style="background: #DAA520; border: none; color: white; padding: 8px 16px; border-radius: 30px;">${currentLanguage === 'en' ? '🕶️ View in AR' : '🕶️ عرض بالواقع المعزز'}</button></model-viewer>`;
-        
-        // Add points
-        userData.points += points;
-        userData.completedLocations.push(locationId);
-        
-        userData.explorationHistory.push({
-            location_id: locationId,
-            location_name: locationName,
-            points_earned: points,
-            timestamp: Date.now()
-        });
-        
-        // Check achievements
-        checkAchievements();
-        
-        // Update UI
-        updateUI();
-        
-        // Save to localStorage
-        localStorage.setItem('heritageTourData', JSON.stringify(userData));
-        
-        showToast(`🎉 +${points} ${currentLanguage === 'en' ? 'points for exploring' : 'نقطة لاستكشاف'} ${locationName}!`, 'success');
-        
-        // Mark as completed
-        const card = document.querySelector(`.location-card[data-location-id="${locationId}"]`);
-        if (card) {
-            const btn = card.querySelector('.explore-location');
-            btn.disabled = true;
-            btn.textContent = currentLanguage === 'en' ? '✅ Completed' : '✅ مكتمل';
-            btn.classList.remove('btn-warning');
-            btn.classList.add('btn-secondary');
-            const badge = card.querySelector('.completed-badge');
-            if (badge) badge.style.display = 'inline';
-        }
-        
-        getAIRecommendations();
-    }
-    
-    // Check achievements
-    function checkAchievements() {
-        const completedCount = userData.completedLocations.length;
-        let achievementUnlocked = false;
-        
-        if (completedCount >= 1 && !userData.achievements.includes('first_step')) {
-            userData.achievements.push('first_step');
-            userData.points += 10;
-            showToast('🏆 ' + (currentLanguage === 'en' ? 'First Explorer Unlocked! (+10 pts)' : 'المستكشف الأول تم فتحه! (+10 نقاط)'), 'achievement');
-            achievementUnlocked = true;
-        }
-        
-        if (completedCount >= 3 && !userData.achievements.includes('heritage_seeker')) {
-            userData.achievements.push('heritage_seeker');
-            userData.points += 25;
-            showToast('🏆 ' + (currentLanguage === 'en' ? 'Heritage Seeker Unlocked! (+25 pts)' : 'باحث عن التراث تم فتحه! (+25 نقطة)'), 'achievement');
-            achievementUnlocked = true;
-        }
-        
-        if (completedCount >= 6 && !userData.achievements.includes('master_historian')) {
-            userData.achievements.push('master_historian');
-            userData.points += 50;
-            showToast('🏆 ' + (currentLanguage === 'en' ? 'Master Historian Unlocked! (+50 pts)' : 'مؤرخ محترف تم فتحه! (+50 نقطة)'), 'achievement');
-            achievementUnlocked = true;
-        }
-        
-        if (userData.points >= 100 && !userData.achievements.includes('point_collector')) {
-            userData.achievements.push('point_collector');
-            userData.points += 15;
-            showToast('🏆 ' + (currentLanguage === 'en' ? 'Point Collector Unlocked! (+15 pts)' : 'جامع النقاط تم فتحه! (+15 نقطة)'), 'achievement');
-            achievementUnlocked = true;
-        }
-        
-        if (achievementUnlocked) {
-            updateUI();
-        }
-    }
-    
-    // Update UI
-    function updateUI() {
-        document.getElementById('userPoints').textContent = userData.points;
-        document.getElementById('floatingPoints').textContent = userData.points;
-        document.getElementById('totalPointsDisplay').textContent = userData.points;
-        
-        const completedCount = userData.completedLocations.length;
-        let level = currentLanguage === 'en' ? 'Explorer' : 'مستكشف';
-        if (completedCount >= 6) level = currentLanguage === 'en' ? 'Master Historian' : 'مؤرخ محترف';
-        else if (completedCount >= 4) level = currentLanguage === 'en' ? 'Heritage Expert' : 'خبير تراثي';
-        else if (completedCount >= 2) level = currentLanguage === 'en' ? 'Adventurer' : 'مغامر';
-        document.getElementById('userLevel').textContent = level;
-        
-        const completionPercent = (completedCount / 6) * 100;
-        document.getElementById('completionPercent').textContent = `${Math.round(completionPercent)}%`;
-        document.getElementById('completionBar').style.width = `${completionPercent}%`;
-        
-        const pointsPercent = Math.min((userData.points / 300) * 100, 100);
-        document.getElementById('pointsBar').style.width = `${pointsPercent}%`;
-        
-        // Update achievements display
-        const achievementsList = document.getElementById('achievementsList');
-        if (userData.achievements.length > 0) {
-            const achievementsHtml = [];
-            if (userData.achievements.includes('first_step')) achievementsHtml.push('<div class="d-flex align-items-center gap-2 p-2 border-bottom"><span class="fs-4">🚀</span><div><h6 class="mb-0">First Explorer</h6><small>Complete your first location</small></div></div>');
-            if (userData.achievements.includes('heritage_seeker')) achievementsHtml.push('<div class="d-flex align-items-center gap-2 p-2 border-bottom"><span class="fs-4">🗺️</span><div><h6 class="mb-0">Heritage Seeker</h6><small>Explore 3 locations</small></div></div>');
-            if (userData.achievements.includes('master_historian')) achievementsHtml.push('<div class="d-flex align-items-center gap-2 p-2 border-bottom"><span class="fs-4">📜</span><div><h6 class="mb-0">Master Historian</h6><small>Explore all 6 locations</small></div></div>');
-            if (userData.achievements.includes('point_collector')) achievementsHtml.push('<div class="d-flex align-items-center gap-2 p-2 border-bottom"><span class="fs-4">💰</span><div><h6 class="mb-0">Point Collector</h6><small>Collect 100 points</small></div></div>');
-            achievementsList.innerHTML = achievementsHtml.join('');
-        } else {
-            achievementsList.innerHTML = '<div class="text-center text-muted py-3">Complete heritage sites to unlock achievements!</div>';
-        }
-    }
-    
-    // Get AI recommendations
-    async function getAIRecommendations() {
-        const completed = userData.completedLocations;
-        const remaining = [1,2,3,4,5,6].filter(id => !completed.includes(id));
-        const completedCount = completed.length;
-        
-        const panel = document.getElementById('aiRecommendationsPanel');
-        
-        if (remaining.length === 0) {
-            panel.innerHTML = `
-                <div class="alert alert-success text-center mb-0">
-                    <i class="bi bi-trophy-fill fs-1"></i>
-                    <h5>${currentLanguage === 'en' ? 'Congratulations Heritage Master! 🎉' : 'تهانينا خبير التراث! 🎉'}</h5>
-                    <p>${currentLanguage === 'en' ? 'You\'ve completed all 6 heritage sites of AlUla!' : 'لقد أكملت جميع المواقع التراثية الستة في العلا!'}</p>
-                    <p>${currentLanguage === 'en' ? 'Total Points:' : 'إجمالي النقاط:'} ${userData.points} | ${currentLanguage === 'en' ? 'Achievements:' : 'الإنجازات:'} ${userData.achievements.length}/4</p>
-                </div>
-            `;
-            return;
-        }
-        
-        const nextLocationId = remaining[0];
-        const locationNames = {1:'Qasr al-Farid',2:'AlUla Old Town',3:'Hegra Tombs',4:'Dadan Lion Tombs',5:'Jabal Ikmah',6:'Desert Oasis'};
-        const nextLocationName = locationNames[nextLocationId];
-        const nextPoints = [0,50,40,60,45,35,30][nextLocationId];
-        
-        let message = '';
-        if (completedCount === 0) {
-            message = `🌟 ${currentLanguage === 'en' ? `Welcome! Start your journey at <strong>${nextLocationName}</strong> to earn ${nextPoints} points.` : `مرحباً! ابدأ رحلتك في <strong>${nextLocationName}</strong> لكسب ${nextPoints} نقطة.`}`;
-        } else if (completedCount === 2) {
-            message = `📚 ${currentLanguage === 'en' ? `You're making great progress! <strong>${nextLocationName}</strong> is ${nextPoints} points away.` : `تحرز تقدماً رائعاً! <strong>${nextLocationName}</strong> يبعد ${nextPoints} نقطة.`}`;
-        } else {
-            message = `🤖 ${currentLanguage === 'en' ? `We recommend <strong>${nextLocationName}</strong> next (${nextPoints} points).` : `نوصي بزيارة <strong>${nextLocationName}</strong> بعد ذلك (${nextPoints} نقطة).`}`;
-        }
-        
-        panel.innerHTML = `
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <p class="mb-1 fw-bold">${message}</p>
-                    <small class="text-muted"><i class="bi bi-lightbulb"></i> ${currentLanguage === 'en' ? `You've explored ${completedCount}/6 sites. Keep going!` : `لقد استكشفت ${completedCount}/6 مواقع. استمر!`}</small>
-                </div>
-                <div class="col-md-4 text-md-end mt-2 mt-md-0">
-                    <div class="d-flex gap-2 justify-content-md-end">
-                        <span class="badge bg-warning text-dark px-3 py-2">🏆 ${userData.points} pts</span>
-                        <span class="badge bg-info px-3 py-2">📊 ${completedCount}/6</span>
-                    </div>
-                </div>
-            </div>
-        `;
-    }
-    
-    // Export user data
-    function exportUserData() {
-        let csv = "Location Name,Points Earned,Timestamp\n";
-        userData.explorationHistory.forEach(exp => {
-            csv += `"${exp.location_name}",${exp.points_earned},"${new Date(exp.timestamp).toLocaleString()}"\n`;
-        });
+        let csv = "Metric,Value\n";
+        csv += `Total Points,${data.total_points}\n`;
+        csv += `Completed Sites,${data.completed_sites.length}/6\n`;
+        csv += `Achievements,${data.achievements.length}/4\n`;
+        csv += `Time Spent,${data.total_time_seconds} seconds\n`;
+        csv += `Completed Sites List,"${data.completed_sites.map(s => siteNames[s]).join(', ')}"\n`;
         
         const blob = new Blob([csv], { type: 'text/csv' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `alula_tour_data_${userData.userId}.csv`;
+        a.download = `tour_data_${Date.now()}.csv`;
         a.click();
         URL.revokeObjectURL(url);
         
-        showToast(currentLanguage === 'en' ? '📊 Data exported successfully!' : '📊 تم تصدير البيانات بنجاح!', 'info');
+        showMessage('📊 Data exported successfully!', 'info');
     }
     
-    // Load saved data
-    function loadUserData() {
-        const saved = localStorage.getItem('heritageTourData');
-        if (saved) {
-            const parsed = JSON.parse(saved);
-            userData.points = parsed.points || 0;
-            userData.completedLocations = parsed.completedLocations || [];
-            userData.achievements = parsed.achievements || [];
-            userData.explorationHistory = parsed.explorationHistory || [];
-        }
-        
-        // Mark completed locations in UI
-        userData.completedLocations.forEach(locId => {
-            const card = document.querySelector(`.location-card[data-location-id="${locId}"]`);
-            if (card) {
-                const btn = card.querySelector('.explore-location');
-                btn.disabled = true;
-                btn.textContent = currentLanguage === 'en' ? '✅ Completed' : '✅ مكتمل';
-                btn.classList.remove('btn-warning');
-                btn.classList.add('btn-secondary');
-                const badge = card.querySelector('.completed-badge');
-                if (badge) badge.style.display = 'inline';
-            }
-        });
-        
-        updateUI();
+    // Initialize AI on load
+    function initAI() {
+        updateAIRecommendations();
     }
     
-    // Initialize
+    // Load data on page load
     document.addEventListener('DOMContentLoaded', () => {
-        loadUserData();
-        getAIRecommendations();
+        loadData();
+        initAI();
     });
 </script>
 
 <style>
-    .location-card .card {
-        transition: all 0.3s ease;
-        cursor: pointer;
+    .card {
+        transition: transform 0.2s ease;
     }
-    .location-card .card:hover {
+    .card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
     }
-    .bg-gradient {
+    .btn-warning {
         background: linear-gradient(135deg, #DAA520, #B8860B);
+        border: none;
+        color: white;
     }
-    @media (max-width: 768px) {
-        model-viewer {
-            height: 300px !important;
-        }
+    .btn-warning:hover {
+        background: linear-gradient(135deg, #B8860B, #8B6914);
+    }
+    model-viewer {
+        --poster-color: #1a1a1a;
     }
 </style>
 {% endblock %}
