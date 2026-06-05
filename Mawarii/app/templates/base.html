@@ -14,13 +14,17 @@
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
+    
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <!-- RTL Support for Arabic -->
     {% if is_rtl %}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     {% endif %}
 
     <!-- Custom CSS -->
@@ -28,119 +32,449 @@
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
     <style>
-        /* Language Switcher Styles */
-        .lang-switch {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            z-index: 1000;
-            background: rgba(0,0,0,0.7);
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif;
+            transition: background 0.3s ease, color 0.2s ease;
+        }
+        
+        [lang="ar"] body, [dir="rtl"] body {
+            font-family: 'Cairo', 'Tahoma', system-ui, sans-serif;
+        }
+        
+        /* Modern Navbar Styles */
+        .navbar-modern {
+            background: var(--navbar-bg, #ffffff);
             backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            padding: 0.8rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        [data-theme="dark"] .navbar-modern {
+            background: rgba(26, 26, 46, 0.95);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        
+        /* Logo Container */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid #DAA520;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo-img:hover {
+            transform: scale(1.05);
+        }
+        
+        .logo-text h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin: 0;
+            background: linear-gradient(135deg, #DAA520, #B8860B);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .logo-text p {
+            font-size: 0.75rem;
+            margin: 0;
+            color: var(--text-secondary, #6c757d);
+            font-style: italic;
+        }
+        
+        /* Modern Dropdown Menu */
+        .dropdown-modern {
+            position: relative;
+        }
+        
+        .dropdown-modern .dropdown-toggle {
+            background: transparent;
+            border: none;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            color: var(--text-color, #1e2a3a);
+            transition: all 0.3s ease;
             border-radius: 40px;
-            padding: 5px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
-        [dir="rtl"] .lang-switch {
-            right: auto;
-            left: 10px;
+        
+        .dropdown-modern .dropdown-toggle:hover {
+            background: rgba(218, 165, 32, 0.1);
+            color: #DAA520;
         }
-        @media (max-width: 768px) {
-            .lang-switch { top: 5px; right: 5px; }
-            [dir="rtl"] .lang-switch { left: 5px; right: auto; }
+        
+        .dropdown-modern .dropdown-menu {
+            background: var(--dropdown-bg, #ffffff);
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            padding: 0.5rem;
+            margin-top: 0.5rem;
+            min-width: 220px;
+            animation: fadeInUp 0.3s ease;
         }
-        .lang-btn {
-            border-radius: 30px !important;
-            padding: 5px 12px !important;
-            font-weight: bold;
+        
+        [data-theme="dark"] .dropdown-modern .dropdown-menu {
+            background: #1e2a2e;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .dropdown-modern .dropdown-item {
+            padding: 0.6rem 1rem;
+            border-radius: 12px;
+            font-weight: 500;
             transition: all 0.2s ease;
+            color: var(--text-color, #1e2a3a);
         }
-        .lang-btn.active {
-            background-color: #DAA520 !important;
-            border-color: #DAA520 !important;
-            color: white !important;
+        
+        .dropdown-modern .dropdown-item:hover {
+            background: linear-gradient(135deg, #DAA520, #B8860B);
+            color: white;
+            transform: translateX(5px);
         }
-        .lang-btn:not(.active) {
-            background-color: transparent !important;
-            border-color: #DAA520 !important;
-            color: #DAA520 !important;
+        
+        [dir="rtl"] .dropdown-modern .dropdown-item:hover {
+            transform: translateX(-5px);
         }
-        .lang-btn:not(.active):hover {
-            background-color: rgba(218,165,32,0.2) !important;
+        
+        .dropdown-modern .dropdown-item i {
+            margin-right: 10px;
+            width: 20px;
         }
-        .nav-link {
-            transition: all 0.2s ease;
+        
+        [dir="rtl"] .dropdown-modern .dropdown-item i {
+            margin-right: 0;
+            margin-left: 10px;
         }
-        .nav-link:hover {
+        
+        /* Modern Nav Links */
+        .nav-link-modern {
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            border-radius: 40px;
+            transition: all 0.3s ease;
+            color: var(--text-color, #1e2a3a);
+            position: relative;
+        }
+        
+        .nav-link-modern:hover {
+            background: rgba(218, 165, 32, 0.1);
+            color: #DAA520;
             transform: translateY(-2px);
+        }
+        
+        .nav-link-modern.active {
+            background: linear-gradient(135deg, #DAA520, #B8860B);
+            color: white;
+        }
+        
+        /* Language Switcher */
+        .lang-switch {
+            display: flex;
+            gap: 5px;
+            background: rgba(0,0,0,0.05);
+            border-radius: 40px;
+            padding: 4px;
+        }
+        
+        .lang-btn {
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            color: var(--text-color, #1e2a3a);
+        }
+        
+        .lang-btn.active {
+            background: #DAA520;
+            color: white;
+        }
+        
+        .lang-btn:hover:not(.active) {
+            background: rgba(218,165,32,0.2);
+        }
+        
+        /* Theme Toggle */
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.05);
+            border: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .theme-toggle:hover {
+            transform: rotate(15deg);
+            background: rgba(218,165,32,0.2);
+        }
+        
+        /* Footer */
+        .footer-modern {
+            background: var(--footer-bg, #1a1a2e);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+            text-align: center;
+        }
+        
+        [data-theme="light"] .footer-modern {
+            background: #f8f9fa;
+            color: #1e2a3a;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* User Menu */
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #DAA520, #B8860B);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 991px) {
+            .navbar-modern {
+                padding: 0.5rem 0;
+            }
+            
+            .dropdown-menu {
+                position: static !important;
+                transform: none !important;
+                margin-top: 0.5rem !important;
+                width: 100%;
+            }
+            
+            .logo-text h1 {
+                font-size: 1.2rem;
+            }
+            
+            .logo-img {
+                width: 40px;
+                height: 40px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Language Switcher -->
-    <div class="lang-switch">
-        <div class="btn-group btn-group-sm" role="group">
-            <a href="{{ url_for('set_language', lang='en') }}" class="btn lang-btn {% if current_lang == 'en' %}active{% endif %}">
-                🇬🇧 EN
-            </a>
-            <a href="{{ url_for('set_language', lang='ar') }}" class="btn lang-btn {% if current_lang == 'ar' %}active{% endif %}">
-                🇸🇦 عربي
-            </a>
-        </div>
-    </div>
 
-    <header class="py-4" style="background-color: var(--btn-bg);">
-        <div class="container d-flex justify-content-between align-items-center flex-wrap">
-            <div>
-                <h1 class="mb-0 d-flex align-items-center" style="color: var(--text-color); font-size: 1.8rem;">
-                    <img src="{{ url_for('static', filename='image/11.jpeg') }}"
-                         alt="Mawari Logo"
-                         style="width:55px; height:55px; object-fit:cover; border-radius:50%; margin-right:5px;">
-                    Mawari
-                </h1>
-                <p class="mb-0" style="color: var(--accent-color); font-style: italic; font-size: 0.9rem;">
-                    {% if current_lang == 'en' %}Inspired by AlUla Heritage & Landscapes{% else %}مستوحى من تراث ومناظر العلا{% endif %}
-                </p>
+    <!-- Modern Navbar -->
+    <nav class="navbar-modern">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                
+                <!-- Logo -->
+                <div class="logo-container">
+                    <img src="{{ url_for('static', filename='image/11.jpeg') }}" alt="Mawari Logo" class="logo-img">
+                    <div class="logo-text">
+                        <h1>Mawari</h1>
+                        <p>{% if current_lang == 'en' %}Inspired by AlUla Heritage{% else %}مستوحى من تراث العلا{% endif %}</p>
+                    </div>
+                </div>
+                
+                <!-- Right Side Controls -->
+                <div class="d-flex align-items-center gap-3">
+                    <!-- Language Switcher -->
+                    <div class="lang-switch">
+                        <button class="lang-btn {% if current_lang == 'en' %}active{% endif %}" onclick="setLanguage('en')">🇬🇧 EN</button>
+                        <button class="lang-btn {% if current_lang == 'ar' %}active{% endif %}" onclick="setLanguage('ar')">🇸🇦 عربي</button>
+                    </div>
+                    
+                    <!-- Theme Toggle -->
+                    <button class="theme-toggle" onclick="toggleTheme()">
+                        <i class="bi bi-moon-fill" id="themeIcon"></i>
+                    </button>
+                </div>
             </div>
-            <div>
-                <button class="btn btn-light theme-toggle" onclick="toggleTheme()">
-                    <i class="bi bi-moon-fill"></i> {% if current_lang == 'en' %}Theme{% else %}المظهر{% endif %}
-                </button>
+            
+            <!-- Navigation Menu with Dropdowns -->
+            <div class="mt-3">
+                <ul class="nav justify-content-center gap-2 flex-wrap">
+                    <!-- Home -->
+                    <li class="nav-item">
+                        <a href="{{ url_for('index') }}" class="nav-link-modern {% if request.endpoint == 'index' %}active{% endif %}">
+                            <i class="bi bi-house-fill"></i> 
+                            <span class="en-text">Home</span><span class="ar-text" style="display: none;">الرئيسية</span>
+                        </a>
+                    </li>
+                    
+                    <!-- Heritage Dropdown -->
+                    <li class="nav-item dropdown-modern">
+                        <button class="dropdown-toggle" data-bs-toggle="dropdown">
+                            <i class="bi bi-map-fill"></i> 
+                            <span class="en-text">Heritage Experience</span>
+                            <span class="ar-text" style="display: none;">تجربة التراث</span>
+                            <i class="bi bi-chevron-down ms-1"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="{{ url_for('heritage') }}" class="dropdown-item">
+                                    <i class="bi bi-vr"></i> 
+                                    <span class="en-text">AR Heritage Explorer</span>
+                                    <span class="ar-text" style="display: none;">مستكشف التراث بالواقع المعزز</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('virtual_city_tour') }}" class="dropdown-item">
+                                    <i class="bi bi-building"></i> 
+                                    <span class="en-text">Virtual City Tour</span>
+                                    <span class="ar-text" style="display: none;">جولة المدينة الافتراضية</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                    <!-- User Dropdown (for logged in users) -->
+                    {% if 'user_id' in session or current_user.is_authenticated %}
+                    <li class="nav-item dropdown-modern">
+                        <button class="dropdown-toggle" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i> 
+                            <span class="en-text">My Account</span>
+                            <span class="ar-text" style="display: none;">حسابي</span>
+                            <i class="bi bi-chevron-down ms-1"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="{{ url_for('dashboard') }}" class="dropdown-item">
+                                    <i class="bi bi-speedometer2"></i> 
+                                    <span class="en-text">Dashboard</span>
+                                    <span class="ar-text" style="display: none;">لوحة التحكم</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('profile') }}" class="dropdown-item">
+                                    <i class="bi bi-person-gear"></i> 
+                                    <span class="en-text">Edit Profile</span>
+                                    <span class="ar-text" style="display: none;">تعديل الملف الشخصي</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('edit_preferences') }}" class="dropdown-item">
+                                    <i class="bi bi-sliders2"></i> 
+                                    <span class="en-text">My Preferences</span>
+                                    <span class="ar-text" style="display: none;">تفضيلاتي</span>
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a href="{{ url_for('logout') }}" class="dropdown-item text-danger">
+                                    <i class="bi bi-box-arrow-right"></i> 
+                                    <span class="en-text">Logout</span>
+                                    <span class="ar-text" style="display: none;">تسجيل خروج</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    {% else %}
+                    <!-- Auth Dropdown (for guests) -->
+                    <li class="nav-item dropdown-modern">
+                        <button class="dropdown-toggle" data-bs-toggle="dropdown">
+                            <i class="bi bi-box-arrow-in-right"></i> 
+                            <span class="en-text">Join Us</span>
+                            <span class="ar-text" style="display: none;">انضم إلينا</span>
+                            <i class="bi bi-chevron-down ms-1"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="{{ url_for('login') }}" class="dropdown-item">
+                                    <i class="bi bi-box-arrow-in-right"></i> 
+                                    <span class="en-text">Login</span>
+                                    <span class="ar-text" style="display: none;">دخول</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('register') }}" class="dropdown-item">
+                                    <i class="bi bi-person-plus-fill"></i> 
+                                    <span class="en-text">Register</span>
+                                    <span class="ar-text" style="display: none;">تسجيل</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    {% endif %}
+                    
+                    <!-- About Dropdown -->
+                    <li class="nav-item dropdown-modern">
+                        <button class="dropdown-toggle" data-bs-toggle="dropdown">
+                            <i class="bi bi-info-circle-fill"></i> 
+                            <span class="en-text">Info</span>
+                            <span class="ar-text" style="display: none;">معلومات</span>
+                            <i class="bi bi-chevron-down ms-1"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="{{ url_for('about') }}" class="dropdown-item">
+                                    <i class="bi bi-quote"></i> 
+                                    <span class="en-text">About Mawari</span>
+                                    <span class="ar-text" style="display: none;">عن مواري</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('contact') }}" class="dropdown-item">
+                                    <i class="bi bi-envelope-fill"></i> 
+                                    <span class="en-text">Contact Us</span>
+                                    <span class="ar-text" style="display: none;">اتصل بنا</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
         </div>
-
-      <!-- NAVIGATION MENU -->
-<nav class="mt-3">
-    <ul class="nav justify-content-center gap-3">
-        <li class="nav-item"><a href="{{ url_for('index') }}" class="nav-link interactive-text"><i class="bi bi-house-fill"></i> <span class="en-text">Home</span><span class="ar-text" style="display: none;">الرئيسية</span></a></li>
-        <li class="nav-item"><a href="{{ url_for('heritage') }}" class="nav-link interactive-text"><i class="bi bi-map-fill"></i> <span class="en-text">Heritage with AR</span><span class="ar-text" style="display: none;">التراث بالواقع المعزز</span></a></li>
-        
-        <!-- الرابط الجديد للجولة السياحية -->
-        <li class="nav-item"><a href="{{ url_for('virtual_city_tour') }}" class="nav-link interactive-text">
-            <i class="bi bi-building"></i> 
-            <span class="en-text">🏙️ Virtual City Tour</span>
-            <span class="ar-text" style="display: none;">🏙️ جولة المدينة الافتراضية</span>
-        </a></li>
-        
-        {% if 'user_id' in session %}
-        <li class="nav-item"><a href="{{ url_for('dashboard') }}" class="nav-link interactive-text"><i class="bi bi-speedometer2"></i> <span class="en-text">Dashboard</span><span class="ar-text" style="display: none;">لوحة التحكم</span></a></li>
-        <li class="nav-item"><a href="{{ url_for('profile') }}" class="nav-link interactive-text"><i class="bi bi-person-circle"></i> <span class="en-text">Profile</span><span class="ar-text" style="display: none;">الملف الشخصي</span></a></li>
-        <li class="nav-item"><a href="{{ url_for('logout') }}" class="nav-link interactive-text"><i class="bi bi-box-arrow-right"></i> <span class="en-text">Logout</span><span class="ar-text" style="display: none;">تسجيل خروج</span></a></li>
-        {% else %}
-        <li class="nav-item"><a href="{{ url_for('register') }}" class="nav-link interactive-text"><i class="bi bi-person-plus-fill"></i> <span class="en-text">Register</span><span class="ar-text" style="display: none;">تسجيل</span></a></li>
-        <li class="nav-item"><a href="{{ url_for('login') }}" class="nav-link interactive-text"><i class="bi bi-box-arrow-in-right"></i> <span class="en-text">Login</span><span class="ar-text" style="display: none;">دخول</span></a></li>
-        {% endif %}
-        <li class="nav-item"><a href="{{ url_for('about') }}" class="nav-link interactive-text"><i class="bi bi-info-circle-fill"></i> <span class="en-text">About</span><span class="ar-text" style="display: none;">حول</span></a></li>
-        <li class="nav-item"><a href="{{ url_for('contact') }}" class="nav-link interactive-text"><i class="bi bi-envelope-fill"></i> <span class="en-text">Contact Us</span><span class="ar-text" style="display: none;">اتصل بنا</span></a></li>
-    </ul>
-</nav>
-    </header>
+    </nav>
 
     <!-- Flash Messages -->
     <div class="container mt-3">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    <div class="alert alert-{{ category }} alert-dismissible fade show rounded-4" role="alert">
+                        <i class="bi bi-{{ 'check-circle' if category == 'success' else 'exclamation-triangle' if category == 'danger' else 'info-circle' }} me-2"></i>
                         {{ message }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
@@ -154,26 +488,89 @@
         {% block content %}{% endblock %}
     </main>
 
-    <!-- FOOTER -->
-    <footer class="py-3" style="background-color: var(--btn-bg); color: var(--text-color); text-align:center;">
-        Team Mawari | {% if current_lang == 'en' %}Developer: 10th Level Computer Science, University College of Ranyah{% else %}المطور: المستوى العاشر علوم حاسوب، الكلية الجامعية برنية{% endif %}
+    <!-- Modern Footer -->
+    <footer class="footer-modern">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <h5><i class="bi bi-gem"></i> Mawari</h5>
+                    <p class="small opacity-75">
+                        <span class="en-text">Preserving AlUla's heritage through Augmented Reality</span>
+                        <span class="ar-text" style="display: none;">الحفاظ على تراث العلا من خلال الواقع المعزز</span>
+                    </p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5><i class="bi bi-link-45deg"></i> <span class="en-text">Quick Links</span><span class="ar-text" style="display: none;">روابط سريعة</span></h5>
+                    <ul class="list-unstyled small">
+                        <li><a href="{{ url_for('heritage') }}" class="text-decoration-none opacity-75">🎨 <span class="en-text">AR Experience</span><span class="ar-text" style="display: none;">تجربة الواقع المعزز</span></a></li>
+                        <li><a href="{{ url_for('virtual_city_tour') }}" class="text-decoration-none opacity-75">🏙️ <span class="en-text">Virtual Tour</span><span class="ar-text" style="display: none;">جولة افتراضية</span></a></li>
+                        <li><a href="{{ url_for('about') }}" class="text-decoration-none opacity-75">📖 <span class="en-text">Our Story</span><span class="ar-text" style="display: none;">قصتنا</span></a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5><i class="bi bi-people-fill"></i> <span class="en-text">Team</span><span class="ar-text" style="display: none;">الفريق</span></h5>
+                    <p class="small opacity-75">
+                        <span class="en-text">10th Level Computer Science</span><br>
+                        <span class="ar-text" style="display: none;">المستوى العاشر علوم حاسوب</span>
+                        <span class="en-text">University College of Ranyah</span>
+                        <span class="ar-text" style="display: none;">الكلية الجامعية برنية</span>
+                    </p>
+                </div>
+            </div>
+            <hr class="opacity-25">
+            <p class="small mb-0 opacity-50">
+                &copy; 2025 Mawari. <span class="en-text">All rights reserved.</span><span class="ar-text" style="display: none;">جميع الحقوق محفوظة.</span>
+            </p>
+        </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
     <script>
-        function toggleTheme() {
-            const html = document.documentElement;
-            html.dataset.theme = html.dataset.theme === 'light' ? 'dark' : 'light';
+        // Set language function
+        function setLanguage(lang) {
+            window.location.href = "{{ url_for('set_language', lang='') }}" + lang;
         }
         
-        // Add active class to current navigation item
-        document.addEventListener('DOMContentLoaded', function() {
+        // Toggle theme function
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+            
+            // Save theme preference
+            localStorage.setItem('theme', newTheme);
+            
+            // Update theme icon
+            const icon = document.querySelector('#themeIcon');
+            if (newTheme === 'dark') {
+                icon.classList.remove('bi-moon-fill');
+                icon.classList.add('bi-sun-fill');
+            } else {
+                icon.classList.remove('bi-sun-fill');
+                icon.classList.add('bi-moon-fill');
+            }
+        }
+        
+        // Load saved theme
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                const icon = document.querySelector('#themeIcon');
+                if (savedTheme === 'dark') {
+                    icon.classList.remove('bi-moon-fill');
+                    icon.classList.add('bi-sun-fill');
+                }
+            }
+            
+            // Add active class to current nav item based on URL
             const currentPath = window.location.pathname;
-            const navLinks = document.querySelectorAll('.nav-link');
-            navLinks.forEach(link => {
-                if (link.getAttribute('href') === currentPath) {
-                    link.style.fontWeight = 'bold';
-                    link.style.textDecoration = 'underline';
+            document.querySelectorAll('.dropdown-item, .nav-link-modern').forEach(link => {
+                const href = link.getAttribute('href');
+                if (href && href !== '#' && currentPath === href) {
+                    link.classList.add('active');
                 }
             });
         });
