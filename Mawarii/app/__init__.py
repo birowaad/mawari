@@ -2,15 +2,15 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 import qrcode
 from flask import send_file
 import io
 import os
-# Add after your existing imports
-from app.models import db, User, Model3D
+
 # Initialize SQLAlchemy
 db = SQLAlchemy()
-
+login_manager = LoginManager()
 
 # User model
 class User(db.Model):
@@ -18,6 +18,30 @@ class User(db.Model):
     username = db.Column(db.String(150), unique=True, nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
+    interests = db.Column(db.String(500), default='')  # NEW: Store interests as comma-separated
+    experience_level = db.Column(db.String(50), default='beginner')  # NEW
+    preferences = db.Column(db.Text, default='{}')  # NEW: JSON string for additional preferences
+    
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+    
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
+    
+    def get_preferences(self):
+        import json
+        return json.loads(self.preferences) if self.preferences else {}
+    
+    def set_preferences(self, prefs_dict):
+        import json
+        self.preferences = json.dumps(prefs_dict)
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+
 def create_app():
     app = Flask(__name__)
 
@@ -26,12 +50,16 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+    # Initialize extensions
     db.init_app(app)
+    login_manager.init_app(app)
+    login_manager.login_view = 'login'
+    
     with app.app_context():
         db.create_all()
 
     # ===========================================================
-    # إعدادات اللغة - Language Settings (بدون ملف خارجي)
+    # إعدادات اللغة - Language Settings
     # ===========================================================
 
     @app.route('/set_language/<lang>')
@@ -156,13 +184,14 @@ def create_app():
         if request.method == 'POST':
             username = request.form['username']
             email = request.form['email']
-            password = generate_password_hash(request.form['password'])
-
+            password = request.form['password']
+            
             if User.query.filter_by(email=email).first():
                 flash("Email already exists", "danger")
                 return redirect(url_for('register'))
 
-            new_user = User(username=username, email=email, password=password)
+            new_user = User(username=username, email=email)
+            new_user.set_password(password)
             db.session.add(new_user)
             db.session.commit()
             flash("Registration successful! Please log in.", "success")
@@ -176,10 +205,15 @@ def create_app():
             email = request.form['email']
             password = request.form['password']
             user = User.query.filter_by(email=email).first()
-            if user and check_password_hash(user.password, password):
-                session['user_id'] = user.id
-                session['username'] = user.username
+            
+            if user and user.check_password(password):
+                login_user(user)
                 flash("Login successful!", "success")
+                
+                # NEW: Redirect to preferences if not set
+                if not user.interests:
+                    return redirect(url_for('preferences_page'))
+                
                 return redirect(url_for('dashboard'))
             else:
                 flash("Invalid credentials", "danger")
@@ -189,24 +223,25 @@ def create_app():
 
     @app.route('/logout')
     def logout():
+        logout_user()
         session.clear()
         flash("You have been logged out.", "info")
         return redirect(url_for('login'))
 
     @app.route('/dashboard')
     def dashboard():
-        if 'user_id' not in session:
+        if 'user_id' not in session and not current_user.is_authenticated:
             flash("Please log in to access the dashboard.", "warning")
             return redirect(url_for('login'))
-        return render_template('dashboard.html', title="Dashboard", username=session['username'])
+        return render_template('dashboard.html', title="Dashboard", username=session.get('username') or current_user.username)
 
     @app.route('/profile', methods=['GET', 'POST'])
     def profile():
-        if 'user_id' not in session:
+        if not current_user.is_authenticated:
             flash("Please log in to access your profile.", "warning")
             return redirect(url_for('login'))
 
-        user = User.query.get(session['user_id'])
+        user = current_user
 
         if request.method == 'POST':
             username = request.form['username']
@@ -221,7 +256,7 @@ def create_app():
             user.username = username
             user.email = email
             if password:
-                user.password = generate_password_hash(password)
+                user.set_password(password)
 
             db.session.commit()
             session['username'] = user.username
@@ -242,6 +277,7 @@ def create_app():
     @app.route('/contact', methods=['GET', 'POST'])
     def contact():
         return render_template('contact.html', title="Contact Us")
+    
     # PWA Routes
     @app.route('/service-worker.js')
     def service_worker():
@@ -254,40 +290,44 @@ def create_app():
     @app.route('/offline')
     def offline():
         return render_template('offline.html', title="Offline")
-# Add these routes before `return app`
 
-@app.route('/preferences', methods=['GET'])
-@login_required
-def preferences_page():
-    """Show preferences onboarding page"""
-    return render_template('preferences.html', title='Personalize Your Experience')
+    # ===========================================================
+    # AI Personalization Routes (Phase 1)
+    # ===========================================================
+    
+    @app.route('/preferences', methods=['GET'])
+    @login_required
+    def preferences_page():
+        """Show preferences onboarding page"""
+        return render_template('preferences.html', title='Personalize Your Experience')
 
-@app.route('/save-preferences', methods=['POST'])
-@login_required
-def save_preferences():
-    """Save user preferences"""
-    user = User.query.get(current_user.id)
-    
-    # Get interests from form (list)
-    interests = request.form.getlist('interests')
-    user.interests = ','.join(interests)
-    
-    # Get experience level
-    user.experience_level = request.form.get('experience_level', 'beginner')
-    
-    # Save tour duration in preferences JSON
-    prefs = user.get_preferences()
-    prefs['tour_duration'] = int(request.form.get('tour_duration', 30))
-    user.set_preferences(prefs)
-    
-    db.session.commit()
-    
-    flash('Preferences saved successfully!', 'success')
-    return redirect(url_for('heritage'))
+    @app.route('/save-preferences', methods=['POST'])
+    @login_required
+    def save_preferences():
+        """Save user preferences"""
+        user = current_user
+        
+        # Get interests from form (list)
+        interests = request.form.getlist('interests')
+        user.interests = ','.join(interests)
+        
+        # Get experience level
+        user.experience_level = request.form.get('experience_level', 'beginner')
+        
+        # Save tour duration in preferences JSON
+        prefs = user.get_preferences()
+        prefs['tour_duration'] = int(request.form.get('tour_duration', 30))
+        user.set_preferences(prefs)
+        
+        db.session.commit()
+        
+        flash('Preferences saved successfully!', 'success')
+        return redirect(url_for('heritage'))
 
-@app.route('/profile/preferences', methods=['GET'])
-@login_required
-def edit_preferences():
-    """Edit existing preferences"""
-    return render_template('preferences.html', title='Edit Preferences')
+    @app.route('/profile/preferences', methods=['GET'])
+    @login_required
+    def edit_preferences():
+        """Edit existing preferences"""
+        return render_template('preferences.html', title='Edit Preferences')
+
     return app
