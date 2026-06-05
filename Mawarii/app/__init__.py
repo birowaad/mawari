@@ -62,8 +62,11 @@ def create_app():
     login_manager.login_view = 'login'
     login_manager.login_message = 'Please log in to access this page.'
     
+    # ========== IMPORTANT: Drop and recreate database with new columns ==========
     with app.app_context():
-        db.create_all()
+        db.drop_all()      # This deletes the old database (users will be lost)
+        db.create_all()    # This creates new database with interests, experience_level, preferences
+        print("✅ Database recreated successfully with User interests, experience_level, preferences columns!")
 
     # ===========================================================
     # Language Settings
