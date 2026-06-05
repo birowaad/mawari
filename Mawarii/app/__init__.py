@@ -308,4 +308,82 @@ def create_app():
     def edit_preferences():
         return render_template('preferences.html', title='Edit Preferences')
 
+        # ===========================================================
+    # Recommendation & AI Agent API Endpoints
+    # ===========================================================
+    
+    from app.recommendation_engine import RecommendationEngine
+    from app.ai_agent import AIAgent
+    
+    # تهيئة محرك التوصيات
+    @app.before_first_request
+    def init_recommendation_engine():
+        from app.models import Model3D
+        models = Model3D.query.filter_by(is_active=True).all()
+        models_data = [{'id': m.id, 'name': m.name, 'tags': m.tags, 'description': m.description} for m in models]
+        app.recommendation_engine = RecommendationEngine(models_data)
+        app.recommendation_engine.build_index()
+        app.ai_agent = AIAgent(db, app.recommendation_engine)
+        print("✅ AI Recommendation Engine and Agent initialized!")
+    
+    @app.route('/api/recommendations/v2')
+    @login_required
+    def get_recommendations_v2():
+        """API متقدمة للتوصيات باستخدام TF-IDF و Cosine Similarity"""
+        user = current_user
+        user_interests = [i.strip() for i in user.interests.split(',') if i.strip()] if user.interests else []
+        
+        recommendations = app.recommendation_engine.get_recommendations(
+            user_interests, 
+            user.experience_level,
+            top_n=6
+        )
+        
+        return {
+            'user_interests': user_interests,
+            'user_experience_level': user.experience_level,
+            'recommendations': recommendations,
+            'algorithm': 'TF-IDF + Cosine Similarity'
+        }
+    
+    @app.route('/api/agent/insights')
+    @login_required
+    def get_agent_insights():
+        """الحصول على رؤى من الوكيل الذكي"""
+        insights = app.ai_agent.get_insights(current_user.id)
+        return insights
+    
+    @app.route('/api/agent/learning-path')
+    @login_required
+    def get_learning_path():
+        """الحصول على مسار تعلم مخصص"""
+        path = app.ai_agent.generate_learning_path(current_user.id, num_steps=5)
+        return {'learning_path': path}
+    
+    @app.route('/api/agent/contextual')
+    @login_required
+    def get_contextual_recommendations():
+        """توصيات سياقية بناءً على الوقت الحالي"""
+        current_model = request.args.get('current_model')
+        recommendations = app.ai_agent.get_contextual_recommendations(
+            current_user.id, 
+            current_model_id=current_model
+        )
+        return {'recommendations': recommendations}
+    
+    @app.route('/api/metrics/evaluate')
+    @login_required
+    def evaluate_recommendations():
+        """تقييم أداء محرك التوصيات (للمدير فقط)"""
+        if not current_user.is_admin():
+            return {'error': 'Unauthorized'}, 403
+        
+        # بيانات اختبار (يمكن تحميلها من ملف)
+        test_data = [
+            {'interests': ['architecture', 'history'], 'expected_models': [1, 2, 3]},
+            {'interests': ['nature', 'landscape'], 'expected_models': [4, 5, 6]},
+        ]
+        
+        metrics = app.recommendation_engine.evaluate_recommendations(test_data)
+        return metrics
     return app
