@@ -15,8 +15,14 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 
 
-# User model
+# ===========================================================
+# MODELS - ORDER MATTERS FOR FOREIGN KEYS
+# ===========================================================
+
+# 1. User model (must be first because UserInteraction references it)
 class User(db.Model):
+    __tablename__ = 'users'
+    
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
@@ -40,7 +46,6 @@ class User(db.Model):
     def get_interests_list(self):
         return [i.strip() for i in self.interests.split(',') if i.strip()] if self.interests else []
     
-    # Flask-Login required properties
     @property
     def is_authenticated(self):
         return True
@@ -57,6 +62,7 @@ class User(db.Model):
         return str(self.id)
 
 
+# 2. Model3D model (must be before UserInteraction)
 class Model3D(db.Model):
     __tablename__ = 'models_3d'
     
@@ -78,6 +84,7 @@ class Model3D(db.Model):
         return [t.strip() for t in self.tags.split(',') if t.strip()]
 
 
+# 3. UserInteraction model (depends on User and Model3D)
 class UserInteraction(db.Model):
     __tablename__ = 'user_interactions'
     
@@ -138,6 +145,12 @@ def create_app():
     with app.app_context():
         db.create_all()
         print("✅ Database tables created successfully!")
+        
+        # Verify tables
+        from sqlalchemy import inspect
+        inspector = inspect(db.engine)
+        tables = inspector.get_table_names()
+        print(f"📋 Created tables: {tables}")
 
     # ===========================================================
     # Helper Functions for Interaction Logging
