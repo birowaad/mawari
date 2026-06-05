@@ -28,7 +28,7 @@ class User(db.Model):
     username = db.Column(db.String(150), unique=True, nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
-    role = db.Column(db.String(50), default='user')  # 'admin' or 'user'
+    role = db.Column(db.String(50), default='user')
     interests = db.Column(db.String(500), default='')
     experience_level = db.Column(db.String(50), default='beginner')
     preferences = db.Column(db.Text, default='{}')
@@ -53,7 +53,6 @@ class User(db.Model):
     def is_admin(self):
         return self.role == 'admin'
     
-    # Flask-Login required properties
     @property
     def is_authenticated(self):
         return True
@@ -246,6 +245,11 @@ def create_app():
             return "AR model not found", 404
         return render_template('ar_model.html', title=f"AR View: {model_name.replace('_', ' ').title()}", model_file=ar_models[model_name])
 
+    @app.route('/virtual-city-tour')
+    def virtual_city_tour():
+        """Virtual city tour page with gamification and AI recommendations"""
+        return render_template('virtual_city_tour.html', title='Virtual City Tour | AlUla Heritage')
+
     # ===========================================================
     # Authentication Routes
     # ===========================================================
@@ -399,6 +403,20 @@ def create_app():
         return render_template('preferences.html', title='Edit Preferences')
 
     # ===========================================================
+    # API Endpoints
+    # ===========================================================
+    
+    @app.route('/api/user/preferences')
+    @login_required
+    def api_user_preferences():
+        user = current_user
+        return {
+            'interests': user.get_interests_list(),
+            'experience_level': user.experience_level,
+            'preferences': user.get_preferences()
+        }
+
+    # ===========================================================
     # ADMIN DASHBOARD - ANALYTICS & EXPORTS
     # ===========================================================
     
@@ -414,46 +432,38 @@ def create_app():
     @admin_required
     def admin_analytics():
         """Admin analytics page with statistics"""
-        # General statistics
         total_users = User.query.count()
         total_interactions = UserInteraction.query.count()
         total_models = Model3D.query.count()
         admin_count = User.query.filter_by(role='admin').count()
         
-        # Time-based statistics (last 7 days)
         week_ago = datetime.utcnow() - timedelta(days=7)
         new_users_last_week = User.query.filter(User.created_at >= week_ago).count()
         interactions_last_week = UserInteraction.query.filter(UserInteraction.created_at >= week_ago).count()
         
-        # Most popular models
         top_models = db.session.query(
             Model3D.name,
             db.func.count(UserInteraction.id).label('count')
         ).join(UserInteraction, Model3D.id == UserInteraction.model_id).group_by(Model3D.id).order_by(db.desc('count')).limit(5).all()
         
-        # Most active users
         top_users = db.session.query(
             User.username,
             db.func.count(UserInteraction.id).label('count')
         ).join(UserInteraction, User.id == UserInteraction.user_id).group_by(User.id).order_by(db.desc('count')).limit(5).all()
         
-        # Interaction types distribution
         interaction_types = db.session.query(
             UserInteraction.interaction_type,
             db.func.count(UserInteraction.id).label('count')
         ).group_by(UserInteraction.interaction_type).all()
         
-        # Average metrics
         avg_listen_time = db.session.query(db.func.avg(UserInteraction.duration_seconds)).filter_by(interaction_type='listen').scalar() or 0
         avg_completion = db.session.query(db.func.avg(UserInteraction.completion_percentage)).scalar() or 0
         
-        # Daily activity for chart
         daily_activity = db.session.query(
             db.func.date(UserInteraction.created_at).label('date'),
             db.func.count(UserInteraction.id).label('count')
         ).group_by(db.func.date(UserInteraction.created_at)).order_by(db.desc('date')).limit(14).all()
         
-        # User interests distribution
         users_with_interests = User.query.filter(User.interests != '').count()
         
         return render_template('admin_analytics.html',
@@ -475,7 +485,6 @@ def create_app():
     @login_required
     @admin_required
     def admin_users():
-        """Admin users management page"""
         users = User.query.order_by(User.created_at.desc()).all()
         return render_template('admin_users.html', users=users)
     
@@ -483,9 +492,8 @@ def create_app():
     @login_required
     @admin_required
     def admin_delete_user(user_id):
-        """Delete a user (admin only)"""
         user = User.query.get(user_id)
-        if user and user.id != current_user.id:  # Can't delete yourself
+        if user and user.id != current_user.id:
             db.session.delete(user)
             db.session.commit()
             flash(f'User {user.username} has been deleted.', 'success')
@@ -497,7 +505,6 @@ def create_app():
     @login_required
     @admin_required
     def admin_toggle_admin(user_id):
-        """Toggle admin role for a user"""
         user = User.query.get(user_id)
         if user and user.id != current_user.id:
             user.role = 'user' if user.role == 'admin' else 'admin'
@@ -513,7 +520,6 @@ def create_app():
     @login_required
     @admin_required
     def export_users_csv():
-        """Export users data to CSV"""
         users = User.query.all()
         
         output = StringIO()
@@ -535,7 +541,6 @@ def create_app():
     @login_required
     @admin_required
     def export_interactions_csv():
-        """Export interactions data to CSV"""
         interactions = UserInteraction.query.all()
         
         output = StringIO()
@@ -558,37 +563,16 @@ def create_app():
     @login_required
     @admin_required
     def export_metrics_csv():
-        """Export recommendation metrics to CSV"""
-        # Calculate recommendation metrics
-        from app.recommendation_engine import RecommendationEngine
-        from app.ai_agent import AIAgent
-        
         models = Model3D.query.filter_by(is_active=True).all()
-        models_data = [{'id': m.id, 'name': m.name, 'tags': m.tags, 'description': m.description} for m in models]
-        engine = RecommendationEngine(models_data)
-        engine.build_index()
-        
-        # Get all users with interests
         users = User.query.filter(User.interests != '').all()
-        
-        metrics_data = []
-        for user in users:
-            interests = user.get_interests_list()
-            if interests:
-                recommendations = engine.get_recommendations(interests, user.experience_level, top_n=5)
-                metrics_data.append({
-                    'user_id': user.id,
-                    'username': user.username,
-                    'interests': user.interests,
-                    'recommendations_count': len(recommendations)
-                })
         
         output = StringIO()
         writer = csv.writer(output)
         writer.writerow(['User ID', 'Username', 'Interests', 'Recommendations Count'])
         
-        for data in metrics_data:
-            writer.writerow([data['user_id'], data['username'], data['interests'], data['recommendations_count']])
+        for user in users:
+            interests = user.get_interests_list()
+            writer.writerow([user.id, user.username, user.interests, len(interests)])
         
         response = make_response(output.getvalue())
         response.headers['Content-Disposition'] = 'attachment; filename=metrics_export.csv'
