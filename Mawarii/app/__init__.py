@@ -9,6 +9,9 @@ import io
 import os
 import json
 from datetime import datetime
+import numpy as np
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 # Initialize extensions
 db = SQLAlchemy()
@@ -16,10 +19,9 @@ login_manager = LoginManager()
 
 
 # ===========================================================
-# MODELS - ORDER MATTERS FOR FOREIGN KEYS
+# MODELS
 # ===========================================================
 
-# 1. User model (must be first because UserInteraction references it)
 class User(db.Model):
     __tablename__ = 'users'
     
@@ -62,7 +64,6 @@ class User(db.Model):
         return str(self.id)
 
 
-# 2. Model3D model (must be before UserInteraction)
 class Model3D(db.Model):
     __tablename__ = 'models_3d'
     
@@ -84,7 +85,6 @@ class Model3D(db.Model):
         return [t.strip() for t in self.tags.split(',') if t.strip()]
 
 
-# 3. UserInteraction model (depends on User and Model3D)
 class UserInteraction(db.Model):
     __tablename__ = 'user_interactions'
     
@@ -135,7 +135,7 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-    # Initialize extensions with app
+    # Initialize extensions
     db.init_app(app)
     login_manager.init_app(app)
     login_manager.login_view = 'login'
@@ -145,36 +145,63 @@ def create_app():
     with app.app_context():
         db.create_all()
         print("✅ Database tables created successfully!")
-        
-        # Verify tables
-        from sqlalchemy import inspect
-        inspector = inspect(db.engine)
-        tables = inspector.get_table_names()
-        print(f"📋 Created tables: {tables}")
+
+    # ========== INITIALIZE RECOMMENDATION ENGINE ==========
+    with app.app_context():
+        try:
+            models = Model3D.query.filter_by(is_active=True).all()
+            models_data = []
+            for m in models:
+                tags_text = m.tags if m.tags else ''
+                name_text = m.name if m.name else ''
+                desc_text = m.description if m.description else ''
+                text = f"{tags_text} {name_text} {desc_text}".lower()
+                models_data.append({
+                    'id': m.id,
+                    'name': m.name,
+                    'text': text,
+                    'category': m.category,
+                    'file_path': m.file_path
+                })
+            
+            if models_data:
+                app.models_data = models_data
+                vectorizer = TfidfVectorizer(stop_words='english', max_features=100)
+                app.tfidf_matrix = vectorizer.fit_transform([m['text'] for m in models_data])
+                app.vectorizer = vectorizer
+                print(f"✅ Recommendation engine initialized with {len(models_data)} models")
+            else:
+                app.models_data = []
+                print("⚠️ No models found for recommendation engine")
+        except Exception as e:
+            print(f"❌ Error initializing recommendation engine: {e}")
+            app.models_data = []
 
     # ===========================================================
-    # Helper Functions for Interaction Logging
+    # Helper Functions
     # ===========================================================
     
-    def log_interaction(user_id, model_id, interaction_type, duration=0, completion=0, **kwargs):
-        try:
-            UserInteraction.log_interaction(
-                db.session, user_id, model_id, interaction_type, duration, completion, **kwargs
-            )
-            print(f"✅ Logged: {interaction_type} | user:{user_id} | model:{model_id}")
-            return True
-        except Exception as e:
-            print(f"❌ Error logging interaction: {e}")
-            return False
-    
-    def log_view_interaction(user_id, model_id, duration=0):
-        return log_interaction(user_id, model_id, 'view', duration)
-    
-    def log_listen_interaction(user_id, model_id, duration=0, completion=100):
-        return log_interaction(user_id, model_id, 'listen', duration, completion)
-    
-    def log_explore_interaction(user_id, model_id, duration=0):
-        return log_interaction(user_id, model_id, 'explore', duration)
+    def get_recommendations(user_interests, top_n=5):
+        """Get recommendations using TF-IDF and Cosine Similarity"""
+        if not app.models_data or not user_interests:
+            return []
+        
+        user_query = ' '.join(user_interests).lower()
+        user_vector = app.vectorizer.transform([user_query])
+        similarities = cosine_similarity(user_vector, app.tfidf_matrix).flatten()
+        
+        indices = similarities.argsort()[::-1][:top_n]
+        
+        recommendations = []
+        for idx in indices:
+            if similarities[idx] > 0:
+                recommendations.append({
+                    'id': app.models_data[idx]['id'],
+                    'name': app.models_data[idx]['name'],
+                    'category': app.models_data[idx]['category'],
+                    'similarity_score': round(float(similarities[idx]) * 100, 2)
+                })
+        return recommendations
 
     # ===========================================================
     # Language Settings
@@ -200,7 +227,7 @@ def create_app():
             session['language'] = 'en'
 
     # ===========================================================
-    # Routes
+    # Main Routes
     # ===========================================================
 
     @app.route('/')
@@ -224,11 +251,7 @@ def create_app():
     def heritage_ar(heritage_id):
         heritage_data = {
             'hegra_tomb': {'name': 'Hegra - Qasr al-Farid', 'model_file': 'hegra_tomb.glb'},
-            'alula_old_town': {'name': 'AlUla Old Town', 'model_file': 'alula_old_town.glb'},
-            'dadan_lion_tombs': {'name': 'Dadan Lion Tombs', 'model_file': 'dadan_lion_tombs.glb'},
-            'jabal_ikmah': {'name': 'Jabal Ikmah', 'model_file': 'jabal_ikmah.glb'},
-            'ancient_tomb': {'name': 'Ancient Tomb', 'model_file': 'ancient_tomb.glb'},
-            'old_city_wall': {'name': 'Old City Wall', 'model_file': 'old_city_wall.glb'}
+            'alula_old_town': {'name': 'AlUla Old Town', 'model_file': 'alula_old_town.glb'}
         }
         info = heritage_data.get(heritage_id, heritage_data['hegra_tomb'])
         return render_template('heritage_detail.html', title=info['name'], heritage=info, heritage_id=heritage_id)
@@ -238,14 +261,15 @@ def create_app():
         ar_models = {
             "ancient_tomb": "ancient_tomb.glb",
             "old_city_wall": "old_city_wall.glb",
-            "hegra_tomb": "hegra_tomb.glb",
-            "alula_old_town": "alula_old_town.glb",
-            "dadan_lion_tombs": "dadan_lion_tombs.glb",
-            "jabal_ikmah": "jabal_ikmah.glb"
+            "hegra_tomb": "hegra_tomb.glb"
         }
         if model_name not in ar_models:
             return "AR model not found", 404
         return render_template('ar_model.html', title=f"AR View: {model_name.replace('_', ' ').title()}", model_file=ar_models[model_name])
+
+    # ===========================================================
+    # Authentication Routes
+    # ===========================================================
 
     @app.route('/register', methods=['GET', 'POST'])
     def register():
@@ -394,77 +418,148 @@ def create_app():
         return render_template('preferences.html', title='Edit Preferences')
 
     # ===========================================================
-    # API Endpoints for Interaction Logging
+    # SMART RECOMMENDATIONS API (TF-IDF + Cosine Similarity)
     # ===========================================================
     
-    @app.route('/api/log/interaction', methods=['POST'])
+    @app.route('/api/recommendations/v2')
     @login_required
-    def api_log_interaction():
-        data = request.get_json()
+    def api_recommendations_v2():
+        """Advanced recommendations using TF-IDF and Cosine Similarity"""
+        user = current_user
+        user_interests = user.get_interests_list()
         
-        model_id = data.get('model_id')
-        interaction_type = data.get('type')
-        duration = data.get('duration', 0)
-        completion = data.get('completion', 0)
-        metadata = data.get('metadata', {})
+        if not user_interests:
+            return jsonify({
+                'user_interests': [],
+                'message': 'Please set your preferences first',
+                'recommendations': []
+            })
         
-        if not model_id or not interaction_type:
-            return jsonify({'error': 'Missing required fields'}), 400
+        recommendations = get_recommendations(user_interests, top_n=6)
         
-        success = log_interaction(
-            current_user.id, model_id, interaction_type, 
-            duration, completion, **metadata
-        )
-        
-        if success:
-            return jsonify({'status': 'success', 'message': 'Interaction logged'})
-        return jsonify({'status': 'error', 'message': 'Failed to log interaction'}), 500
+        return jsonify({
+            'user_interests': user_interests,
+            'user_experience_level': user.experience_level,
+            'algorithm': 'TF-IDF + Cosine Similarity',
+            'recommendations': recommendations
+        })
     
-    @app.route('/api/log/view', methods=['POST'])
+    @app.route('/api/recommendations')
     @login_required
-    def api_log_view():
-        data = request.get_json()
-        model_id = data.get('model_id')
-        duration = data.get('duration', 0)
+    def api_recommendations_basic():
+        """Basic recommendations endpoint"""
+        user = current_user
+        user_interests = user.get_interests_list()
         
-        if log_view_interaction(current_user.id, model_id, duration):
-            return jsonify({'status': 'success'})
-        return jsonify({'status': 'error'}), 500
-    
-    @app.route('/api/log/listen', methods=['POST'])
-    @login_required
-    def api_log_listen():
-        data = request.get_json()
-        model_id = data.get('model_id')
-        duration = data.get('duration', 0)
-        completion = data.get('completion', 100)
+        if not user_interests:
+            return jsonify({'recommendations': []})
         
-        if log_listen_interaction(current_user.id, model_id, duration, completion):
-            return jsonify({'status': 'success'})
-        return jsonify({'status': 'error'}), 500
-    
-    @app.route('/api/log/explore', methods=['POST'])
-    @login_required
-    def api_log_explore():
-        data = request.get_json()
-        model_id = data.get('model_id')
-        
-        if log_explore_interaction(current_user.id, model_id):
-            return jsonify({'status': 'success'})
-        return jsonify({'status': 'error'}), 500
+        recommendations = get_recommendations(user_interests, top_n=5)
+        return jsonify({'recommendations': recommendations})
 
     # ===========================================================
-    # User API Endpoints
+    # AI AGENT API ENDPOINTS
     # ===========================================================
+    
+    @app.route('/api/agent/insights')
+    @login_required
+    def api_agent_insights():
+        """AI Agent insights based on user behavior"""
+        user = current_user
+        user_interests = user.get_interests_list()
+        
+        # Calculate engagement score based on interactions
+        interactions = UserInteraction.query.filter_by(user_id=user.id).count()
+        engagement_score = min(100, interactions * 10)
+        
+        insights = []
+        
+        if engagement_score > 70:
+            insights.append("You're a heritage expert! 🎓")
+        elif engagement_score > 30:
+            insights.append("You're building great heritage knowledge! 📚")
+        else:
+            insights.append("Explore more heritage sites to unlock AI insights! 🌍")
+        
+        if user_interests:
+            insights.append(f"Your interests: {', '.join(user_interests[:3])}")
+        
+        # Get recommendations for next step
+        recommendations = get_recommendations(user_interests, top_n=1)
+        next_rec = recommendations[0] if recommendations else None
+        
+        return jsonify({
+            'insights': insights,
+            'engagement_score': engagement_score,
+            'interactions_count': interactions,
+            'next_recommendation': next_rec
+        })
+    
+    @app.route('/api/agent/learning-path')
+    @login_required
+    def api_agent_learning_path():
+        """Generate personalized learning path"""
+        user = current_user
+        user_interests = user.get_interests_list()
+        
+        if not user_interests:
+            return jsonify({'learning_path': [], 'message': 'Set your preferences first'})
+        
+        recommendations = get_recommendations(user_interests, top_n=5)
+        
+        # Categorize into learning levels
+        learning_path = []
+        for i, rec in enumerate(recommendations):
+            level = 'Beginner' if i < 2 else 'Intermediate' if i < 4 else 'Advanced'
+            learning_path.append({
+                'step': i + 1,
+                'level': level,
+                'model_id': rec['id'],
+                'model_name': rec['name'],
+                'similarity_score': rec['similarity_score']
+            })
+        
+        return jsonify({
+            'learning_path': learning_path,
+            'total_steps': len(learning_path)
+        })
+    
+    @app.route('/api/agent/contextual')
+    @login_required
+    def api_agent_contextual():
+        """Contextual recommendations based on time of day"""
+        user = current_user
+        user_interests = user.get_interests_list()
+        
+        current_hour = datetime.now().hour
+        
+        if current_hour < 12:
+            time_context = 'morning'
+            context_message = "Good morning! Start your heritage journey with these sites"
+        elif current_hour < 18:
+            time_context = 'afternoon'
+            context_message = "Good afternoon! Discover these hidden gems"
+        else:
+            time_context = 'evening'
+            context_message = "Good evening! Relax and explore these amazing places"
+        
+        recommendations = get_recommendations(user_interests, top_n=4)
+        
+        return jsonify({
+            'time_context': time_context,
+            'message': context_message,
+            'recommendations': recommendations
+        })
     
     @app.route('/api/user/preferences')
     @login_required
     def api_user_preferences():
+        """Get user preferences"""
         user = current_user
-        return {
+        return jsonify({
             'interests': user.get_interests_list(),
             'experience_level': user.experience_level,
             'preferences': user.get_preferences()
-        }
+        })
 
     return app
