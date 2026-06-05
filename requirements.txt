@@ -1,7 +1,11 @@
 Flask
 Flask-SQLAlchemy
 Flask-Login
+Flask-Bcrypt
 Werkzeug
 qrcode
 Pillow
 gunicorn
+scikit-learn
+numpy
+scipy
