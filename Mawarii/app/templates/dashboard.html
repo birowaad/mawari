@@ -18,7 +18,7 @@
         </div>
     </div>
 
-    <!-- إحصائيات المستخدم -->
+    <!-- Statistics Cards -->
     <div class="row g-3 mb-4">
         <div class="col-md-3 col-6">
             <div class="card dashboard-stats-card p-3 text-center border-0 shadow-sm">
@@ -50,37 +50,56 @@
         </div>
     </div>
 
-    <!-- قائمة أحدث النماذج المستكشفة -->
+    <!-- User Preferences Card -->
     <div class="card shadow-sm mb-4 border-0">
         <div class="card-header bg-transparent border-0 pt-3">
-            <h5 class="mb-0"><i class="bi bi-clock-history text-warning"></i> {% if current_lang == 'en' %}Recently Explored{% else %}آخر النماذج المستكشفة{% endif %}</h5>
+            <h5 class="mb-0"><i class="bi bi-sliders2 text-warning"></i> {% if current_lang == 'en' %}Your Preferences{% else %}تفضيلاتك{% endif %}</h5>
         </div>
         <div class="card-body">
-            <div id="recentModelsList" class="row g-3">
-                <div class="col-12 text-center text-muted py-3">
-                    <i class="bi bi-info-circle"></i> {% if current_lang == 'en' %}No models explored yet. Start your journey!{% else %}لم يتم استكشاف أي نماذج بعد. ابدأ رحلتك!{% endif %}
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <p class="mb-2 text-muted">
+                        {% if current_lang == 'en' %}Personalize your heritage experience by setting your interests and preferred tour duration.{% else %}خصص تجربتك التراثية من خلال تحديد اهتماماتك ومدة الجولة المفضلة.{% endif %}
+                    </p>
+                    <div class="d-flex flex-wrap gap-2" id="userInterestsDisplay">
+                        <span class="badge bg-secondary">{% if current_lang == 'en' %}No interests selected{% else %}لم يتم اختيار اهتمامات{% endif %}</span>
+                    </div>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <a href="{{ url_for('edit_preferences') }}" class="btn btn-outline-warning rounded-pill">
+                        <i class="bi bi-pencil"></i> {% if current_lang == 'en' %}Edit Preferences{% else %}تعديل التفضيلات{% endif %}
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- أزرار الإجراءات السريعة -->
+    <!-- Quick Actions -->
     <div class="row g-3">
-        <div class="col-md-4 col-sm-6">
+        <div class="col-md-3 col-sm-6">
             <div class="card dashboard-card p-3 text-center border-0 shadow-sm">
                 <i class="bi bi-person-circle fs-1 text-primary"></i>
                 <h5 class="mt-2">{% if current_lang == 'en' %}Edit Profile{% else %}تعديل الملف الشخصي{% endif %}</h5>
                 <a href="{{ url_for('profile') }}" class="btn btn-warning mt-2">{% if current_lang == 'en' %}Go{% else %}انتقال{% endif %}</a>
             </div>
         </div>
-        <div class="col-md-4 col-sm-6">
+        <div class="col-md-3 col-sm-6">
             <div class="card dashboard-card p-3 text-center border-0 shadow-sm">
                 <i class="bi bi-vr fs-1 text-success"></i>
                 <h5 class="mt-2">{% if current_lang == 'en' %}Explore Heritage{% else %}استكشف التراث{% endif %}</h5>
                 <a href="{{ url_for('heritage') }}" class="btn btn-warning mt-2">{% if current_lang == 'en' %}Go{% else %}انتقال{% endif %}</a>
             </div>
         </div>
-        <div class="col-md-4 col-sm-6">
+        <div class="col-md-3 col-sm-6">
+            <div class="card dashboard-card p-3 text-center border-0 shadow-sm">
+                <i class="bi bi-sliders2 fs-1 text-info"></i>
+                <h5 class="mt-2">{% if current_lang == 'en' %}My Preferences{% else %}تفضيلاتي{% endif %}</h5>
+                <a href="{{ url_for('edit_preferences') }}" class="btn btn-info mt-2">
+                    {% if current_lang == 'en' %}Edit{% else %}تعديل{% endif %}
+                </a>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
             <div class="card dashboard-card p-3 text-center border-0 shadow-sm">
                 <i class="bi bi-box-arrow-right fs-1 text-danger"></i>
                 <h5 class="mt-2">{% if current_lang == 'en' %}Logout{% else %}تسجيل خروج{% endif %}</h5>
@@ -91,10 +110,9 @@
 </div>
 
 <script>
-    // تحميل وعرض الإحصائيات من localStorage
+    // Load saved data from localStorage
     function loadDashboardStats() {
         const savedHistory = localStorage.getItem('heritageExploredHistory');
-        
         if (savedHistory) {
             const history = JSON.parse(savedHistory);
             const totalModels = history.length;
@@ -105,7 +123,6 @@
             document.getElementById('totalTimeSpent').textContent = totalMinutes;
             document.getElementById('storiesListened').textContent = totalStories;
             
-            // حساب الإنجازات بناءً على الإحصائيات
             let achievements = 0;
             if (totalModels >= 1) achievements++;
             if (totalModels >= 3) achievements++;
@@ -115,54 +132,30 @@
             if (totalStories >= 3) achievements++;
             if (totalStories >= 7) achievements++;
             document.getElementById('achievementsCount').textContent = achievements;
+        }
+    }
+    
+    // Load user preferences from server
+    async function loadUserPreferences() {
+        try {
+            const response = await fetch('/api/user/preferences');
+            const data = await response.json();
             
-            // عرض آخر النماذج المستكشفة
-            displayRecentModels(history);
+            if (data.interests && data.interests.length > 0) {
+                const container = document.getElementById('userInterestsDisplay');
+                container.innerHTML = data.interests.map(interest => 
+                    `<span class="badge bg-warning text-dark">${interest}</span>`
+                ).join('');
+            }
+        } catch (error) {
+            console.error('Error loading preferences:', error);
         }
     }
     
-    // عرض آخر 4 نماذج تم استكشافها
-    function displayRecentModels(history) {
-        const recentContainer = document.getElementById('recentModelsList');
-        const sorted = [...history].sort((a, b) => (b.lastVisited || 0) - (a.lastVisited || 0));
-        const recent = sorted.slice(0, 4);
-        
-        if (recent.length === 0) {
-            recentContainer.innerHTML = `<div class="col-12 text-center text-muted py-3">
-                <i class="bi bi-info-circle"></i> ${getText('no_models')}
-            </div>`;
-            return;
-        }
-        
-        recentContainer.innerHTML = recent.map(item => `
-            <div class="col-md-3 col-6">
-                <div class="card border-0 shadow-sm text-center p-2 h-100">
-                    <div class="model-icon mt-2">
-                        <i class="bi bi-building fs-2 text-primary"></i>
-                    </div>
-                    <h6 class="mt-2 mb-0 small fw-bold">${item.name}</h6>
-                    <small class="text-muted">${getText('last_visited')}: ${new Date(item.lastVisited).toLocaleDateString()}</small>
-                    <div class="mt-1">
-                        <span class="badge bg-secondary">${item.time || 0} ${getText('min')}</span>
-                        <span class="badge bg-info ms-1">${item.stories || 0} 🎧</span>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-    }
-    
-    // نصوص مترجمة للوحة التحكم
-    function getText(key) {
-        const lang = '{{ current_lang }}';
-        const texts = {
-            no_models: { en: 'No models explored yet. Start your journey!', ar: 'لم يتم استكشاف أي نماذج بعد. ابدأ رحلتك!' },
-            last_visited: { en: 'Last visited', ar: 'آخر زيارة' },
-            min: { en: 'min', ar: 'دقيقة' }
-        };
-        return texts[key]?.[lang] || texts[key]?.en || key;
-    }
-    
-    document.addEventListener('DOMContentLoaded', loadDashboardStats);
+    document.addEventListener('DOMContentLoaded', () => {
+        loadDashboardStats();
+        loadUserPreferences();
+    });
 </script>
 
 <style>
@@ -177,7 +170,6 @@
     }
     @media (max-width: 768px) {
         .dashboard-stats-card h3 { font-size: 1.2rem; }
-        .recent-model-title { font-size: 0.8rem; }
     }
 </style>
 {% endblock %}
