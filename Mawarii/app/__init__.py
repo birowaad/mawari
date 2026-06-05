@@ -37,8 +37,8 @@ class User(db.Model):
     def set_preferences(self, prefs_dict):
         self.preferences = json.dumps(prefs_dict)
     
-    def is_admin(self):
-        return self.role == 'admin' if hasattr(self, 'role') else False
+    def get_interests_list(self):
+        return [i.strip() for i in self.interests.split(',') if i.strip()] if self.interests else []
     
     # Flask-Login required properties
     @property
@@ -87,17 +87,17 @@ class UserInteraction(db.Model):
     interaction_type = db.Column(db.String(50), nullable=False)
     duration_seconds = db.Column(db.Integer, default=0)
     completion_percentage = db.Column(db.Float, default=0.0)
-    metadata = db.Column(db.Text, default='{}')
+    interaction_data = db.Column(db.Text, default='{}')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     def get_metadata(self):
         try:
-            return json.loads(self.metadata) if self.metadata else {}
+            return json.loads(self.interaction_data) if self.interaction_data else {}
         except:
             return {}
     
     def set_metadata(self, data_dict):
-        self.metadata = json.dumps(data_dict)
+        self.interaction_data = json.dumps(data_dict)
     
     @classmethod
     def log_interaction(cls, db_session, user_id, model_id, interaction_type, duration=0, completion=0, **kwargs):
@@ -144,7 +144,6 @@ def create_app():
     # ===========================================================
     
     def log_interaction(user_id, model_id, interaction_type, duration=0, completion=0, **kwargs):
-        """تسجيل تفاعل المستخدم مع مجسم معين"""
         try:
             UserInteraction.log_interaction(
                 db.session, user_id, model_id, interaction_type, duration, completion, **kwargs
@@ -163,12 +162,6 @@ def create_app():
     
     def log_explore_interaction(user_id, model_id, duration=0):
         return log_interaction(user_id, model_id, 'explore', duration)
-    
-    def log_hotspot_interaction(user_id, model_id, hotspot_id, hotspot_name):
-        return log_interaction(user_id, model_id, 'hotspot_click', metadata={'hotspot_id': hotspot_id, 'hotspot_name': hotspot_name})
-    
-    def log_share_interaction(user_id, model_id, platform='social'):
-        return log_interaction(user_id, model_id, 'share', metadata={'platform': platform})
 
     # ===========================================================
     # Language Settings
@@ -394,7 +387,6 @@ def create_app():
     @app.route('/api/log/interaction', methods=['POST'])
     @login_required
     def api_log_interaction():
-        """API endpoint لتسجيل التفاعلات من الواجهة الأمامية"""
         data = request.get_json()
         
         model_id = data.get('model_id')
@@ -455,7 +447,6 @@ def create_app():
     @app.route('/api/user/preferences')
     @login_required
     def api_user_preferences():
-        """الحصول على تفضيلات المستخدم"""
         user = current_user
         return {
             'interests': user.get_interests_list(),
