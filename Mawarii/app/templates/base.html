@@ -67,10 +67,16 @@
         .lang-btn:not(.active):hover {
             background-color: rgba(218,165,32,0.2) !important;
         }
+        .nav-link {
+            transition: all 0.2s ease;
+        }
+        .nav-link:hover {
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
-    <!-- Language Switcher - Visible on ALL pages -->
+    <!-- Language Switcher -->
     <div class="lang-switch">
         <div class="btn-group btn-group-sm" role="group">
             <a href="{{ url_for('set_language', lang='en') }}" class="btn lang-btn {% if current_lang == 'en' %}active{% endif %}">
@@ -110,6 +116,8 @@
                 {% if 'user_id' in session %}
                 <li class="nav-item"><a href="{{ url_for('dashboard') }}" class="nav-link interactive-text"><i class="bi bi-speedometer2"></i> {% if current_lang == 'en' %}Dashboard{% else %}لوحة التحكم{% endif %}</a></li>
                 <li class="nav-item"><a href="{{ url_for('profile') }}" class="nav-link interactive-text"><i class="bi bi-person-circle"></i> {% if current_lang == 'en' %}Profile{% else %}الملف الشخصي{% endif %}</a></li>
+                <!-- NEW: Preferences link in navigation -->
+                <li class="nav-item"><a href="{{ url_for('edit_preferences') }}" class="nav-link interactive-text"><i class="bi bi-sliders2"></i> {% if current_lang == 'en' %}Preferences{% else %}التفضيلات{% endif %}</a></li>
                 <li class="nav-item"><a href="{{ url_for('logout') }}" class="nav-link interactive-text"><i class="bi bi-box-arrow-right"></i> {% if current_lang == 'en' %}Logout{% else %}تسجيل خروج{% endif %}</a></li>
                 {% else %}
                 <li class="nav-item"><a href="{{ url_for('register') }}" class="nav-link interactive-text"><i class="bi bi-person-plus-fill"></i> {% if current_lang == 'en' %}Register{% else %}تسجيل{% endif %}</a></li>
@@ -142,7 +150,7 @@
 
     <!-- FOOTER -->
     <footer class="py-3" style="background-color: var(--btn-bg); color: var(--text-color); text-align:center;">
-        Team Mawari | {% if current_lang == 'en' %}Developer: 10th Level Computer Science, University College of Ranyah{% else %}المطور: طالبات المستوى العاشر علوم حاسب، الكلية الجامعية برنية مجموعة مواري{% endif %}
+        Team Mawari | {% if current_lang == 'en' %}Developer: 10th Level Computer Science, University College of Ranyah{% else %}المطور: المستوى العاشر علوم حاسوب، الكلية الجامعية برنية{% endif %}
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -151,6 +159,18 @@
             const html = document.documentElement;
             html.dataset.theme = html.dataset.theme === 'light' ? 'dark' : 'light';
         }
+        
+        // Add active class to current navigation item
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPath = window.location.pathname;
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === currentPath) {
+                    link.style.fontWeight = 'bold';
+                    link.style.textDecoration = 'underline';
+                }
+            });
+        });
     </script>
 </body>
 </html>
