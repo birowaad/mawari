@@ -7,10 +7,12 @@ import qrcode
 from flask import send_file
 import io
 import os
+import json
 
-# Initialize SQLAlchemy
+# Initialize extensions
 db = SQLAlchemy()
 login_manager = LoginManager()
+
 
 # User model
 class User(db.Model):
@@ -18,9 +20,9 @@ class User(db.Model):
     username = db.Column(db.String(150), unique=True, nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
-    interests = db.Column(db.String(500), default='')  # NEW: Store interests as comma-separated
-    experience_level = db.Column(db.String(50), default='beginner')  # NEW
-    preferences = db.Column(db.Text, default='{}')  # NEW: JSON string for additional preferences
+    interests = db.Column(db.String(500), default='')
+    experience_level = db.Column(db.String(50), default='beginner')
+    preferences = db.Column(db.Text, default='{}')
     
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -29,12 +31,16 @@ class User(db.Model):
         return check_password_hash(self.password, password)
     
     def get_preferences(self):
-        import json
         return json.loads(self.preferences) if self.preferences else {}
     
     def set_preferences(self, prefs_dict):
-        import json
         self.preferences = json.dumps(prefs_dict)
+    
+    def is_admin(self):
+        return self.role == 'admin' if hasattr(self, 'role') else False
+    
+    def get_id(self):
+        return str(self.id)
 
 
 @login_manager.user_loader
@@ -46,32 +52,31 @@ def create_app():
     app = Flask(__name__)
 
     # App config
-    app.config['SECRET_KEY'] = 'your-secret-key'
+    app.config['SECRET_KEY'] = 'your-secret-key-change-this'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-    # Initialize extensions
+    # Initialize extensions with app
     db.init_app(app)
     login_manager.init_app(app)
     login_manager.login_view = 'login'
+    login_manager.login_message = 'Please log in to access this page.'
     
     with app.app_context():
         db.create_all()
 
     # ===========================================================
-    # إعدادات اللغة - Language Settings
+    # Language Settings
     # ===========================================================
 
     @app.route('/set_language/<lang>')
     def set_language(lang):
-        """تغيير اللغة"""
         if lang in ['en', 'ar']:
             session['language'] = lang
         return redirect(request.referrer or url_for('index'))
 
     @app.context_processor
     def inject_language():
-        """إضافة متغيرات اللغة إلى جميع القوالب"""
         current_lang = session.get('language', 'en')
         return {
             'current_lang': current_lang,
@@ -80,12 +85,11 @@ def create_app():
 
     @app.before_request
     def set_default_language():
-        """تعيين اللغة الافتراضية"""
         if 'language' not in session:
             session['language'] = 'en'
 
     # ===========================================================
-    # المسارات - Routes
+    # Routes
     # ===========================================================
 
     @app.route('/')
@@ -108,60 +112,15 @@ def create_app():
     @app.route('/heritage/<heritage_id>')
     def heritage_ar(heritage_id):
         heritage_data = {
-            'hegra_tomb': {
-                'name': 'Hegra (Mada\'in Saleh) - Qasr al-Farid',
-                'description': 'The largest and most famous tomb at Hegra.',
-                'history': 'Built during the Nabataean Kingdom in the 1st century CE.',
-                'location': 'Hegra Archaeological Site, AlUla',
-                'coordinates': '26.8041° N, 37.9656° E',
-                'model_file': 'hegra_tomb.glb'
-            },
-            'alula_old_town': {
-                'name': 'AlUla Old Town',
-                'description': 'A historic mud-brick village.',
-                'history': 'Settled from the 12th century CE.',
-                'location': 'AlUla Valley',
-                'coordinates': '26.6367° N, 37.9240° E',
-                'model_file': 'alula_old_town.glb'
-            },
-            'dadan_lion_tombs': {
-                'name': 'Dadan (Al-Khuraybah)',
-                'description': 'Lion tombs carved into red rock.',
-                'history': 'Capital of the Dadan and Lihyan kingdoms.',
-                'location': 'Dadan, AlUla',
-                'coordinates': '26.6500° N, 37.9000° E',
-                'model_file': 'dadan_lion_tombs.glb'
-            },
-            'jabal_ikmah': {
-                'name': 'Jabal Ikmah',
-                'description': 'Ancient library of inscriptions.',
-                'history': 'Used as a ceremonial site for thousands of years.',
-                'location': 'Desert area north of AlUla',
-                'coordinates': '26.6800° N, 37.8500° E',
-                'model_file': 'jabal_ikmah.glb'
-            },
-            'ancient_tomb': {
-                'name': 'Ancient Tomb',
-                'description': 'A reconstructed Nabatean tomb in AR.',
-                'history': 'Nabataean burial site from the 1st century CE.',
-                'location': 'Hegra, AlUla',
-                'coordinates': '26.8041° N, 37.9656° E',
-                'model_file': 'ancient_tomb.glb'
-            },
-            'old_city_wall': {
-                'name': 'Old City Wall',
-                'description': 'The ancient defensive walls of AlUla Old Town.',
-                'history': 'Built during the 12th century CE.',
-                'location': 'AlUla Old Town',
-                'coordinates': '26.6367° N, 37.9240° E',
-                'model_file': 'old_city_wall.glb'
-            }
+            'hegra_tomb': {'name': 'Hegra - Qasr al-Farid', 'model_file': 'hegra_tomb.glb'},
+            'alula_old_town': {'name': 'AlUla Old Town', 'model_file': 'alula_old_town.glb'},
+            'dadan_lion_tombs': {'name': 'Dadan Lion Tombs', 'model_file': 'dadan_lion_tombs.glb'},
+            'jabal_ikmah': {'name': 'Jabal Ikmah', 'model_file': 'jabal_ikmah.glb'},
+            'ancient_tomb': {'name': 'Ancient Tomb', 'model_file': 'ancient_tomb.glb'},
+            'old_city_wall': {'name': 'Old City Wall', 'model_file': 'old_city_wall.glb'}
         }
         info = heritage_data.get(heritage_id, heritage_data['hegra_tomb'])
-        return render_template('heritage_detail.html',
-                               title=info['name'],
-                               heritage=info,
-                               heritage_id=heritage_id)
+        return render_template('heritage_detail.html', title=info['name'], heritage=info, heritage_id=heritage_id)
 
     @app.route('/heritage/ar/<model_name>')
     def heritage_ar_viewer(model_name):
@@ -175,9 +134,7 @@ def create_app():
         }
         if model_name not in ar_models:
             return "AR model not found", 404
-        return render_template('ar_model.html',
-                               title=f"AR View: {model_name.replace('_', ' ').title()}",
-                               model_file=ar_models[model_name])
+        return render_template('ar_model.html', title=f"AR View: {model_name.replace('_', ' ').title()}", model_file=ar_models[model_name])
 
     @app.route('/register', methods=['GET', 'POST'])
     def register():
@@ -208,9 +165,10 @@ def create_app():
             
             if user and user.check_password(password):
                 login_user(user)
+                session['user_id'] = user.id
+                session['username'] = user.username
                 flash("Login successful!", "success")
                 
-                # NEW: Redirect to preferences if not set
                 if not user.interests:
                     return redirect(url_for('preferences_page'))
                 
@@ -230,10 +188,12 @@ def create_app():
 
     @app.route('/dashboard')
     def dashboard():
-        if 'user_id' not in session and not current_user.is_authenticated:
+        if not current_user.is_authenticated and 'user_id' not in session:
             flash("Please log in to access the dashboard.", "warning")
             return redirect(url_for('login'))
-        return render_template('dashboard.html', title="Dashboard", username=session.get('username') or current_user.username)
+        
+        username = session.get('username') or (current_user.username if current_user.is_authenticated else 'Guest')
+        return render_template('dashboard.html', title="Dashboard", username=username)
 
     @app.route('/profile', methods=['GET', 'POST'])
     def profile():
@@ -277,7 +237,7 @@ def create_app():
     @app.route('/contact', methods=['GET', 'POST'])
     def contact():
         return render_template('contact.html', title="Contact Us")
-    
+
     # PWA Routes
     @app.route('/service-worker.js')
     def service_worker():
@@ -292,29 +252,23 @@ def create_app():
         return render_template('offline.html', title="Offline")
 
     # ===========================================================
-    # AI Personalization Routes (Phase 1)
+    # AI Personalization Routes
     # ===========================================================
     
     @app.route('/preferences', methods=['GET'])
     @login_required
     def preferences_page():
-        """Show preferences onboarding page"""
         return render_template('preferences.html', title='Personalize Your Experience')
 
     @app.route('/save-preferences', methods=['POST'])
     @login_required
     def save_preferences():
-        """Save user preferences"""
         user = current_user
         
-        # Get interests from form (list)
         interests = request.form.getlist('interests')
         user.interests = ','.join(interests)
-        
-        # Get experience level
         user.experience_level = request.form.get('experience_level', 'beginner')
         
-        # Save tour duration in preferences JSON
         prefs = user.get_preferences()
         prefs['tour_duration'] = int(request.form.get('tour_duration', 30))
         user.set_preferences(prefs)
@@ -327,7 +281,6 @@ def create_app():
     @app.route('/profile/preferences', methods=['GET'])
     @login_required
     def edit_preferences():
-        """Edit existing preferences"""
         return render_template('preferences.html', title='Edit Preferences')
 
     return app
