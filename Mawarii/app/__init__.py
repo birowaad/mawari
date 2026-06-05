@@ -62,8 +62,11 @@ def create_app():
     login_manager.login_view = 'login'
     login_manager.login_message = 'Please log in to access this page.'
     
-    with app.app_context():
-        db.create_all()
+      with app.app_context():
+        # NEW: Drop all tables and recreate them
+        db.drop_all()  # هذا سيحذف جميع الجداول القديمة
+        db.create_all()  # هذا سينشئ الجداول من جديد
+        print("✅ Database recreated successfully!")
 
     # ===========================================================
     # Language Settings
