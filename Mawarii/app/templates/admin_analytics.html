@@ -1,87 +1,422 @@
-<!-- templates/admin_analytics.html -->
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
-    <h2 class="mb-4">📊 Admin Analytics Dashboard</h2>
+<div class="container-fluid py-4">
     
-    <!-- Statistics Cards -->
-    <div class="row g-4 mb-5">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="display-5 fw-bold" style="color: #DAA520;">
+                <i class="bi bi-graph-up"></i> 
+                {% if current_lang == 'en' %}Admin Analytics Dashboard{% else %}لوحة تحليل البيانات للمشرف{% endif %}
+            </h1>
+            <p class="text-muted">
+                {% if current_lang == 'en' %}Monitor user activity, interaction metrics, and system performance{% else %}مراقبة نشاط المستخدمين، مقاييس التفاعل، وأداء النظام{% endif %}
+            </p>
+        </div>
+        <div>
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> 
+                {% if current_lang == 'en' %}Back to Dashboard{% else %}العودة للوحة التحكم{% endif %}
+            </a>
+        </div>
+    </div>
+
+    <!-- Quick Stats Cards -->
+    <div class="row g-4 mb-4">
         <div class="col-md-3">
-            <div class="card text-center p-3">
-                <h3>{{ total_users }}</h3>
-                <p>Total Users</p>
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-1">{% if current_lang == 'en' %}Total Users{% else %}إجمالي المستخدمين{% endif %}</h6>
+                            <h2 class="mb-0">{{ total_users }}</h2>
+                        </div>
+                        <div class="rounded-circle bg-primary bg-opacity-10 p-3">
+                            <i class="bi bi-people-fill fs-2 text-primary"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card text-center p-3">
-                <h3>{{ total_interactions }}</h3>
-                <p>Total Interactions</p>
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-1">{% if current_lang == 'en' %}Total Interactions{% else %}إجمالي التفاعلات{% endif %}</h6>
+                            <h2 class="mb-0">{{ total_interactions }}</h2>
+                        </div>
+                        <div class="rounded-circle bg-success bg-opacity-10 p-3">
+                            <i class="bi bi-hand-index-thumb-fill fs-2 text-success"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card text-center p-3">
-                <h3>{{ total_models }}</h3>
-                <p>3D Models</p>
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-1">{% if current_lang == 'en' %}3D Models{% else %}النماذج ثلاثية الأبعاد{% endif %}</h6>
+                            <h2 class="mb-0">{{ total_models }}</h2>
+                        </div>
+                        <div class="rounded-circle bg-info bg-opacity-10 p-3">
+                            <i class="bi bi-cube-fill fs-2 text-info"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card text-center p-3">
-                <h3>{{ avg_listen_time|round|int }}s</h3>
-                <p>Avg Listen Time</p>
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-1">{% if current_lang == 'en' %}Admin Users{% else %}المشرفون{% endif %}</h6>
+                            <h2 class="mb-0">{{ admin_count }}</h2>
+                        </div>
+                        <div class="rounded-circle bg-warning bg-opacity-10 p-3">
+                            <i class="bi bi-shield-lock-fill fs-2 text-warning"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    
+
+    <!-- Time-based Stats -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body">
+                    <h6><i class="bi bi-person-plus-fill text-success"></i> {% if current_lang == 'en' %}New Users (Last 7 Days){% else %}المستخدمين الجدد (آخر 7 أيام){% endif %}</h6>
+                    <h2 class="text-success">{{ new_users_last_week }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body">
+                    <h6><i class="bi bi-chat-dots-fill text-info"></i> {% if current_lang == 'en' %}Interactions (Last 7 Days){% else %}التفاعلات (آخر 7 أيام){% endif %}</h6>
+                    <h2 class="text-info">{{ interactions_last_week }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Export Buttons -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="btn-group">
+    <div class="card shadow-sm border-0 rounded-4 mb-4">
+        <div class="card-body">
+            <h5 class="mb-3"><i class="bi bi-download"></i> {% if current_lang == 'en' %}Export Data{% else %}تصدير البيانات{% endif %}</h5>
+            <div class="d-flex gap-3 flex-wrap">
                 <a href="{{ url_for('export_users_csv') }}" class="btn btn-success">
-                    <i class="bi bi-download"></i> Export Users CSV
+                    <i class="bi bi-file-spreadsheet"></i> {% if current_lang == 'en' %}Export Users{% else %}تصدير المستخدمين{% endif %}
                 </a>
                 <a href="{{ url_for('export_interactions_csv') }}" class="btn btn-primary">
-                    <i class="bi bi-download"></i> Export Interactions CSV
+                    <i class="bi bi-file-spreadsheet"></i> {% if current_lang == 'en' %}Export Interactions{% else %}تصدير التفاعلات{% endif %}
                 </a>
                 <a href="{{ url_for('export_metrics_csv') }}" class="btn btn-info">
-                    <i class="bi bi-download"></i> Export Metrics CSV
+                    <i class="bi bi-file-spreadsheet"></i> {% if current_lang == 'en' %}Export Metrics{% else %}تصدير المقاييس{% endif %}
                 </a>
             </div>
         </div>
     </div>
-    
-    <!-- Top Models -->
-    <div class="card mb-4">
-        <div class="card-header">
-            <h5>🔥 Most Popular Models</h5>
+
+    <!-- Performance Metrics -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-header bg-transparent border-0 pt-3">
+                    <h5><i class="bi bi-bar-chart-steps text-warning"></i> {% if current_lang == 'en' %}Average Listen Time{% else %}متوسط وقت الاستماع{% endif %}</h5>
+                </div>
+                <div class="card-body text-center">
+                    <div class="display-4 fw-bold text-warning">{{ avg_listen_time }} <small class="fs-5">seconds</small></div>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            <table>
-                <thead><tr><th>Model Name</th><th>Interactions</th></tr></thead>
-                <tbody>
-                {% for model in top_models %}
-                    <tr><td>{{ model.name }}</td><td>{{ model.count }}</td></tr>
-                {% endfor %}
-                </tbody>
-            </table>
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-header bg-transparent border-0 pt-3">
+                    <h5><i class="bi bi-check2-circle text-success"></i> {% if current_lang == 'en' %}Average Completion Rate{% else %}متوسط نسبة الإكمال{% endif %}</h5>
+                </div>
+                <div class="card-body text-center">
+                    <div class="display-4 fw-bold text-success">{{ avg_completion }}<small class="fs-5">%</small></div>
+                </div>
+            </div>
         </div>
     </div>
-    
-    <!-- Interaction Types Distribution -->
-    <div class="card">
-        <div class="card-header">
-            <h5>📊 Interaction Types Distribution</h5>
+
+    <!-- Top Models -->
+    <div class="card shadow-sm border-0 rounded-4 mb-4">
+        <div class="card-header bg-transparent border-0 pt-3">
+            <h5><i class="bi bi-trophy-fill text-warning"></i> {% if current_lang == 'en' %}Most Popular 3D Models{% else %}أكثر النماذج ثلاثية الأبعاد تفاعلاً{% endif %}</h5>
         </div>
         <div class="card-body">
-            <table>
-                <thead><tr><th>Type</th><th>Count</th></tr></thead>
-                <tbody>
-                {% for type in interaction_types %}
-                    <tr><td>{{ type.interaction_type }}</td><td>{{ type.count }}</td></tr>
-                {% endfor %}
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>{% if current_lang == 'en' %}Model Name{% else %}اسم النموذج{% endif %}</th>
+                            <th>{% if current_lang == 'en' %}Interactions{% else %}عدد التفاعلات{% endif %}</th>
+                            <th>{% if current_lang == 'en' %}Percentage{% else %}النسبة{% endif %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for model in top_models %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td><strong>{{ model.name }}</strong></td>
+                            <td>{{ model.count }}</td>
+                            <td>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-warning" style="width: {% if total_interactions > 0 %}{{ (model.count / total_interactions * 100) | round }}{% else %}0{% endif %}%"></div>
+                                </div>
+                                <small class="text-muted">{% if total_interactions > 0 %}{{ (model.count / total_interactions * 100) | round }}%{% else %}0%{% endif %}</small>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center text-muted">No interactions yet</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Users -->
+    <div class="card shadow-sm border-0 rounded-4 mb-4">
+        <div class="card-header bg-transparent border-0 pt-3">
+            <h5><i class="bi bi-award-fill text-warning"></i> {% if current_lang == 'en' %}Most Active Users{% else %}أكثر المستخدمين نشاطاً{% endif %}</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>{% if current_lang == 'en' %}Username{% else %}اسم المستخدم{% endif %}</th>
+                            <th>{% if current_lang == 'en' %}Interactions{% else %}عدد التفاعلات{% endif %}</th>
+                            <th>{% if current_lang == 'en' %}Contribution{% else %}المساهمة{% endif %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in top_users %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td><strong>{{ user.username }}</strong></td>
+                            <td>{{ user.count }}</td>
+                            <td>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-info" style="width: {% if total_interactions > 0 %}{{ (user.count / total_interactions * 100) | round }}{% else %}0{% endif %}%"></div>
+                                </div>
+                                <small class="text-muted">{% if total_interactions > 0 %}{{ (user.count / total_interactions * 100) | round }}%{% else %}0%{% endif %}</small>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center text-muted">No interactions yet</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interaction Types Distribution -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-header bg-transparent border-0 pt-3">
+                    <h5><i class="bi bi-pie-chart-fill text-primary"></i> {% if current_lang == 'en' %}Interaction Types Distribution{% else %}توزيع أنواع التفاعلات{% endif %}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>{% if current_lang == 'en' %}Type{% else %}النوع{% endif %}</th>
+                                    <th>{% if current_lang == 'en' %}Count{% else %}العدد{% endif %}</th>
+                                    <th>{% if current_lang == 'en' %}Percentage{% else %}النسبة{% endif %}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for type in interaction_types %}
+                                <tr>
+                                    <td>
+                                        {% if type.interaction_type == 'view' %}
+                                            <i class="bi bi-eye-fill text-primary"></i> View
+                                        {% elif type.interaction_type == 'listen' %}
+                                            <i class="bi bi-headphones text-info"></i> Listen
+                                        {% elif type.interaction_type == 'explore' %}
+                                            <i class="bi bi-vr text-success"></i> Explore
+                                        {% else %}
+                                            <i class="bi bi-star-fill text-warning"></i> {{ type.interaction_type }}
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ type.count }}</td>
+                                    <td>
+                                        <div class="progress" style="height: 6px;">
+                                            <div class="progress-bar bg-{% if type.interaction_type == 'view' %}primary{% elif type.interaction_type == 'listen' %}info{% else %}success{% endif %}" 
+                                                 style="width: {% if total_interactions > 0 %}{{ (type.count / total_interactions * 100) | round }}{% else %}0{% endif %}%"></div>
+                                        </div>
+                                        <small>{% if total_interactions > 0 %}{{ (type.count / total_interactions * 100) | round }}%{% else %}0%{% endif %}</small>
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted">No data available</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- User Interests Stats -->
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-header bg-transparent border-0 pt-3">
+                    <h5><i class="bi bi-bar-chart-steps text-success"></i> {% if current_lang == 'en' %}User Preferences Status{% else %}حالة تفضيلات المستخدمين{% endif %}</h5>
+                </div>
+                <div class="card-body text-center">
+                    <div class="display-3 fw-bold text-success">{{ users_with_interests }}</div>
+                    <p class="text-muted mb-0">{% if current_lang == 'en' %}Users who set their preferences{% else %}مستخدم قاموا بتعيين تفضيلاتهم{% endif %}</p>
+                    <div class="progress mt-3" style="height: 10px;">
+                        <div class="progress-bar bg-success" style="width: {% if total_users > 0 %}{{ (users_with_interests / total_users * 100) | round }}{% else %}0{% endif %}%"></div>
+                    </div>
+                    <p class="mt-2 text-muted small">{% if total_users > 0 %}{{ (users_with_interests / total_users * 100) | round }}%{% else %}0%{% endif %} {% if current_lang == 'en' %}of total users{% else %}من إجمالي المستخدمين{% endif %}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Daily Activity Chart -->
+    <div class="card shadow-sm border-0 rounded-4 mb-4">
+        <div class="card-header bg-transparent border-0 pt-3">
+            <h5><i class="bi bi-calendar-week-fill text-info"></i> {% if current_lang == 'en' %}Daily Activity (Last 14 Days){% else %}النشاط اليومي (آخر 14 يوماً){% endif %}</h5>
+        </div>
+        <div class="card-body">
+            <canvas id="activityChart" style="height: 300px;"></canvas>
+        </div>
+    </div>
+
+    <!-- Evaluation Metrics Card -->
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-header bg-transparent border-0 pt-3">
+            <h5><i class="bi bi-clipboard-data-fill text-danger"></i> {% if current_lang == 'en' %}Recommendation System Evaluation{% else %}تقييم نظام التوصيات{% endif %}</h5>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle-fill"></i>
+                {% if current_lang == 'en' %}
+                    To calculate Precision, Recall, and F1-Score for your recommendation system, 
+                    export the metrics data and use a tool like Python, Excel, or SPSS for statistical analysis.
+                {% else %}
+                    لحساب الدقة والاستدعاء ودرجة F1 لنظام التوصيات الخاص بك، 
+                    قم بتصدير بيانات المقاييس واستخدم أداة مثل Python أو Excel أو SPSS للتحليل الإحصائي.
+                {% endif %}
+            </div>
+            <div class="text-center">
+                <a href="{{ url_for('export_metrics_csv') }}" class="btn btn-danger btn-lg">
+                    <i class="bi bi-file-spreadsheet"></i> {% if current_lang == 'en' %}Export Metrics for Analysis{% else %}تصدير المقاييس للتحليل{% endif %}
+                </a>
+            </div>
         </div>
     </div>
 </div>
+
+<!-- Chart.js for graphs -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // Daily Activity Chart
+    const ctx = document.getElementById('activityChart').getContext('2d');
+    
+    const dates = [{% for activity in daily_activity %}'{{ activity.date }}',{% endfor %}];
+    const counts = [{% for activity in daily_activity %}{{ activity.count }},{% endfor %}];
+    
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: dates.reverse(),
+            datasets: [{
+                label: '{% if current_lang == 'en' %}Interactions per Day{% else %}التفاعلات في اليوم{% endif %}',
+                data: counts.reverse(),
+                borderColor: '#DAA520',
+                backgroundColor: 'rgba(218, 165, 32, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: '#DAA520',
+                pointBorderColor: '#fff',
+                pointRadius: 4,
+                pointHoverRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `{% if current_lang == 'en' %}Interactions{% else %}تفاعلات{% endif %}: ${context.raw}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: '{% if current_lang == 'en' %}Number of Interactions{% else %}عدد التفاعلات{% endif %}'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: '{% if current_lang == 'en' %}Date{% else %}التاريخ{% endif %}'
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+<style>
+    .card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1) !important;
+    }
+    .progress {
+        background-color: #e9ecef;
+        border-radius: 10px;
+    }
+    .table th, .table td {
+        vertical-align: middle;
+    }
+    @media (max-width: 768px) {
+        .display-4 {
+            font-size: 2rem;
+        }
+        .display-3 {
+            font-size: 1.8rem;
+        }
+    }
+</style>
 {% endblock %}
