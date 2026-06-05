@@ -1,5 +1,5 @@
 # app/__init__.py
-from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, make_response
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
@@ -8,10 +8,9 @@ from flask import send_file
 import io
 import os
 import json
-from datetime import datetime
-import numpy as np
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
+from datetime import datetime, timedelta
+import csv
+from io import StringIO
 
 # Initialize extensions
 db = SQLAlchemy()
@@ -29,9 +28,12 @@ class User(db.Model):
     username = db.Column(db.String(150), unique=True, nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
+    role = db.Column(db.String(50), default='user')  # 'admin' or 'user'
     interests = db.Column(db.String(500), default='')
     experience_level = db.Column(db.String(50), default='beginner')
     preferences = db.Column(db.Text, default='{}')
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    last_login = db.Column(db.DateTime, default=datetime.utcnow)
     
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -48,6 +50,10 @@ class User(db.Model):
     def get_interests_list(self):
         return [i.strip() for i in self.interests.split(',') if i.strip()] if self.interests else []
     
+    def is_admin(self):
+        return self.role == 'admin'
+    
+    # Flask-Login required properties
     @property
     def is_authenticated(self):
         return True
@@ -145,63 +151,36 @@ def create_app():
     with app.app_context():
         db.create_all()
         print("✅ Database tables created successfully!")
-
-    # ========== INITIALIZE RECOMMENDATION ENGINE ==========
-    with app.app_context():
-        try:
-            models = Model3D.query.filter_by(is_active=True).all()
-            models_data = []
-            for m in models:
-                tags_text = m.tags if m.tags else ''
-                name_text = m.name if m.name else ''
-                desc_text = m.description if m.description else ''
-                text = f"{tags_text} {name_text} {desc_text}".lower()
-                models_data.append({
-                    'id': m.id,
-                    'name': m.name,
-                    'text': text,
-                    'category': m.category,
-                    'file_path': m.file_path
-                })
-            
-            if models_data:
-                app.models_data = models_data
-                vectorizer = TfidfVectorizer(stop_words='english', max_features=100)
-                app.tfidf_matrix = vectorizer.fit_transform([m['text'] for m in models_data])
-                app.vectorizer = vectorizer
-                print(f"✅ Recommendation engine initialized with {len(models_data)} models")
-            else:
-                app.models_data = []
-                print("⚠️ No models found for recommendation engine")
-        except Exception as e:
-            print(f"❌ Error initializing recommendation engine: {e}")
-            app.models_data = []
+        
+        # Create default admin user if not exists
+        admin = User.query.filter_by(role='admin').first()
+        if not admin:
+            admin_user = User(
+                username='admin',
+                email='admin@mawari.com',
+                role='admin',
+                interests='',
+                experience_level='expert'
+            )
+            admin_user.set_password('admin123')
+            db.session.add(admin_user)
+            db.session.commit()
+            print("✅ Default admin created: username='admin', password='admin123'")
 
     # ===========================================================
     # Helper Functions
     # ===========================================================
     
-    def get_recommendations(user_interests, top_n=5):
-        """Get recommendations using TF-IDF and Cosine Similarity"""
-        if not app.models_data or not user_interests:
-            return []
-        
-        user_query = ' '.join(user_interests).lower()
-        user_vector = app.vectorizer.transform([user_query])
-        similarities = cosine_similarity(user_vector, app.tfidf_matrix).flatten()
-        
-        indices = similarities.argsort()[::-1][:top_n]
-        
-        recommendations = []
-        for idx in indices:
-            if similarities[idx] > 0:
-                recommendations.append({
-                    'id': app.models_data[idx]['id'],
-                    'name': app.models_data[idx]['name'],
-                    'category': app.models_data[idx]['category'],
-                    'similarity_score': round(float(similarities[idx]) * 100, 2)
-                })
-        return recommendations
+    def admin_required(f):
+        """Decorator to check if user is admin"""
+        from functools import wraps
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if not current_user.is_authenticated or not current_user.is_admin():
+                flash('Access denied. Admin privileges required.', 'danger')
+                return redirect(url_for('index'))
+            return f(*args, **kwargs)
+        return decorated_function
 
     # ===========================================================
     # Language Settings
@@ -302,6 +281,8 @@ def create_app():
                 login_user(user)
                 session['user_id'] = user.id
                 session['username'] = user.username
+                user.last_login = datetime.utcnow()
+                db.session.commit()
                 flash("Login successful!", "success")
                 
                 if not user.interests:
@@ -418,148 +399,200 @@ def create_app():
         return render_template('preferences.html', title='Edit Preferences')
 
     # ===========================================================
-    # SMART RECOMMENDATIONS API (TF-IDF + Cosine Similarity)
+    # ADMIN DASHBOARD - ANALYTICS & EXPORTS
     # ===========================================================
     
-    @app.route('/api/recommendations/v2')
+    @app.route('/admin')
     @login_required
-    def api_recommendations_v2():
-        """Advanced recommendations using TF-IDF and Cosine Similarity"""
-        user = current_user
-        user_interests = user.get_interests_list()
-        
-        if not user_interests:
-            return jsonify({
-                'user_interests': [],
-                'message': 'Please set your preferences first',
-                'recommendations': []
-            })
-        
-        recommendations = get_recommendations(user_interests, top_n=6)
-        
-        return jsonify({
-            'user_interests': user_interests,
-            'user_experience_level': user.experience_level,
-            'algorithm': 'TF-IDF + Cosine Similarity',
-            'recommendations': recommendations
-        })
+    @admin_required
+    def admin_dashboard():
+        """Admin main dashboard"""
+        return render_template('admin_dashboard.html', title='Admin Dashboard')
     
-    @app.route('/api/recommendations')
+    @app.route('/admin/analytics')
     @login_required
-    def api_recommendations_basic():
-        """Basic recommendations endpoint"""
-        user = current_user
-        user_interests = user.get_interests_list()
+    @admin_required
+    def admin_analytics():
+        """Admin analytics page with statistics"""
+        # General statistics
+        total_users = User.query.count()
+        total_interactions = UserInteraction.query.count()
+        total_models = Model3D.query.count()
+        admin_count = User.query.filter_by(role='admin').count()
         
-        if not user_interests:
-            return jsonify({'recommendations': []})
+        # Time-based statistics (last 7 days)
+        week_ago = datetime.utcnow() - timedelta(days=7)
+        new_users_last_week = User.query.filter(User.created_at >= week_ago).count()
+        interactions_last_week = UserInteraction.query.filter(UserInteraction.created_at >= week_ago).count()
         
-        recommendations = get_recommendations(user_interests, top_n=5)
-        return jsonify({'recommendations': recommendations})
-
-    # ===========================================================
-    # AI AGENT API ENDPOINTS
-    # ===========================================================
+        # Most popular models
+        top_models = db.session.query(
+            Model3D.name,
+            db.func.count(UserInteraction.id).label('count')
+        ).join(UserInteraction, Model3D.id == UserInteraction.model_id).group_by(Model3D.id).order_by(db.desc('count')).limit(5).all()
+        
+        # Most active users
+        top_users = db.session.query(
+            User.username,
+            db.func.count(UserInteraction.id).label('count')
+        ).join(UserInteraction, User.id == UserInteraction.user_id).group_by(User.id).order_by(db.desc('count')).limit(5).all()
+        
+        # Interaction types distribution
+        interaction_types = db.session.query(
+            UserInteraction.interaction_type,
+            db.func.count(UserInteraction.id).label('count')
+        ).group_by(UserInteraction.interaction_type).all()
+        
+        # Average metrics
+        avg_listen_time = db.session.query(db.func.avg(UserInteraction.duration_seconds)).filter_by(interaction_type='listen').scalar() or 0
+        avg_completion = db.session.query(db.func.avg(UserInteraction.completion_percentage)).scalar() or 0
+        
+        # Daily activity for chart
+        daily_activity = db.session.query(
+            db.func.date(UserInteraction.created_at).label('date'),
+            db.func.count(UserInteraction.id).label('count')
+        ).group_by(db.func.date(UserInteraction.created_at)).order_by(db.desc('date')).limit(14).all()
+        
+        # User interests distribution
+        users_with_interests = User.query.filter(User.interests != '').count()
+        
+        return render_template('admin_analytics.html',
+                              total_users=total_users,
+                              total_interactions=total_interactions,
+                              total_models=total_models,
+                              admin_count=admin_count,
+                              new_users_last_week=new_users_last_week,
+                              interactions_last_week=interactions_last_week,
+                              top_models=top_models,
+                              top_users=top_users,
+                              interaction_types=interaction_types,
+                              avg_listen_time=int(avg_listen_time),
+                              avg_completion=round(avg_completion, 1),
+                              daily_activity=daily_activity,
+                              users_with_interests=users_with_interests)
     
-    @app.route('/api/agent/insights')
+    @app.route('/admin/users')
     @login_required
-    def api_agent_insights():
-        """AI Agent insights based on user behavior"""
-        user = current_user
-        user_interests = user.get_interests_list()
-        
-        # Calculate engagement score based on interactions
-        interactions = UserInteraction.query.filter_by(user_id=user.id).count()
-        engagement_score = min(100, interactions * 10)
-        
-        insights = []
-        
-        if engagement_score > 70:
-            insights.append("You're a heritage expert! 🎓")
-        elif engagement_score > 30:
-            insights.append("You're building great heritage knowledge! 📚")
+    @admin_required
+    def admin_users():
+        """Admin users management page"""
+        users = User.query.order_by(User.created_at.desc()).all()
+        return render_template('admin_users.html', users=users)
+    
+    @app.route('/admin/users/<int:user_id>/delete', methods=['POST'])
+    @login_required
+    @admin_required
+    def admin_delete_user(user_id):
+        """Delete a user (admin only)"""
+        user = User.query.get(user_id)
+        if user and user.id != current_user.id:  # Can't delete yourself
+            db.session.delete(user)
+            db.session.commit()
+            flash(f'User {user.username} has been deleted.', 'success')
         else:
-            insights.append("Explore more heritage sites to unlock AI insights! 🌍")
-        
-        if user_interests:
-            insights.append(f"Your interests: {', '.join(user_interests[:3])}")
-        
-        # Get recommendations for next step
-        recommendations = get_recommendations(user_interests, top_n=1)
-        next_rec = recommendations[0] if recommendations else None
-        
-        return jsonify({
-            'insights': insights,
-            'engagement_score': engagement_score,
-            'interactions_count': interactions,
-            'next_recommendation': next_rec
-        })
+            flash('Cannot delete this user.', 'danger')
+        return redirect(url_for('admin_users'))
     
-    @app.route('/api/agent/learning-path')
+    @app.route('/admin/users/<int:user_id>/toggle-admin', methods=['POST'])
     @login_required
-    def api_agent_learning_path():
-        """Generate personalized learning path"""
-        user = current_user
-        user_interests = user.get_interests_list()
-        
-        if not user_interests:
-            return jsonify({'learning_path': [], 'message': 'Set your preferences first'})
-        
-        recommendations = get_recommendations(user_interests, top_n=5)
-        
-        # Categorize into learning levels
-        learning_path = []
-        for i, rec in enumerate(recommendations):
-            level = 'Beginner' if i < 2 else 'Intermediate' if i < 4 else 'Advanced'
-            learning_path.append({
-                'step': i + 1,
-                'level': level,
-                'model_id': rec['id'],
-                'model_name': rec['name'],
-                'similarity_score': rec['similarity_score']
-            })
-        
-        return jsonify({
-            'learning_path': learning_path,
-            'total_steps': len(learning_path)
-        })
+    @admin_required
+    def admin_toggle_admin(user_id):
+        """Toggle admin role for a user"""
+        user = User.query.get(user_id)
+        if user and user.id != current_user.id:
+            user.role = 'user' if user.role == 'admin' else 'admin'
+            db.session.commit()
+            flash(f'User {user.username} role updated to {user.role}.', 'success')
+        return redirect(url_for('admin_users'))
     
-    @app.route('/api/agent/contextual')
-    @login_required
-    def api_agent_contextual():
-        """Contextual recommendations based on time of day"""
-        user = current_user
-        user_interests = user.get_interests_list()
-        
-        current_hour = datetime.now().hour
-        
-        if current_hour < 12:
-            time_context = 'morning'
-            context_message = "Good morning! Start your heritage journey with these sites"
-        elif current_hour < 18:
-            time_context = 'afternoon'
-            context_message = "Good afternoon! Discover these hidden gems"
-        else:
-            time_context = 'evening'
-            context_message = "Good evening! Relax and explore these amazing places"
-        
-        recommendations = get_recommendations(user_interests, top_n=4)
-        
-        return jsonify({
-            'time_context': time_context,
-            'message': context_message,
-            'recommendations': recommendations
-        })
+    # ===========================================================
+    # EXPORT ROUTES
+    # ===========================================================
     
-    @app.route('/api/user/preferences')
+    @app.route('/admin/export/users')
     @login_required
-    def api_user_preferences():
-        """Get user preferences"""
-        user = current_user
-        return jsonify({
-            'interests': user.get_interests_list(),
-            'experience_level': user.experience_level,
-            'preferences': user.get_preferences()
-        })
+    @admin_required
+    def export_users_csv():
+        """Export users data to CSV"""
+        users = User.query.all()
+        
+        output = StringIO()
+        writer = csv.writer(output)
+        writer.writerow(['ID', 'Username', 'Email', 'Role', 'Interests', 'Experience Level', 'Created At', 'Last Login'])
+        
+        for user in users:
+            writer.writerow([
+                user.id, user.username, user.email, user.role,
+                user.interests, user.experience_level, user.created_at, user.last_login
+            ])
+        
+        response = make_response(output.getvalue())
+        response.headers['Content-Disposition'] = 'attachment; filename=users_export.csv'
+        response.headers['Content-type'] = 'text/csv'
+        return response
+    
+    @app.route('/admin/export/interactions')
+    @login_required
+    @admin_required
+    def export_interactions_csv():
+        """Export interactions data to CSV"""
+        interactions = UserInteraction.query.all()
+        
+        output = StringIO()
+        writer = csv.writer(output)
+        writer.writerow(['ID', 'User ID', 'Model ID', 'Interaction Type', 'Duration (s)', 'Completion %', 'Created At'])
+        
+        for interaction in interactions:
+            writer.writerow([
+                interaction.id, interaction.user_id, interaction.model_id,
+                interaction.interaction_type, interaction.duration_seconds,
+                interaction.completion_percentage, interaction.created_at
+            ])
+        
+        response = make_response(output.getvalue())
+        response.headers['Content-Disposition'] = 'attachment; filename=interactions_export.csv'
+        response.headers['Content-type'] = 'text/csv'
+        return response
+    
+    @app.route('/admin/export/metrics')
+    @login_required
+    @admin_required
+    def export_metrics_csv():
+        """Export recommendation metrics to CSV"""
+        # Calculate recommendation metrics
+        from app.recommendation_engine import RecommendationEngine
+        from app.ai_agent import AIAgent
+        
+        models = Model3D.query.filter_by(is_active=True).all()
+        models_data = [{'id': m.id, 'name': m.name, 'tags': m.tags, 'description': m.description} for m in models]
+        engine = RecommendationEngine(models_data)
+        engine.build_index()
+        
+        # Get all users with interests
+        users = User.query.filter(User.interests != '').all()
+        
+        metrics_data = []
+        for user in users:
+            interests = user.get_interests_list()
+            if interests:
+                recommendations = engine.get_recommendations(interests, user.experience_level, top_n=5)
+                metrics_data.append({
+                    'user_id': user.id,
+                    'username': user.username,
+                    'interests': user.interests,
+                    'recommendations_count': len(recommendations)
+                })
+        
+        output = StringIO()
+        writer = csv.writer(output)
+        writer.writerow(['User ID', 'Username', 'Interests', 'Recommendations Count'])
+        
+        for data in metrics_data:
+            writer.writerow([data['user_id'], data['username'], data['interests'], data['recommendations_count']])
+        
+        response = make_response(output.getvalue())
+        response.headers['Content-Disposition'] = 'attachment; filename=metrics_export.csv'
+        response.headers['Content-type'] = 'text/csv'
+        return response
 
     return app
