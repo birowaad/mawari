@@ -6,7 +6,8 @@ import qrcode
 from flask import send_file
 import io
 import os
-
+# Add after your existing imports
+from app.models import db, User, Model3D
 # Initialize SQLAlchemy
 db = SQLAlchemy()
 
@@ -17,8 +18,6 @@ class User(db.Model):
     username = db.Column(db.String(150), unique=True, nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
-
-
 def create_app():
     app = Flask(__name__)
 
@@ -243,7 +242,6 @@ def create_app():
     @app.route('/contact', methods=['GET', 'POST'])
     def contact():
         return render_template('contact.html', title="Contact Us")
-
     # PWA Routes
     @app.route('/service-worker.js')
     def service_worker():
@@ -256,5 +254,40 @@ def create_app():
     @app.route('/offline')
     def offline():
         return render_template('offline.html', title="Offline")
+# Add these routes before `return app`
 
+@app.route('/preferences', methods=['GET'])
+@login_required
+def preferences_page():
+    """Show preferences onboarding page"""
+    return render_template('preferences.html', title='Personalize Your Experience')
+
+@app.route('/save-preferences', methods=['POST'])
+@login_required
+def save_preferences():
+    """Save user preferences"""
+    user = User.query.get(current_user.id)
+    
+    # Get interests from form (list)
+    interests = request.form.getlist('interests')
+    user.interests = ','.join(interests)
+    
+    # Get experience level
+    user.experience_level = request.form.get('experience_level', 'beginner')
+    
+    # Save tour duration in preferences JSON
+    prefs = user.get_preferences()
+    prefs['tour_duration'] = int(request.form.get('tour_duration', 30))
+    user.set_preferences(prefs)
+    
+    db.session.commit()
+    
+    flash('Preferences saved successfully!', 'success')
+    return redirect(url_for('heritage'))
+
+@app.route('/profile/preferences', methods=['GET'])
+@login_required
+def edit_preferences():
+    """Edit existing preferences"""
+    return render_template('preferences.html', title='Edit Preferences')
     return app
