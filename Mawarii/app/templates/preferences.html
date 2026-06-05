@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <i class="bi bi-robot fs-1 text-warning"></i>
+                        <h2 class="mt-2">{% if current_lang == 'en' %}Personalize Your Experience{% else %}خصص تجربتك{% endif %}</h2>
+                        <p class="text-muted">
+                            {% if current_lang == 'en' %}Help us recommend the best heritage content for you{% else %}ساعدنا في تقديم أفضل محتوى تراثي يناسبك{% endif %}
+                        </p>
+                    </div>
+                    
+                    <form method="POST" action="{{ url_for('save_preferences') }}">
+                        <!-- Interests Section -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-star-fill text-warning"></i>
+                                {% if current_lang == 'en' %}What interests you most?{% else %}ما الذي يثير اهتمامك أكثر؟{% endif %}
+                            </label>
+                            <div class="row g-2">
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="interests" value="architecture" id="interest_arch">
+                                        <label class="form-check-label" for="interest_arch">
+                                            🏛️ {% if current_lang == 'en' %}Ancient Architecture{% else %}العمارة القديمة{% endif %}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="interests" value="history" id="interest_hist">
+                                        <label class="form-check-label" for="interest_hist">
+                                            📜 {% if current_lang == 'en' %}Historical Stories{% else %}القصص التاريخية{% endif %}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="interests" value="artifacts" id="interest_art">
+                                        <label class="form-check-label" for="interest_art">
+                                            🏺 {% if current_lang == 'en' %}Ancient Artifacts{% else %}القطع الأثرية{% endif %}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="interests" value="nature" id="interest_nat">
+                                        <label class="form-check-label" for="interest_nat">
+                                            🌴 {% if current_lang == 'en' %}Desert Landscapes{% else %}المناظر الصحراوية{% endif %}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="interests" value="nabataean" id="interest_nab">
+                                        <label class="form-check-label" for="interest_nab">
+                                            👑 {% if current_lang == 'en' %}Nabataean Civilization{% else %}الحضارة النبطية{% endif %}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="interests" value="culture" id="interest_cult">
+                                        <label class="form-check-label" for="interest_cult">
+                                            🎭 {% if current_lang == 'en' %}Local Culture{% else %}الثقافة المحلية{% endif %}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Experience Level -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-bar-chart-steps"></i>
+                                {% if current_lang == 'en' %}What's your experience level?{% else %}ما هو مستوى خبرتك؟{% endif %}
+                            </label>
+                            <div class="row g-2">
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="experience_level" value="beginner" id="exp_beginner" checked>
+                                        <label class="form-check-label" for="exp_beginner">
+                                            🎓 {% if current_lang == 'en' %}Beginner (Quick overview){% else %}مبتدئ (نظرة عامة){% endif %}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="experience_level" value="intermediate" id="exp_intermediate">
+                                        <label class="form-check-label" for="exp_intermediate">
+                                            📚 {% if current_lang == 'en' %}Intermediate (Detailed){% else %}متوسط (مفصل){% endif %}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="experience_level" value="expert" id="exp_expert">
+                                        <label class="form-check-label" for="exp_expert">
+                                            🎓 {% if current_lang == 'en' %}Expert (Deep dive){% else %}خبير (متعمق){% endif %}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Preferred Tour Duration -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-clock"></i>
+                                {% if current_lang == 'en' %}Preferred tour duration?{% else %}المدة المفضلة للجولة؟{% endif %}
+                            </label>
+                            <select name="tour_duration" class="form-select">
+                                <option value="15">⏱️ 15 {% if current_lang == 'en' %}minutes (Quick){% else %}دقيقة (سريعة){% endif %}</option>
+                                <option value="30" selected>⏱️ 30 {% if current_lang == 'en' %}minutes (Standard){% else %}دقيقة (قياسية){% endif %}</option>
+                                <option value="60">⏱️ 60 {% if current_lang == 'en' %}minutes (In-depth){% else %}دقيقة (متعمقة){% endif %}</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-warning btn-lg rounded-pill">
+                                <i class="bi bi-check-circle"></i>
+                                {% if current_lang == 'en' %}Save Preferences & Start Journey{% else %}حفظ التفضيلات وبدء الرحلة{% endif %}
+                            </button>
+                            <a href="{{ url_for('heritage') }}" class="btn btn-outline-secondary rounded-pill">
+                                {% if current_lang == 'en' %}Skip for now{% else %}تخطي الآن{% endif %}
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
