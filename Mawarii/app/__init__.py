@@ -15,49 +15,43 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 
 
-# ===========================================================
-# User model (defined here for circular import avoidance)
-# ===========================================================
+# User model
 class User(db.Model):
-    __tablename__ = 'users'
-    
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
-    password_hash = db.Column(db.String(200), nullable=False)
-    role = db.Column(db.String(50), default='user')
-    is_active = db.Column(db.Boolean, default=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    
+    password = db.Column(db.String(200), nullable=False)
     interests = db.Column(db.String(500), default='')
     experience_level = db.Column(db.String(50), default='beginner')
     preferences = db.Column(db.Text, default='{}')
     
     def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
+        self.password = generate_password_hash(password)
     
     def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
-    
-    def is_admin(self):
-        return self.role == 'admin'
+        return check_password_hash(self.password, password)
     
     def get_preferences(self):
-        try:
-            return json.loads(self.preferences) if self.preferences else {}
-        except:
-            return {}
+        return json.loads(self.preferences) if self.preferences else {}
     
     def set_preferences(self, prefs_dict):
         self.preferences = json.dumps(prefs_dict)
     
-    def get_interests_list(self):
-        return [i.strip() for i in self.interests.split(',') if i.strip()] if self.interests else []
+    def is_admin(self):
+        return self.role == 'admin' if hasattr(self, 'role') else False
     
     # Flask-Login required properties
     @property
     def is_authenticated(self):
         return True
+    
+    @property
+    def is_active(self):
+        return True
+    
+    @property
+    def is_anonymous(self):
+        return False
     
     def get_id(self):
         return str(self.id)
@@ -140,7 +134,7 @@ def create_app():
     login_manager.login_view = 'login'
     login_manager.login_message = 'Please log in to access this page.'
     
-    # ========== Create database tables ==========
+    # ========== CREATE DATABASE TABLES ==========
     with app.app_context():
         db.create_all()
         print("✅ Database tables created successfully!")
@@ -162,23 +156,18 @@ def create_app():
             return False
     
     def log_view_interaction(user_id, model_id, duration=0):
-        """تسجيل مشاهدة مجسم"""
         return log_interaction(user_id, model_id, 'view', duration)
     
     def log_listen_interaction(user_id, model_id, duration=0, completion=100):
-        """تسجيل الاستماع إلى قصة"""
         return log_interaction(user_id, model_id, 'listen', duration, completion)
     
     def log_explore_interaction(user_id, model_id, duration=0):
-        """تسجيل استكشاف مجسم (بدء الجولة)"""
         return log_interaction(user_id, model_id, 'explore', duration)
     
     def log_hotspot_interaction(user_id, model_id, hotspot_id, hotspot_name):
-        """تسجيل النقر على نقطة تفاعلية"""
         return log_interaction(user_id, model_id, 'hotspot_click', metadata={'hotspot_id': hotspot_id, 'hotspot_name': hotspot_name})
     
     def log_share_interaction(user_id, model_id, platform='social'):
-        """تسجيل مشاركة مجسم"""
         return log_interaction(user_id, model_id, 'share', metadata={'platform': platform})
 
     # ===========================================================
@@ -458,5 +447,20 @@ def create_app():
         if log_explore_interaction(current_user.id, model_id):
             return jsonify({'status': 'success'})
         return jsonify({'status': 'error'}), 500
+
+    # ===========================================================
+    # User API Endpoints
+    # ===========================================================
+    
+    @app.route('/api/user/preferences')
+    @login_required
+    def api_user_preferences():
+        """الحصول على تفضيلات المستخدم"""
+        user = current_user
+        return {
+            'interests': user.get_interests_list(),
+            'experience_level': user.experience_level,
+            'preferences': user.get_preferences()
+        }
 
     return app
