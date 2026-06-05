@@ -1,0 +1,87 @@
+<!-- templates/admin_analytics.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">📊 Admin Analytics Dashboard</h2>
+    
+    <!-- Statistics Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="card text-center p-3">
+                <h3>{{ total_users }}</h3>
+                <p>Total Users</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center p-3">
+                <h3>{{ total_interactions }}</h3>
+                <p>Total Interactions</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center p-3">
+                <h3>{{ total_models }}</h3>
+                <p>3D Models</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center p-3">
+                <h3>{{ avg_listen_time|round|int }}s</h3>
+                <p>Avg Listen Time</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Export Buttons -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="btn-group">
+                <a href="{{ url_for('export_users_csv') }}" class="btn btn-success">
+                    <i class="bi bi-download"></i> Export Users CSV
+                </a>
+                <a href="{{ url_for('export_interactions_csv') }}" class="btn btn-primary">
+                    <i class="bi bi-download"></i> Export Interactions CSV
+                </a>
+                <a href="{{ url_for('export_metrics_csv') }}" class="btn btn-info">
+                    <i class="bi bi-download"></i> Export Metrics CSV
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Top Models -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>🔥 Most Popular Models</h5>
+        </div>
+        <div class="card-body">
+            <table>
+                <thead><tr><th>Model Name</th><th>Interactions</th></tr></thead>
+                <tbody>
+                {% for model in top_models %}
+                    <tr><td>{{ model.name }}</td><td>{{ model.count }}</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Interaction Types Distribution -->
+    <div class="card">
+        <div class="card-header">
+            <h5>📊 Interaction Types Distribution</h5>
+        </div>
+        <div class="card-body">
+            <table>
+                <thead><tr><th>Type</th><th>Count</th></tr></thead>
+                <tbody>
+                {% for type in interaction_types %}
+                    <tr><td>{{ type.interaction_type }}</td><td>{{ type.count }}</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
