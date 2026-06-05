@@ -36,7 +36,7 @@ class User(db.Model):
     def set_preferences(self, prefs_dict):
         self.preferences = json.dumps(prefs_dict)
     
-    # ========== Flask-Login Required Properties ==========
+    # Flask-Login required properties
     @property
     def is_authenticated(self):
         return True
@@ -72,10 +72,24 @@ def create_app():
     login_manager.login_view = 'login'
     login_manager.login_message = 'Please log in to access this page.'
     
-    # ========== Create database tables ==========
+    # ========== RECREATE DATABASE ==========
     with app.app_context():
+        # Drop all existing tables
+        db.drop_all()
+        print("✅ Dropped all existing tables")
+        
+        # Create all tables with new schema
         db.create_all()
-        print("✅ Database tables created successfully!")
+        print("✅ Created all tables with new schema (interests, experience_level, preferences)")
+        
+        # Verify columns exist
+        import sqlite3
+        conn = sqlite3.connect('users.db')
+        cursor = conn.cursor()
+        cursor.execute("PRAGMA table_info(user)")
+        columns = cursor.fetchall()
+        print("📋 User table columns:", [col[1] for col in columns])
+        conn.close()
 
     # ===========================================================
     # Language Settings
