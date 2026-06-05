@@ -7,7 +7,7 @@
 
     <!-- PWA Meta Tags -->
     <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
-    <meta name="theme-color" content="#DAA520">
+    <meta name="theme-color" content="#8B6914">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Mawari AR">
@@ -21,7 +21,7 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- RTL Support for Arabic -->
+    <!-- RTL Support -->
     {% if is_rtl %}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -32,64 +32,64 @@
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
     <style>
-        /* Global Styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* Color Variables - Inspired by AlUla Heritage */
+        :root {
+            --sand-light: #F5E6D3;
+            --sand-medium: #E8D5B7;
+            --sand-dark: #D4B896;
+            --terracotta: #C17A5B;
+            --olive: #8B7D3C;
+            --gold: #DAA520;
+            --gold-dark: #B8860B;
+            --text-dark: #4A3728;
+            --text-light: #F5F0E8;
+            --shadow: rgba(74, 55, 40, 0.1);
+        }
+        
+        [data-theme="dark"] {
+            --sand-light: #2A241E;
+            --sand-medium: #3D3228;
+            --sand-dark: #5A4A3A;
+            --terracotta: #9B6B52;
+            --text-light: #E8E0D5;
+            --text-dark: #D4C4B0;
         }
         
         body {
+            background: linear-gradient(135deg, var(--sand-light) 0%, var(--sand-medium) 100%);
             font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif;
-            transition: background 0.3s ease, color 0.2s ease;
+            color: var(--text-dark);
+            min-height: 100vh;
         }
         
-        [lang="ar"] body, [dir="rtl"] body {
-            font-family: 'Cairo', 'Tahoma', system-ui, sans-serif;
-        }
-        
-        /* Modern Navbar Styles */
+        /* Modern Navbar */
         .navbar-modern {
-            background: var(--navbar-bg, #ffffff);
+            background: rgba(255, 248, 240, 0.95);
             backdrop-filter: blur(10px);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 20px var(--shadow);
             padding: 0.8rem 0;
             position: sticky;
             top: 0;
             z-index: 1000;
-            transition: all 0.3s ease;
         }
         
         [data-theme="dark"] .navbar-modern {
-            background: rgba(26, 26, 46, 0.95);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            background: rgba(42, 36, 30, 0.95);
         }
         
         /* Logo Container */
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
         .logo-img {
             width: 50px;
             height: 50px;
             object-fit: cover;
             border-radius: 50%;
-            border: 2px solid #DAA520;
-            transition: transform 0.3s ease;
-        }
-        
-        .logo-img:hover {
-            transform: scale(1.05);
+            border: 2px solid var(--gold);
         }
         
         .logo-text h1 {
             font-size: 1.6rem;
             font-weight: 700;
-            margin: 0;
-            background: linear-gradient(135deg, #DAA520, #B8860B);
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -97,93 +97,59 @@
         
         .logo-text p {
             font-size: 0.75rem;
-            margin: 0;
-            color: var(--text-secondary, #6c757d);
+            color: var(--terracotta);
             font-style: italic;
         }
         
-        /* Modern Dropdown Menu */
-        .dropdown-modern {
-            position: relative;
-        }
-        
+        /* Dropdown */
         .dropdown-modern .dropdown-toggle {
             background: transparent;
             border: none;
             padding: 0.5rem 1rem;
             font-weight: 500;
-            color: var(--text-color, #1e2a3a);
-            transition: all 0.3s ease;
+            color: var(--text-dark);
             border-radius: 40px;
         }
         
         .dropdown-modern .dropdown-toggle:hover {
             background: rgba(218, 165, 32, 0.1);
-            color: #DAA520;
+            color: var(--gold);
         }
         
         .dropdown-modern .dropdown-menu {
-            background: var(--dropdown-bg, #ffffff);
+            background: var(--sand-light);
             border: none;
             border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 30px var(--shadow);
             padding: 0.5rem;
-            margin-top: 0.5rem;
-            min-width: 220px;
-            animation: fadeInUp 0.3s ease;
-        }
-        
-        [data-theme="dark"] .dropdown-modern .dropdown-menu {
-            background: #1e2a2e;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
         
         .dropdown-modern .dropdown-item {
             padding: 0.6rem 1rem;
             border-radius: 12px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            color: var(--text-color, #1e2a3a);
+            color: var(--text-dark);
         }
         
         .dropdown-modern .dropdown-item:hover {
-            background: linear-gradient(135deg, #DAA520, #B8860B);
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
             color: white;
-            transform: translateX(5px);
         }
         
-        [dir="rtl"] .dropdown-modern .dropdown-item:hover {
-            transform: translateX(-5px);
-        }
-        
-        .dropdown-modern .dropdown-item i {
-            margin-right: 10px;
-            width: 20px;
-        }
-        
-        [dir="rtl"] .dropdown-modern .dropdown-item i {
-            margin-right: 0;
-            margin-left: 10px;
-        }
-        
-        /* Modern Nav Links */
+        /* Nav Links */
         .nav-link-modern {
             padding: 0.5rem 1rem;
             font-weight: 500;
             border-radius: 40px;
-            transition: all 0.3s ease;
-            color: var(--text-color, #1e2a3a);
-            position: relative;
+            color: var(--text-dark);
         }
         
         .nav-link-modern:hover {
             background: rgba(218, 165, 32, 0.1);
-            color: #DAA520;
-            transform: translateY(-2px);
+            color: var(--gold);
         }
         
         .nav-link-modern.active {
-            background: linear-gradient(135deg, #DAA520, #B8860B);
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
             color: white;
         }
         
@@ -191,7 +157,7 @@
         .lang-switch {
             display: flex;
             gap: 5px;
-            background: rgba(0,0,0,0.05);
+            background: rgba(218, 165, 32, 0.1);
             border-radius: 40px;
             padding: 4px;
         }
@@ -200,21 +166,14 @@
             padding: 6px 14px;
             border-radius: 30px;
             font-weight: 600;
-            font-size: 0.85rem;
-            transition: all 0.2s ease;
-            cursor: pointer;
             background: transparent;
             border: none;
-            color: var(--text-color, #1e2a3a);
+            color: var(--text-dark);
         }
         
         .lang-btn.active {
-            background: #DAA520;
+            background: var(--gold);
             color: white;
-        }
-        
-        .lang-btn:hover:not(.active) {
-            background: rgba(218,165,32,0.2);
         }
         
         /* Theme Toggle */
@@ -222,232 +181,124 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0,0,0,0.05);
+            background: rgba(218, 165, 32, 0.1);
             border: none;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .theme-toggle:hover {
-            transform: rotate(15deg);
-            background: rgba(218,165,32,0.2);
+            color: var(--gold);
         }
         
         /* Footer */
         .footer-modern {
-            background: var(--footer-bg, #1a1a2e);
-            color: white;
+            background: var(--sand-dark);
+            color: var(--text-light);
             padding: 2rem 0;
             margin-top: 3rem;
-            text-align: center;
         }
         
-        [data-theme="light"] .footer-modern {
-            background: #f8f9fa;
-            color: #1e2a3a;
-            border-top: 1px solid #dee2e6;
+        [data-theme="dark"] .footer-modern {
+            background: var(--sand-medium);
         }
         
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        /* Cards */
+        .heritage-card {
+            background: rgba(255, 248, 240, 0.9);
+            border: 1px solid rgba(218, 165, 32, 0.2);
+            border-radius: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         
-        /* Responsive */
-        @media (max-width: 991px) {
-            .navbar-modern {
-                padding: 0.5rem 0;
-            }
-            
-            .dropdown-menu {
-                position: static !important;
-                transform: none !important;
-                margin-top: 0.5rem !important;
-                width: 100%;
-            }
-            
-            .logo-text h1 {
-                font-size: 1.2rem;
-            }
-            
-            .logo-img {
-                width: 40px;
-                height: 40px;
-            }
+        .heritage-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px var(--shadow);
+        }
+        
+        @media (max-width: 768px) {
+            .logo-text h1 { font-size: 1.2rem; }
+            .logo-img { width: 40px; height: 40px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Modern Navbar -->
+    <!-- Navbar -->
     <nav class="navbar-modern">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center flex-wrap">
-                
-                <!-- Logo -->
-                <div class="logo-container">
-                    <img src="{{ url_for('static', filename='image/11.jpeg') }}" alt="Mawari Logo" class="logo-img">
+                <div class="logo-container d-flex align-items-center gap-3">
+                    <img src="{{ url_for('static', filename='image/11.jpeg') }}" alt="Logo" class="logo-img">
                     <div class="logo-text">
-                        <h1>Mawari</h1>
+                        <h1>مواري</h1>
                         <p>{% if current_lang == 'en' %}Inspired by AlUla Heritage{% else %}مستوحى من تراث العلا{% endif %}</p>
                     </div>
                 </div>
                 
-                <!-- Right Side Controls -->
                 <div class="d-flex align-items-center gap-3">
-                    <!-- Language Switcher -->
                     <div class="lang-switch">
                         <button class="lang-btn {% if current_lang == 'en' %}active{% endif %}" onclick="setLanguage('en')">🇬🇧 EN</button>
                         <button class="lang-btn {% if current_lang == 'ar' %}active{% endif %}" onclick="setLanguage('ar')">🇸🇦 عربي</button>
                     </div>
-                    
-                    <!-- Theme Toggle -->
                     <button class="theme-toggle" onclick="toggleTheme()">
                         <i class="bi bi-moon-fill" id="themeIcon"></i>
                     </button>
                 </div>
             </div>
             
-            <!-- Navigation Menu with Dropdowns - Bilingual -->
+            <!-- Navigation Menu -->
             <div class="mt-3">
                 <ul class="nav justify-content-center gap-2 flex-wrap">
-                    
-                    <!-- Home / الرئيسية -->
                     <li class="nav-item">
                         <a href="{{ url_for('index') }}" class="nav-link-modern {% if request.endpoint == 'index' %}active{% endif %}">
-                            <i class="bi bi-house-fill"></i> 
-                            {% if current_lang == 'en' %}Home{% else %}الرئيسية{% endif %}
+                            <i class="bi bi-house-fill"></i> {% if current_lang == 'en' %}Home{% else %}الرئيسية{% endif %}
                         </a>
                     </li>
                     
-                    <!-- Heritage Experience / تجربة التراث - Dropdown -->
                     <li class="nav-item dropdown-modern">
                         <button class="dropdown-toggle" data-bs-toggle="dropdown">
-                            <i class="bi bi-map-fill"></i> 
-                            {% if current_lang == 'en' %}Heritage Experience{% else %}تجربة التراث{% endif %}
+                            <i class="bi bi-map-fill"></i> {% if current_lang == 'en' %}Heritage{% else %}التراث{% endif %}
                             <i class="bi bi-chevron-down ms-1"></i>
                         </button>
                         <ul class="dropdown-menu">
-                            <li>
-                                <a href="{{ url_for('heritage') }}" class="dropdown-item">
-                                    <i class="bi bi-vr"></i> 
-                                    {% if current_lang == 'en' %}AR Heritage Explorer{% else %}مستكشف التراث بالواقع المعزز{% endif %}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ url_for('virtual_city_tour') }}" class="dropdown-item">
-                                    <i class="bi bi-building"></i> 
-                                    {% if current_lang == 'en' %}Virtual City Tour{% else %}جولة المدينة الافتراضية{% endif %}
-                                </a>
-                            </li>
+                            <li><a href="{{ url_for('heritage') }}" class="dropdown-item"><i class="bi bi-vr"></i> {% if current_lang == 'en' %}AR Explorer{% else %}المستكشف{% endif %}</a></li>
+                            <li><a href="{{ url_for('virtual_city_tour') }}" class="dropdown-item"><i class="bi bi-building"></i> {% if current_lang == 'en' %}Virtual Tour{% else %}جولة افتراضية{% endif %}</a></li>
                         </ul>
                     </li>
                     
-                    <!-- User Menu for Logged In Users / قائمة المستخدم -->
                     {% if 'user_id' in session or current_user.is_authenticated %}
                     <li class="nav-item dropdown-modern">
                         <button class="dropdown-toggle" data-bs-toggle="dropdown">
-                            <i class="bi bi-person-circle"></i> 
-                            {% if current_lang == 'en' %}My Account{% else %}حسابي{% endif %}
+                            <i class="bi bi-person-circle"></i> {% if current_lang == 'en' %}Account{% else %}حسابي{% endif %}
                             <i class="bi bi-chevron-down ms-1"></i>
                         </button>
                         <ul class="dropdown-menu">
-                            <li>
-                                <a href="{{ url_for('dashboard') }}" class="dropdown-item">
-                                    <i class="bi bi-speedometer2"></i> 
-                                    {% if current_lang == 'en' %}Dashboard{% else %}لوحة التحكم{% endif %}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ url_for('profile') }}" class="dropdown-item">
-                                    <i class="bi bi-person-gear"></i> 
-                                    {% if current_lang == 'en' %}Edit Profile{% else %}تعديل الملف الشخصي{% endif %}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ url_for('edit_preferences') }}" class="dropdown-item">
-                                    <i class="bi bi-sliders2"></i> 
-                                    {% if current_lang == 'en' %}My Preferences{% else %}تفضيلاتي{% endif %}
-                                </a>
-                            </li>
+                            <li><a href="{{ url_for('dashboard') }}" class="dropdown-item"><i class="bi bi-speedometer2"></i> {% if current_lang == 'en' %}Dashboard{% else %}لوحة التحكم{% endif %}</a></li>
+                            <li><a href="{{ url_for('profile') }}" class="dropdown-item"><i class="bi bi-person-gear"></i> {% if current_lang == 'en' %}Profile{% else %}الملف الشخصي{% endif %}</a></li>
+                            <li><a href="{{ url_for('edit_preferences') }}" class="dropdown-item"><i class="bi bi-sliders2"></i> {% if current_lang == 'en' %}Preferences{% else %}التفضيلات{% endif %}</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <a href="{{ url_for('logout') }}" class="dropdown-item text-danger">
-                                    <i class="bi bi-box-arrow-right"></i> 
-                                    {% if current_lang == 'en' %}Logout{% else %}تسجيل خروج{% endif %}
-                                </a>
-                            </li>
+                            <li><a href="{{ url_for('logout') }}" class="dropdown-item text-danger"><i class="bi bi-box-arrow-right"></i> {% if current_lang == 'en' %}Logout{% else %}تسجيل خروج{% endif %}</a></li>
                         </ul>
                     </li>
-                    
-                    <!-- Guest Menu / قائمة الزوار -->
                     {% else %}
                     <li class="nav-item dropdown-modern">
                         <button class="dropdown-toggle" data-bs-toggle="dropdown">
-                            <i class="bi bi-box-arrow-in-right"></i> 
-                            {% if current_lang == 'en' %}Join Us{% else %}انضم إلينا{% endif %}
+                            <i class="bi bi-box-arrow-in-right"></i> {% if current_lang == 'en' %}Join{% else %}انضم{% endif %}
                             <i class="bi bi-chevron-down ms-1"></i>
                         </button>
                         <ul class="dropdown-menu">
-                            <li>
-                                <a href="{{ url_for('login') }}" class="dropdown-item">
-                                    <i class="bi bi-box-arrow-in-right"></i> 
-                                    {% if current_lang == 'en' %}Login{% else %}دخول{% endif %}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ url_for('register') }}" class="dropdown-item">
-                                    <i class="bi bi-person-plus-fill"></i> 
-                                    {% if current_lang == 'en' %}Register{% else %}تسجيل{% endif %}
-                                </a>
-                            </li>
+                            <li><a href="{{ url_for('login') }}" class="dropdown-item"><i class="bi bi-box-arrow-in-right"></i> {% if current_lang == 'en' %}Login{% else %}دخول{% endif %}</a></li>
+                            <li><a href="{{ url_for('register') }}" class="dropdown-item"><i class="bi bi-person-plus-fill"></i> {% if current_lang == 'en' %}Register{% else %}تسجيل{% endif %}</a></li>
                         </ul>
                     </li>
                     {% endif %}
                     
-                    <!-- Info / معلومات - Dropdown -->
                     <li class="nav-item dropdown-modern">
                         <button class="dropdown-toggle" data-bs-toggle="dropdown">
-                            <i class="bi bi-info-circle-fill"></i> 
-                            {% if current_lang == 'en' %}Info{% else %}معلومات{% endif %}
+                            <i class="bi bi-info-circle-fill"></i> {% if current_lang == 'en' %}Info{% else %}معلومات{% endif %}
                             <i class="bi bi-chevron-down ms-1"></i>
                         </button>
                         <ul class="dropdown-menu">
-                            <li>
-                                <a href="{{ url_for('about') }}" class="dropdown-item">
-                                    <i class="bi bi-quote"></i> 
-                                    {% if current_lang == 'en' %}About Mawari{% else %}عن مواري{% endif %}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ url_for('contact') }}" class="dropdown-item">
-                                    <i class="bi bi-envelope-fill"></i> 
-                                    {% if current_lang == 'en' %}Contact Us{% else %}اتصل بنا{% endif %}
-                                </a>
-                            </li>
+                            <li><a href="{{ url_for('about') }}" class="dropdown-item"><i class="bi bi-quote"></i> {% if current_lang == 'en' %}About{% else %}عن التطبيق{% endif %}</a></li>
+                            <li><a href="{{ url_for('contact') }}" class="dropdown-item"><i class="bi bi-envelope-fill"></i> {% if current_lang == 'en' %}Contact{% else %}اتصل بنا{% endif %}</a></li>
                         </ul>
                     </li>
-                    
-                    <!-- Admin Dashboard (Visible only to admins) / لوحة تحكم المشرف -->
-                    {% if current_user.is_authenticated and current_user.is_admin() %}
-                    <li class="nav-item">
-                        <a href="{{ url_for('admin_dashboard') }}" class="nav-link-modern">
-                            <i class="bi bi-shield-lock-fill"></i> 
-                            {% if current_lang == 'en' %}Admin{% else %}المشرف{% endif %}
-                        </a>
-                    </li>
-                    {% endif %}
-                    
                 </ul>
             </div>
         </div>
@@ -459,7 +310,6 @@
             {% if messages %}
                 {% for category, message in messages %}
                     <div class="alert alert-{{ category }} alert-dismissible fade show rounded-4" role="alert">
-                        <i class="bi bi-{{ 'check-circle' if category == 'success' else 'exclamation-triangle' if category == 'danger' else 'info-circle' }} me-2"></i>
                         {{ message }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
@@ -473,62 +323,44 @@
         {% block content %}{% endblock %}
     </main>
 
-    <!-- Modern Footer -->
+    <!-- Footer -->
     <footer class="footer-modern">
-        <div class="container">
+        <div class="container text-center">
             <div class="row">
                 <div class="col-md-4 mb-3">
-                    <h5><i class="bi bi-gem"></i> Mawari</h5>
-                    <p class="small opacity-75">
-                        {% if current_lang == 'en' %}Preserving AlUla's heritage through Augmented Reality{% else %}الحفاظ على تراث العلا من خلال الواقع المعزز{% endif %}
-                    </p>
+                    <h5><i class="bi bi-gem"></i> مواري</h5>
+                    <p class="small opacity-75">{% if current_lang == 'en' %}Preserving AlUla's heritage through AR{% else %}الحفاظ على تراث العلا من خلال الواقع المعزز{% endif %}</p>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <h5><i class="bi bi-link-45deg"></i> 
-                        {% if current_lang == 'en' %}Quick Links{% else %}روابط سريعة{% endif %}
-                    </h5>
+                    <h5><i class="bi bi-link-45deg"></i> {% if current_lang == 'en' %}Quick Links{% else %}روابط سريعة{% endif %}</h5>
                     <ul class="list-unstyled small">
-                        <li><a href="{{ url_for('heritage') }}" class="text-decoration-none opacity-75">🎨 {% if current_lang == 'en' %}AR Experience{% else %}تجربة الواقع المعزز{% endif %}</a></li>
+                        <li><a href="{{ url_for('heritage') }}" class="text-decoration-none opacity-75">🎨 {% if current_lang == 'en' %}AR Experience{% else %}تجربة AR{% endif %}</a></li>
                         <li><a href="{{ url_for('virtual_city_tour') }}" class="text-decoration-none opacity-75">🏙️ {% if current_lang == 'en' %}Virtual Tour{% else %}جولة افتراضية{% endif %}</a></li>
-                        <li><a href="{{ url_for('about') }}" class="text-decoration-none opacity-75">📖 {% if current_lang == 'en' %}Our Story{% else %}قصتنا{% endif %}</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <h5><i class="bi bi-people-fill"></i> 
-                        {% if current_lang == 'en' %}Team{% else %}الفريق{% endif %}
-                    </h5>
-                    <p class="small opacity-75">
-                        {% if current_lang == 'en' %}10th Level Computer Science{% else %}المستوى العاشر علوم حاسوب{% endif %}<br>
-                        {% if current_lang == 'en' %}University College of Ranyah{% else %}الكلية الجامعية برنية{% endif %}
-                    </p>
+                    <h5><i class="bi bi-people-fill"></i> {% if current_lang == 'en' %}Team{% else %}الفريق{% endif %}</h5>
+                    <p class="small opacity-75">{% if current_lang == 'en' %}10th Level CS, Ranyah{% else %}المستوى العاشر علوم حاسوب، رنية{% endif %}</p>
                 </div>
             </div>
             <hr class="opacity-25">
-            <p class="small mb-0 opacity-50">
-                &copy; 2025 Mawari. {% if current_lang == 'en' %}All rights reserved.{% else %}جميع الحقوق محفوظة.{% endif %}
-            </p>
+            <p class="small mb-0 opacity-50">© 2025 مواري. {% if current_lang == 'en' %}All rights reserved.{% else %}جميع الحقوق محفوظة.{% endif %}</p>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        // Set language function
         function setLanguage(lang) {
             window.location.href = "{{ url_for('set_language', lang='') }}" + lang;
         }
         
-        // Toggle theme function
         function toggleTheme() {
             const html = document.documentElement;
-            const currentTheme = html.getAttribute('data-theme');
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            const current = html.getAttribute('data-theme');
+            const newTheme = current === 'light' ? 'dark' : 'light';
             html.setAttribute('data-theme', newTheme);
-            
-            // Save theme preference
             localStorage.setItem('theme', newTheme);
-            
-            // Update theme icon
             const icon = document.querySelector('#themeIcon');
             if (newTheme === 'dark') {
                 icon.classList.remove('bi-moon-fill');
@@ -539,26 +371,16 @@
             }
         }
         
-        // Load saved theme
         document.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) {
-                document.documentElement.setAttribute('data-theme', savedTheme);
+            const saved = localStorage.getItem('theme');
+            if (saved) {
+                document.documentElement.setAttribute('data-theme', saved);
                 const icon = document.querySelector('#themeIcon');
-                if (savedTheme === 'dark') {
+                if (saved === 'dark') {
                     icon.classList.remove('bi-moon-fill');
                     icon.classList.add('bi-sun-fill');
                 }
             }
-            
-            // Add active class to current nav item based on URL
-            const currentPath = window.location.pathname;
-            document.querySelectorAll('.dropdown-item, .nav-link-modern').forEach(link => {
-                const href = link.getAttribute('href');
-                if (href && href !== '#' && currentPath === href) {
-                    link.classList.add('active');
-                }
-            });
         });
     </script>
 </body>
