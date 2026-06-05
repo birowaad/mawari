@@ -23,6 +23,7 @@ class User(db.Model):
     interests = db.Column(db.String(500), default='')
     experience_level = db.Column(db.String(50), default='beginner')
     preferences = db.Column(db.Text, default='{}')
+    is_active = db.Column(db.Boolean, default=True)  # <-- IMPORTANT: Add this line
     
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -65,8 +66,8 @@ def create_app():
     # ========== IMPORTANT: Drop and recreate database with new columns ==========
     with app.app_context():
         db.drop_all()      # This deletes the old database (users will be lost)
-        db.create_all()    # This creates new database with interests, experience_level, preferences
-        print("✅ Database recreated successfully with User interests, experience_level, preferences columns!")
+        db.create_all()    # This creates new database with interests, experience_level, preferences, is_active
+        print("✅ Database recreated successfully with User interests, experience_level, preferences, is_active columns!")
 
     # ===========================================================
     # Language Settings
@@ -150,7 +151,7 @@ def create_app():
                 flash("Email already exists", "danger")
                 return redirect(url_for('register'))
 
-            new_user = User(username=username, email=email)
+            new_user = User(username=username, email=email, is_active=True)
             new_user.set_password(password)
             db.session.add(new_user)
             db.session.commit()
