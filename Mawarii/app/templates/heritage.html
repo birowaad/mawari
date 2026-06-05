@@ -9,8 +9,18 @@
             {% if current_lang == 'en' %}🏛️ AlUla Heritage Experience{% else %}🏛️ تجربة تراث العلا{% endif %}
         </h1>
         <p class="lead fs-6" style="color: #6c757d;">
-            {% if current_lang == 'en' %}Explore tombs, artifacts & desert life with interactive hotspots & ambient sounds{% else %}استكشف المقابر والقطع الأثرية والحياة الصحراوية مع نقاط تفاعلية ومؤثرات صوتية{% endif %}
+            {% if current_lang == 'en' %}Explore tombs, artifacts & desert life with interactive hotspots{% else %}استكشف المقابر والقطع الأثرية والحياة الصحراوية مع نقاط تفاعلية{% endif %}
         </p>
+    </div>
+
+    <!-- Edit Preferences Button - Top Right -->
+    <div class="container">
+        <div class="text-end mb-3">
+            <a href="{{ url_for('edit_preferences') }}" class="btn btn-outline-warning btn-sm rounded-pill">
+                <i class="bi bi-sliders2"></i> 
+                {% if current_lang == 'en' %}Edit Your Preferences{% else %}تعديل تفضيلاتك{% endif %}
+            </a>
+        </div>
     </div>
 
     <!-- 3 TABS -->
@@ -57,7 +67,7 @@
                             <i class="bi bi-pin-map"></i> 📍 Hotspots
                         </button>
                         <button id="toggleAmbientBtn" class="btn btn-outline-gold btn-sm rounded-pill px-3 py-1" onclick="toggleAmbientSound()" style="background: rgba(255,255,255,0.15); backdrop-filter: blur(4px); border: 1px solid #DAA520; color: #FFF;">
-                            <i class="bi bi-volume-up"></i> 🎵 Sound effects 
+                            <i class="bi bi-volume-up"></i> 🎵 Ambience
                         </button>
                         <button class="btn btn-outline-gold btn-sm rounded-pill px-3 py-1" onclick="scrollToQR()" style="background: rgba(255,255,255,0.15); backdrop-filter: blur(4px); border: 1px solid #DAA520; color: #FFF;">
                             <i class="bi bi-qr-code"></i> 📱 AR
@@ -337,20 +347,17 @@
     };
     
     // ==================== HOTSPOTS DATA ====================
-    // Hotspots for Qasr al-Farid (Sites)
     const siteHotspots = [
-        { id: 1, x: 50, y: 35, title: "🏛️ Main Facade", desc: "Four partially completed Nabataean columns frame the entrance. Each column is carved with intricate patterns.", audio: "The main facade features four partially completed columns. The symmetry demonstrates the advanced mathematical knowledge of the Nabataean civilization." },
+        { id: 1, x: 50, y: 35, title: "🏛️ Main Facade", desc: "Four partially completed Nabataean columns frame the entrance.", audio: "The main facade features four partially completed columns. The symmetry demonstrates the advanced mathematical knowledge of the Nabataean civilization." },
         { id: 2, x: 45, y: 55, title: "🚪 Tomb Entrance", desc: "The sacred doorway leading to the burial chamber of Lihyan, son of Kuza.", audio: "This sacred doorway leads to the burial chamber of Lihyan, son of Kuza. The Nabataeans believed in an afterlife." },
         { id: 3, x: 30, y: 50, title: "📜 Nabataean Inscriptions", desc: "Ancient writings in Aramaic and Nabataean script.", audio: "These precious inscriptions identify Lihyan, son of Kuza, as the tomb's owner." }
     ];
     
-    // Hotspots for Artifacts
     const artifactHotspots = [
-        { id: 101, x: 50, y: 45, title: "🏺 Pottery Details", desc: "Thin-walled ceramic with elegant painted designs typical of Nabataean craftsmanship.", audio: "Nabataean pottery is known for its exceptionally thin walls and delicate decorations, traded across the ancient world." },
-        { id: 102, x: 50, y: 55, title: "🪔 Lamp Spout", desc: "The nozzle where the wick was placed to produce light.", audio: "Oil lamps like this one were filled with olive oil, with a wick protruding from this spout to provide light." }
+        { id: 101, x: 50, y: 45, title: "🏺 Pottery Details", desc: "Thin-walled ceramic with elegant painted designs.", audio: "Nabataean pottery is known for its exceptionally thin walls and delicate decorations." },
+        { id: 102, x: 50, y: 55, title: "🪔 Lamp Spout", desc: "The nozzle where the wick was placed to produce light.", audio: "Oil lamps like this one were filled with olive oil, with a wick protruding from this spout." }
     ];
     
-    // Hotspots for Desert Life
     const desertHotspots = [
         { id: 201, x: 50, y: 40, title: "🐪 Camel Hump", desc: "Stores fat for energy during long desert journeys.", audio: "The camel's hump stores fat, not water. This allows camels to survive for weeks without food." },
         { id: 202, x: 50, y: 60, title: "🏜️ Sand Dunes", desc: "Wind-carved sand formations typical of the AlUla desert.", audio: "These sand dunes are constantly reshaped by the wind, creating the ever-changing desert landscape." }
