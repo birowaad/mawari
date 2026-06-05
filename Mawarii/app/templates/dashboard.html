@@ -13,7 +13,8 @@
         </div>
         <div>
             <span class="badge bg-warning text-dark p-2">
-                <i class="bi bi-star-fill"></i> {% if current_lang == 'en' %}Heritage Explorer{% else %}مستكشف التراث{% endif %}
+                <i class="bi bi-star-fill"></i> 
+                {% if current_lang == 'en' %}Heritage Explorer{% else %}مستكشف التراث{% endif %}
             </span>
         </div>
     </div>
@@ -24,57 +25,68 @@
             <div class="card dashboard-stats-card p-3 text-center border-0 shadow-sm">
                 <i class="bi bi-camera-fill fs-1 text-primary"></i>
                 <h3 class="mb-0 mt-2" id="modelsExploredCount">0</h3>
-                <p class="text-muted small">{% if current_lang == 'en' %}Models Explored{% else %}نماذج تم استكشافها{% endif %}</p>
+                <p class="text-muted small">
+                    {% if current_lang == 'en' %}Models Explored{% else %}نماذج تم استكشافها{% endif %}
+                </p>
             </div>
         </div>
         <div class="col-md-3 col-6">
             <div class="card dashboard-stats-card p-3 text-center border-0 shadow-sm">
                 <i class="bi bi-clock-history fs-1 text-success"></i>
                 <h3 class="mb-0 mt-2" id="totalTimeSpent">0</h3>
-                <p class="text-muted small">{% if current_lang == 'en' %}Minutes Explored{% else %}دقائق استكشاف{% endif %}</p>
+                <p class="text-muted small">
+                    {% if current_lang == 'en' %}Minutes Explored{% else %}دقائق استكشاف{% endif %}
+                </p>
             </div>
         </div>
         <div class="col-md-3 col-6">
             <div class="card dashboard-stats-card p-3 text-center border-0 shadow-sm">
                 <i class="bi bi-headphones fs-1 text-info"></i>
                 <h3 class="mb-0 mt-2" id="storiesListened">0</h3>
-                <p class="text-muted small">{% if current_lang == 'en' %}Stories Listened{% else %}قصص تم الاستماع إليها{% endif %}</p>
+                <p class="text-muted small">
+                    {% if current_lang == 'en' %}Stories Listened{% else %}قصص تم الاستماع إليها{% endif %}
+                </p>
             </div>
         </div>
         <div class="col-md-3 col-6">
             <div class="card dashboard-stats-card p-3 text-center border-0 shadow-sm">
                 <i class="bi bi-trophy-fill fs-1 text-warning"></i>
                 <h3 class="mb-0 mt-2" id="achievementsCount">0</h3>
-                <p class="text-muted small">{% if current_lang == 'en' %}Achievements{% else %}إنجازات{% endif %}</p>
+                <p class="text-muted small">
+                    {% if current_lang == 'en' %}Achievements{% else %}إنجازات{% endif %}
+                </p>
             </div>
         </div>
     </div>
 
-    <!-- AI AGENT INSIGHTS CARD - NEW -->
+    <!-- AI AGENT INSIGHTS CARD -->
     <div class="card shadow-lg mb-4 border-0">
         <div class="card-header bg-gradient" style="background: linear-gradient(135deg, #DAA520, #B8860B); color: white;">
             <h5 class="mb-0 py-2">
                 <i class="bi bi-robot"></i> 
-                <span class="en-text">🤖 AI Heritage Assistant</span>
-                <span class="ar-text" style="display: none;">🤖 مساعد التراث الذكي</span>
+                {% if current_lang == 'en' %}🤖 AI Heritage Assistant{% else %}🤖 مساعد التراث الذكي{% endif %}
             </h5>
         </div>
         <div class="card-body" id="aiInsightsContainer">
             <div class="text-center py-4">
                 <div class="spinner-border text-warning" role="status">
-                    <span class="visually-hidden">Loading AI insights...</span>
+                    <span class="visually-hidden">
+                        {% if current_lang == 'en' %}Loading AI insights...{% else %}جاري تحميل رؤى الذكاء الاصطناعي...{% endif %}
+                    </span>
                 </div>
-                <p class="mt-2 text-muted">Loading your personalized insights...</p>
+                <p class="mt-2 text-muted">
+                    {% if current_lang == 'en' %}Loading your personalized insights...{% else %}جاري تحميل رؤاك المخصصة...{% endif %}
+                </p>
             </div>
         </div>
     </div>
 
-    <!-- LEARNING PATH CARD - NEW -->
+    <!-- LEARNING PATH CARD -->
     <div class="card shadow-sm mb-4 border-0" id="learningPathCard" style="display: none;">
         <div class="card-header bg-transparent border-0 pt-3">
-            <h5 class="mb-0"><i class="bi bi-diagram-3 text-warning"></i> 
-                <span class="en-text">📚 Your Personalized Learning Path</span>
-                <span class="ar-text" style="display: none;">📚 مسار التعلم المخصص لك</span>
+            <h5 class="mb-0">
+                <i class="bi bi-diagram-3 text-warning"></i> 
+                {% if current_lang == 'en' %}📚 Your Personalized Learning Path{% else %}📚 مسار التعلم المخصص لك{% endif %}
             </h5>
         </div>
         <div class="card-body" id="learningPathContainer">
@@ -85,27 +97,27 @@
     <!-- User Preferences Card -->
     <div class="card shadow-sm mb-4 border-0">
         <div class="card-header bg-transparent border-0 pt-3">
-            <h5 class="mb-0"><i class="bi bi-sliders2 text-warning"></i> 
-                <span class="en-text">Your Preferences</span>
-                <span class="ar-text" style="display: none;">تفضيلاتك</span>
+            <h5 class="mb-0">
+                <i class="bi bi-sliders2 text-warning"></i> 
+                {% if current_lang == 'en' %}Your Preferences{% else %}تفضيلاتك{% endif %}
             </h5>
         </div>
         <div class="card-body">
             <div class="row align-items-center">
                 <div class="col-md-8">
                     <p class="mb-2 text-muted">
-                        <span class="en-text">Personalize your heritage experience by setting your interests.</span>
-                        <span class="ar-text" style="display: none;">خصص تجربتك التراثية من خلال تحديد اهتماماتك.</span>
+                        {% if current_lang == 'en' %}Personalize your heritage experience by setting your interests.{% else %}خصص تجربتك التراثية من خلال تحديد اهتماماتك.{% endif %}
                     </p>
                     <div class="d-flex flex-wrap gap-2" id="userInterestsDisplay">
-                        <span class="badge bg-secondary">No interests selected</span>
+                        <span class="badge bg-secondary">
+                            {% if current_lang == 'en' %}No interests selected{% else %}لم يتم اختيار اهتمامات{% endif %}
+                        </span>
                     </div>
                 </div>
                 <div class="col-md-4 text-md-end mt-3 mt-md-0">
                     <a href="{{ url_for('edit_preferences') }}" class="btn btn-outline-warning rounded-pill">
                         <i class="bi bi-pencil"></i> 
-                        <span class="en-text">Edit Preferences</span>
-                        <span class="ar-text" style="display: none;">تعديل التفضيلات</span>
+                        {% if current_lang == 'en' %}Edit Preferences{% else %}تعديل التفضيلات{% endif %}
                     </a>
                 </div>
             </div>
@@ -117,35 +129,59 @@
         <div class="col-md-3 col-sm-6">
             <div class="card dashboard-card p-3 text-center border-0 shadow-sm">
                 <i class="bi bi-person-circle fs-1 text-primary"></i>
-                <h5 class="mt-2">Edit Profile</h5>
-                <a href="{{ url_for('profile') }}" class="btn btn-warning mt-2">Go</a>
+                <h5 class="mt-2">{% if current_lang == 'en' %}Edit Profile{% else %}تعديل الملف الشخصي{% endif %}</h5>
+                <a href="{{ url_for('profile') }}" class="btn btn-warning mt-2">
+                    {% if current_lang == 'en' %}Go{% else %}انتقال{% endif %}
+                </a>
             </div>
         </div>
         <div class="col-md-3 col-sm-6">
             <div class="card dashboard-card p-3 text-center border-0 shadow-sm">
                 <i class="bi bi-vr fs-1 text-success"></i>
-                <h5 class="mt-2">Explore Heritage</h5>
-                <a href="{{ url_for('heritage') }}" class="btn btn-warning mt-2">Go</a>
+                <h5 class="mt-2">{% if current_lang == 'en' %}Explore Heritage{% else %}استكشف التراث{% endif %}</h5>
+                <a href="{{ url_for('heritage') }}" class="btn btn-warning mt-2">
+                    {% if current_lang == 'en' %}Go{% else %}انتقال{% endif %}
+                </a>
             </div>
         </div>
         <div class="col-md-3 col-sm-6">
             <div class="card dashboard-card p-3 text-center border-0 shadow-sm">
                 <i class="bi bi-sliders2 fs-1 text-info"></i>
-                <h5 class="mt-2">My Preferences</h5>
-                <a href="{{ url_for('edit_preferences') }}" class="btn btn-info mt-2">Edit</a>
+                <h5 class="mt-2">{% if current_lang == 'en' %}My Preferences{% else %}تفضيلاتي{% endif %}</h5>
+                <a href="{{ url_for('edit_preferences') }}" class="btn btn-info mt-2">
+                    {% if current_lang == 'en' %}Edit{% else %}تعديل{% endif %}
+                </a>
             </div>
         </div>
         <div class="col-md-3 col-sm-6">
             <div class="card dashboard-card p-3 text-center border-0 shadow-sm">
                 <i class="bi bi-box-arrow-right fs-1 text-danger"></i>
-                <h5 class="mt-2">Logout</h5>
-                <a href="{{ url_for('logout') }}" class="btn btn-danger mt-2">Logout</a>
+                <h5 class="mt-2">{% if current_lang == 'en' %}Logout{% else %}تسجيل خروج{% endif %}</h5>
+                <a href="{{ url_for('logout') }}" class="btn btn-danger mt-2">
+                    {% if current_lang == 'en' %}Logout{% else %}تسجيل خروج{% endif %}
+                </a>
             </div>
         </div>
     </div>
 </div>
 
 <script>
+    // Helper function for translations in JavaScript
+    function getTranslation(key) {
+        const lang = '{{ current_lang }}';
+        const translations = {
+            engagement_score: { en: 'Engagement Score', ar: 'نسبة التفاعل' },
+            ai_insights: { en: 'AI Insights', ar: 'رؤى الذكاء الاصطناعي' },
+            next_recommendation: { en: 'Next recommendation', ar: 'التوصية التالية' },
+            complete_preferences: { en: 'Complete your preferences to unlock AI insights!', ar: 'أكمل تفضيلاتك لفتح رؤى الذكاء الاصطناعي!' },
+            set_preferences: { en: 'Set your preferences first to get personalized AI insights.', ar: 'حدد تفضيلاتك أولاً للحصول على رؤى مخصصة.' },
+            loading: { en: 'Loading your personalized insights...', ar: 'جاري تحميل رؤاك المخصصة...' },
+            start_lesson: { en: 'Start Lesson', ar: 'ابدأ الدرس' },
+            match_with_interests: { en: 'match with your interests', ar: 'تطابق مع اهتماماتك' }
+        };
+        return translations[key]?.[lang] || translations[key]?.en || key;
+    }
+
     // Load saved data from localStorage
     function loadDashboardStats() {
         const savedHistory = localStorage.getItem('heritageExploredHistory');
@@ -176,6 +212,7 @@
         try {
             const response = await fetch('/api/agent/insights');
             const data = await response.json();
+            const lang = '{{ current_lang }}';
             
             const container = document.getElementById('aiInsightsContainer');
             
@@ -184,18 +221,18 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="bg-light rounded-3 p-3 mb-3">
-                                <h6><i class="bi bi-graph-up text-warning"></i> Engagement Score</h6>
+                                <h6><i class="bi bi-graph-up text-warning"></i> ${getTranslation('engagement_score')}</h6>
                                 <div class="progress mb-2" style="height: 25px; border-radius: 12px;">
                                     <div class="progress-bar bg-warning fw-bold" style="width: ${data.engagement_score}%; border-radius: 12px;">
                                         ${data.engagement_score}%
                                     </div>
                                 </div>
-                                <p class="small text-muted mb-0">Based on ${data.interactions_count || 0} interactions</p>
+                                <p class="small text-muted mb-0">${lang === 'en' ? 'Based on' : 'بناءً على'} ${data.interactions_count || 0} ${lang === 'en' ? 'interactions' : 'تفاعل'}</p>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="bg-light rounded-3 p-3 mb-3">
-                                <h6><i class="bi bi-lightbulb text-warning"></i> AI Insights</h6>
+                                <h6><i class="bi bi-lightbulb text-warning"></i> ${getTranslation('ai_insights')}</h6>
                                 <ul class="mb-0 ps-3">
                                     ${data.insights.map(i => `<li class="small mb-2">${i}</li>`).join('')}
                                 </ul>
@@ -205,16 +242,16 @@
                     ${data.next_recommendation ? `
                     <div class="alert alert-warning mt-2">
                         <i class="bi bi-arrow-right-circle"></i>
-                        <strong>Next recommendation:</strong> ${data.next_recommendation.name || 'Keep exploring!'}
+                        <strong>${getTranslation('next_recommendation')}:</strong> ${data.next_recommendation.name || (lang === 'en' ? 'Keep exploring!' : 'استمر في الاستكشاف!')}
                     </div>
                     ` : ''}
                 `;
             } else {
-                container.innerHTML = `<p class="text-muted text-center py-4">Complete your preferences to unlock AI insights!</p>`;
+                container.innerHTML = `<p class="text-muted text-center py-4">${getTranslation('complete_preferences')}</p>`;
             }
         } catch (error) {
             console.error('Error loading AI insights:', error);
-            document.getElementById('aiInsightsContainer').innerHTML = `<p class="text-muted text-center py-4">Set your preferences first to get personalized AI insights.</p>`;
+            document.getElementById('aiInsightsContainer').innerHTML = `<p class="text-muted text-center py-4">${getTranslation('set_preferences')}</p>`;
         }
     }
     
@@ -223,9 +260,16 @@
         try {
             const response = await fetch('/api/agent/learning-path');
             const data = await response.json();
+            const lang = '{{ current_lang }}';
             
             const card = document.getElementById('learningPathCard');
             const container = document.getElementById('learningPathContainer');
+            
+            const levelNames = {
+                Beginner: lang === 'en' ? 'Beginner' : 'مبتدئ',
+                Intermediate: lang === 'en' ? 'Intermediate' : 'متوسط',
+                Advanced: lang === 'en' ? 'Advanced' : 'متقدم'
+            };
             
             if (data.learning_path && data.learning_path.length > 0) {
                 card.style.display = 'block';
@@ -240,10 +284,10 @@
                                             <span class="fs-2">${step.step}</span>
                                         </div>
                                         <h6 class="fw-bold">${step.model_name}</h6>
-                                        <span class="badge bg-${step.level === 'Beginner' ? 'success' : step.level === 'Intermediate' ? 'warning' : 'danger'} mb-2">${step.level}</span>
-                                        <p class="small text-muted">${step.similarity_score}% match with your interests</p>
+                                        <span class="badge bg-${step.level === 'Beginner' ? 'success' : step.level === 'Intermediate' ? 'warning' : 'danger'} mb-2">${levelNames[step.level]}</span>
+                                        <p class="small text-muted">${step.similarity_score}% ${getTranslation('match_with_interests')}</p>
                                         <a href="{{ url_for('heritage') }}?load=${step.model_id}" class="btn btn-sm btn-outline-primary w-100">
-                                            <i class="bi bi-vr"></i> Start Lesson
+                                            <i class="bi bi-vr"></i> ${getTranslation('start_lesson')}
                                         </a>
                                     </div>
                                 </div>
@@ -262,6 +306,7 @@
         try {
             const response = await fetch('/api/user/preferences');
             const data = await response.json();
+            const lang = '{{ current_lang }}';
             
             const container = document.getElementById('userInterestsDisplay');
             if (data.interests && data.interests.length > 0) {
@@ -269,7 +314,7 @@
                     `<span class="badge bg-warning text-dark">${interest}</span>`
                 ).join('');
             } else {
-                container.innerHTML = `<span class="badge bg-secondary">No interests selected</span>`;
+                container.innerHTML = `<span class="badge bg-secondary">${lang === 'en' ? 'No interests selected' : 'لم يتم اختيار اهتمامات'}</span>`;
             }
         } catch (error) {
             console.error('Error loading preferences:', error);
@@ -299,6 +344,19 @@
     }
     .bg-gradient {
         background: linear-gradient(135deg, #DAA520, #B8860B);
+    }
+    .progress-bar {
+        transition: width 0.5s ease;
+    }
+    .card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1) !important;
+    }
+    [dir="rtl"] .text-md-end {
+        text-align: left !important;
     }
 </style>
 {% endblock %}
