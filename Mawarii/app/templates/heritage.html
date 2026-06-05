@@ -3,14 +3,26 @@
 {% block content %}
 <div class="container-fluid px-0" id="mainContainer">
 
-    <!-- Hero Title -->
+    <!-- Hero Title with AI Agent Indicator -->
     <div class="text-center py-3" style="background: linear-gradient(135deg, #fff9f0, #fff5e6);">
-        <h1 class="display-5 fw-bold" style="color: #8B6914;">
-            {% if current_lang == 'en' %}🏛️ AlUla Heritage Experience{% else %}🏛️ تجربة تراث العلا{% endif %}
-        </h1>
-        <p class="lead fs-6" style="color: #6c757d;">
-            {% if current_lang == 'en' %}Explore tombs, artifacts & desert life with AI-powered recommendations{% else %}استكشف المقابر والقطع الأثرية والحياة الصحراوية مع توصيات الذكاء الاصطناعي{% endif %}
-        </p>
+        <div class="d-flex justify-content-between align-items-center px-4">
+            <div></div>
+            <div class="text-center flex-grow-1">
+                <h1 class="display-5 fw-bold" style="color: #8B6914;">
+                    {% if current_lang == 'en' %}🏛️ AlUla Heritage Experience{% else %}🏛️ تجربة تراث العلا{% endif %}
+                </h1>
+                <p class="lead fs-6" style="color: #6c757d;">
+                    {% if current_lang == 'en' %}Explore tombs, artifacts & desert life with AI-powered recommendations{% else %}استكشف المقابر والقطع الأثرية والحياة الصحراوية مع توصيات الذكاء الاصطناعي{% endif %}
+                </p>
+            </div>
+            <!-- AI Agent Badge -->
+            <div>
+                <span class="badge bg-gradient" style="background: linear-gradient(135deg, #DAA520, #B8860B); color: white; padding: 8px 16px;">
+                    <i class="bi bi-robot"></i> 
+                    {% if current_lang == 'en' %}AI Agent Active{% else %}الوكيل الذكي نشط{% endif %}
+                </span>
+            </div>
+        </div>
     </div>
 
     <!-- Edit Preferences Button -->
@@ -24,7 +36,7 @@
     </div>
 
     <!-- =========================================================== -->
-    <!-- AI RECOMMENDATIONS SECTION - NEW -->
+    <!-- AI RECOMMENDATIONS SECTION -->
     <!-- =========================================================== -->
     <div id="aiRecommendationsSection" class="container my-4" style="display: none;">
         <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
@@ -33,16 +45,99 @@
                     <i class="bi bi-robot"></i> 
                     <span class="en-text">🤖 AI-Powered Recommendations For You</span>
                     <span class="ar-text" style="display: none;">🤖 توصيات الذكاء الاصطناعي لك</span>
+                    <span class="badge bg-light text-dark ms-2">Powered by TF-IDF + Cosine Similarity</span>
                 </h5>
             </div>
-            <div class="card-body bg-light">
-                <div id="aiRecommendationsRow" class="row g-3">
-                    <div class="col-12 text-center py-3">
-                        <div class="spinner-border text-warning" role="status">
-                            <span class="visually-hidden">Loading AI recommendations...</span>
-                        </div>
-                        <p class="mt-2 text-muted">Loading personalized recommendations...</p>
+            <div class="card-body bg-light" id="aiRecommendationsRow">
+                <div class="text-center py-3">
+                    <div class="spinner-border text-warning" role="status"></div>
+                    <p class="mt-2 text-muted">Loading personalized recommendations...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================================================== -->
+    <!-- VIRTUAL TOUR SECTION - NEW -->
+    <!-- =========================================================== -->
+    <div class="container my-4">
+        <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+            <div class="card-header bg-gradient" style="background: linear-gradient(135deg, #20B2AA, #008080); color: white;">
+                <h5 class="mb-0 py-2">
+                    <i class="bi bi-vr"></i> 
+                    <span class="en-text">🎮 Virtual Guided Tour - Experience AlUla Like Never Before</span>
+                    <span class="ar-text" style="display: none;">🎮 جولة سياحية افتراضية - استمتع بتجربة العلا كما لم يحدث من قبل</span>
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                <!-- Tour Progress Bar -->
+                <div class="p-3 bg-light border-bottom">
+                    <div class="d-flex justify-content-between mb-2">
+                        <small><i class="bi bi-compass"></i> <span class="en-text">Tour Progress</span><span class="ar-text" style="display: none;">تقدم الجولة</span></small>
+                        <small id="tourProgressPercent" class="text-warning fw-bold">0%</small>
                     </div>
+                    <div class="progress" style="height: 8px;">
+                        <div id="tourProgressBar" class="progress-bar bg-warning" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <!-- Tour Stops -->
+                <div id="tourStops" class="row g-0">
+                    <!-- Stop 1: Qasr al-Farid -->
+                    <div class="col-md-4 tour-stop" data-stop-id="1" data-model-id="qasr_al_farid" data-model-name="Qasr al-Farid">
+                        <div class="p-3 m-2 border rounded-3 text-center tour-stop-card">
+                            <div class="tour-marker" style="width: 40px; height: 40px; background: #DAA520; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: white; font-weight: bold;">1</div>
+                            <h6 class="mt-2">🏛️ Qasr al-Farid</h6>
+                            <p class="small text-muted">The Lonely Castle | 1st Century CE</p>
+                            <span class="badge bg-warning text-dark">⭐ Highlight</span>
+                            <div class="mt-2">
+                                <button class="btn btn-sm btn-outline-warning tour-start-btn" onclick="startTourStop(1, 'qasr_al_farid', 'Qasr al-Farid', 'sketchfab', '9b18367aac28420bbc066d65e73b9acd')">
+                                    <i class="bi bi-play-fill"></i> <span class="en-text">Start Tour</span><span class="ar-text" style="display: none;">ابدأ الجولة</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Stop 2: Roman Oil Lamp -->
+                    <div class="col-md-4 tour-stop" data-stop-id="2" data-model-id="roman_oil_lamp" data-model-name="Roman Oil Lamp">
+                        <div class="p-3 m-2 border rounded-3 text-center tour-stop-card">
+                            <div class="tour-marker" style="width: 40px; height: 40px; background: #20B2AA; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: white; font-weight: bold;">2</div>
+                            <h6 class="mt-2">🪔 Roman Oil Lamp</h6>
+                            <p class="small text-muted">Daily Life Artifact | 1st-2nd Century CE</p>
+                            <span class="badge bg-info">🔍 Artifact</span>
+                            <div class="mt-2">
+                                <button class="btn btn-sm btn-outline-info tour-start-btn" onclick="startTourStop(2, 'roman_oil_lamp', 'Roman Oil Lamp', 'glb', '/static/models/roman_oil_lamp_tarraco.glb')">
+                                    <i class="bi bi-play-fill"></i> <span class="en-text">Start Tour</span><span class="ar-text" style="display: none;">ابدأ الجولة</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Stop 3: Arabian Camel -->
+                    <div class="col-md-4 tour-stop" data-stop-id="3" data-model-id="camel" data-model-name="Arabian Camel">
+                        <div class="p-3 m-2 border rounded-3 text-center tour-stop-card">
+                            <div class="tour-marker" style="width: 40px; height: 40px; background: #28A745; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: white; font-weight: bold;">3</div>
+                            <h6 class="mt-2">🐪 Arabian Camel</h6>
+                            <p class="small text-muted">Ship of the Desert</p>
+                            <span class="badge bg-success">🌿 Desert Life</span>
+                            <div class="mt-2">
+                                <button class="btn btn-sm btn-outline-success tour-start-btn" onclick="startTourStop(3, 'camel', 'Arabian Camel', 'glb', '/static/models/camel.glb')">
+                                    <i class="bi bi-play-fill"></i> <span class="en-text">Start Tour</span><span class="ar-text" style="display: none;">ابدأ الجولة</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tour Navigation Buttons -->
+                <div class="p-3 bg-light text-center border-top">
+                    <button id="prevTourBtn" class="btn btn-outline-secondary rounded-pill px-3" onclick="previousTourStop()" disabled>
+                        <i class="bi bi-arrow-left"></i> <span class="en-text">Previous</span><span class="ar-text" style="display: none;">السابق</span>
+                    </button>
+                    <span class="mx-3"><span id="currentTourStop">1</span> / <span id="totalTourStops">3</span></span>
+                    <button id="nextTourBtn" class="btn btn-outline-warning rounded-pill px-3" onclick="nextTourStop()">
+                        <span class="en-text">Next</span><span class="ar-text" style="display: none;">التالي</span> <i class="bi bi-arrow-right"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -63,7 +158,7 @@
         </div>
     </div>
 
-    <!-- 3D MODEL VIEWER WITH HOTSPOTS -->
+    <!-- 3D MODEL VIEWER -->
     <div class="row mx-0 py-3" style="background: linear-gradient(135deg, #f5f5f0, #e8e4d8);">
         <div class="col-12">
             <div class="position-relative rounded-4 shadow-xl" style="border: 1px solid rgba(184,134,11,0.3); overflow: hidden; margin: 0 10px;">
@@ -152,25 +247,19 @@
     <!-- ==================== TAB 1: SITES ==================== -->
     <div id="sitesTab" class="container my-3">
         <h5 class="mb-2 text-center">{% if current_lang == 'en' %}🏛️ Archaeological Sites{% else %}🏛️ المواقع الأثرية{% endif %}</h5>
-        <div class="row g-2" id="sitesRow">
-            <!-- Sites will be loaded here -->
-        </div>
+        <div class="row g-2" id="sitesRow"></div>
     </div>
 
     <!-- ==================== TAB 2: ARTIFACTS ==================== -->
     <div id="artifactsTab" class="container my-3" style="display: none;">
         <h5 class="mb-2 text-center">{% if current_lang == 'en' %}🏺 Ancient Artifacts{% else %}🏺 القطع الأثرية{% endif %}</h5>
-        <div class="row g-2" id="artifactsRow">
-            <!-- Artifacts will be loaded here -->
-        </div>
+        <div class="row g-2" id="artifactsRow"></div>
     </div>
 
     <!-- ==================== TAB 3: DESERT LIFE ==================== -->
     <div id="desertTab" class="container my-3" style="display: none;">
         <h5 class="mb-2 text-center">{% if current_lang == 'en' %}🐪 Desert Life{% else %}🐪 الحياة الصحراوية{% endif %}</h5>
-        <div class="row g-2" id="desertRow">
-            <!-- Desert items will be loaded here -->
-        </div>
+        <div class="row g-2" id="desertRow"></div>
     </div>
 
     <!-- QR CODE SECTION -->
@@ -207,13 +296,18 @@
     let progressInterval = null;
     let currentStoryText = "";
     let currentStoryTitle = "";
-    let hotspotsVisible = false;
     let currentModelId = "";
+    let currentModelType = "";
+    let currentModelUrl = "";
+    
+    // Tour variables
+    let currentTourStop = 1;
+    let totalTourStops = 3;
+    let completedStops = [];
     
     // Ambient sound variables
     let ambientAudio = null;
     let isAmbientPlaying = false;
-    let currentAmbientType = 'desert';
     
     const ambientSounds = {
         desert: '/static/audio/wind_desert.mp3',
@@ -221,7 +315,7 @@
         whisper: '/static/audio/whisper_of_a_desert.mp3'
     };
     
-    // ==================== HERITAGE ITEMS DATA ====================
+    // Heritage items data
     const heritageItems = {
         sites: [
             { id: 'qasr_al_farid', name: 'Qasr al-Farid', icon: '🏛️', color: 'primary', type: 'sketchfab', url: '9b18367aac28420bbc066d65e73b9acd', description: 'The Lonely Castle | Hegra | 1st Century CE' }
@@ -234,28 +328,83 @@
         desert: [
             { id: 'camel', name: 'Arabian Camel', icon: '🐪', color: 'success', type: 'glb', url: '/static/models/camel.glb', description: 'Ship of the Desert' },
             { id: 'oasis', name: 'Desert Oasis', icon: '🌴', color: 'info', type: 'glb', url: '/static/models/osais.glb', description: 'AlUla Valley' },
-            { id: 'tent', name: 'Arabian Tent', icon: '🏕️', color: 'secondary', type: 'glb', url: '/static/models/tent_arab.glb', description: 'Bedouin Dwelling' },
-            { id: 'desert_cliff', name: 'Desert Cliff', icon: '⛰️', color: 'warning', type: 'glb', url: '/static/models/desert_western_cliff_high.glb', description: 'Sandstone Formation' },
-            { id: 'desert_rock', name: 'Ledge Rock', icon: '🪨', color: 'secondary', type: 'glb', url: '/static/models/desert_western_ledge_rock.glb', description: 'Natural Formation' }
+            { id: 'tent', name: 'Arabian Tent', icon: '🏕️', color: 'secondary', type: 'glb', url: '/static/models/tent_arab.glb', description: 'Bedouin Dwelling' }
         ]
     };
     
     // Stories
     const stories = {
-        qasr_al_farid: { en: "Qasr al-Farid, The Lonely Castle of Hegra, is the most iconic tomb at Saudi Arabia's first UNESCO World Heritage Site. Carved entirely from a single sandstone monolith in the 1st century CE for Lihyan, son of Kuza.", ar: "قصر الفريد، القصر الوحيد في الحجر، هو أشهر مقبرة في أول موقع تراث عالمي لليونسكو." },
-        roman_oil_lamp: { en: "This Roman oil lamp from Taracco, dating to the 1st-2nd century CE, was essential for daily life.", ar: "هذا المصباح الزيتي الروماني من تاراكو كان ضرورياً للحياة اليومية." },
-        ancient_pottery: { en: "This Nabataean pottery set represents the famous thin-walled ceramics traded across the ancient world.", ar: "تمثل مجموعة الفخار النبطي هذه الفخار الشهير." },
-        dallah_coffee: { en: "The Dallah is an iconic Arabian coffee pot, symbol of hospitality and generosity in Arab culture.", ar: "الدلة هي وعاء قهوة عربي أيقوني، رمز الكرم والضيافة." },
-        camel: { en: "The Arabian camel, known as the 'Ship of the Desert,' was essential for survival and trade in ancient Arabia.", ar: "الجمل العربي، المعروف بـ'سفينة الصحراء'، كان ضرورياً للبقاء." },
+        qasr_al_farid: { en: "Qasr al-Farid, The Lonely Castle of Hegra, is the most iconic tomb at Saudi Arabia's first UNESCO World Heritage Site. Carved from a single sandstone monolith in the 1st century CE.", ar: "قصر الفريد، القصر الوحيد في الحجر، هو أشهر مقبرة في أول موقع تراث عالمي لليونسكو." },
+        roman_oil_lamp: { en: "This Roman oil lamp from Taracco was essential for daily life, illuminating homes, temples, and tombs.", ar: "هذا المصباح الزيتي الروماني كان ضرورياً للحياة اليومية." },
+        ancient_pottery: { en: "This Nabataean pottery represents the famous thin-walled ceramics traded across the ancient world.", ar: "تمثل مجموعة الفخار النبطي هذه الفخار الشهير." },
+        dallah_coffee: { en: "The Dallah is an iconic Arabian coffee pot, symbol of hospitality and generosity.", ar: "الدلة هي وعاء قهوة عربي أيقوني، رمز الكرم والضيافة." },
+        camel: { en: "The Arabian camel, known as the 'Ship of the Desert,' was essential for survival and trade.", ar: "الجمل العربي، المعروف بـ'سفينة الصحراء'، كان ضرورياً للبقاء." },
         oasis: { en: "Desert oases like those in AlUla were vital lifelines in the harsh desert environment.", ar: "كانت الواحات الصحراوية في العلا شريان حياة حيوياً." },
-        tent: { en: "The Arabian tent is the traditional dwelling of Bedouin nomads, woven from goat or camel hair.", ar: "الخيمة العربية هي المسكن التقليدي للبدو الرحل." },
-        desert_cliff: { en: "These layered sandstone cliffs tell a geological story spanning millions of years in AlUla.", ar: "تصف منحدرات الحجر الرملي قصة جيولوجية." },
-        desert_rock: { en: "These natural rock formations were shaped by wind and water over thousands of years.", ar: "هذه التكوينات الصخرية شكلتها الرياح والمياه." }
+        tent: { en: "The Arabian tent is the traditional dwelling of Bedouin nomads, woven from goat or camel hair.", ar: "الخيمة العربية هي المسكن التقليدي للبدو الرحل." }
     };
     
     // Initialize speech synthesis
     if ('speechSynthesis' in window) {
         speechSynth = window.speechSynthesis;
+    }
+    
+    // ==================== TOUR FUNCTIONS ====================
+    function startTourStop(stopId, modelId, modelName, modelType, modelUrl) {
+        currentTourStop = stopId;
+        loadModel(modelId, modelName, modelType, modelUrl);
+        
+        // Mark stop as completed
+        if (!completedStops.includes(stopId)) {
+            completedStops.push(stopId);
+            updateTourProgress();
+        }
+        
+        // Highlight active stop
+        document.querySelectorAll('.tour-stop').forEach((stop, idx) => {
+            if (idx + 1 === stopId) {
+                stop.querySelector('.tour-stop-card').style.border = '2px solid #DAA520';
+                stop.querySelector('.tour-stop-card').style.background = 'rgba(218,165,32,0.1)';
+            } else {
+                stop.querySelector('.tour-stop-card').style.border = '1px solid #dee2e6';
+                stop.querySelector('.tour-stop-card').style.background = 'white';
+            }
+        });
+        
+        // Update navigation buttons
+        updateTourNavigation();
+    }
+    
+    function nextTourStop() {
+        if (currentTourStop < totalTourStops) {
+            currentTourStop++;
+            const nextStop = document.querySelector(`.tour-stop[data-stop-id="${currentTourStop}"]`);
+            if (nextStop) {
+                const btn = nextStop.querySelector('.tour-start-btn');
+                if (btn) btn.click();
+            }
+        }
+    }
+    
+    function previousTourStop() {
+        if (currentTourStop > 1) {
+            currentTourStop--;
+            const prevStop = document.querySelector(`.tour-stop[data-stop-id="${currentTourStop}"]`);
+            if (prevStop) {
+                const btn = prevStop.querySelector('.tour-start-btn');
+                if (btn) btn.click();
+            }
+        }
+    }
+    
+    function updateTourProgress() {
+        const progressPercent = (completedStops.length / totalTourStops) * 100;
+        document.getElementById('tourProgressBar').style.width = `${progressPercent}%`;
+        document.getElementById('tourProgressPercent').textContent = `${Math.round(progressPercent)}%`;
+    }
+    
+    function updateTourNavigation() {
+        document.getElementById('currentTourStop').textContent = currentTourStop;
+        document.getElementById('prevTourBtn').disabled = (currentTourStop === 1);
     }
     
     // ==================== LOAD AI RECOMMENDATIONS ====================
@@ -270,23 +419,31 @@
             if (data.recommendations && data.recommendations.length > 0) {
                 section.style.display = 'block';
                 
-                row.innerHTML = data.recommendations.slice(0, 3).map(rec => `
-                    <div class="col-md-4">
-                        <div class="card h-100 border-warning shadow-sm">
-                            <div class="card-body text-center">
-                                <div class="position-absolute top-0 end-0 m-2">
-                                    <span class="badge bg-warning">${rec.similarity_score}% match</span>
+                row.innerHTML = `
+                    <div class="row g-3">
+                        ${data.recommendations.slice(0, 3).map(rec => `
+                            <div class="col-md-4">
+                                <div class="card h-100 border-warning shadow-sm">
+                                    <div class="card-body text-center">
+                                        <div class="position-absolute top-0 end-0 m-2">
+                                            <span class="badge bg-warning">${rec.similarity_score}% match</span>
+                                        </div>
+                                        <i class="bi bi-star-fill text-warning fs-1"></i>
+                                        <h6 class="mt-2 fw-bold">${rec.name}</h6>
+                                        <p class="small text-muted">AI Recommended</p>
+                                        <button class="btn btn-sm btn-warning w-100 explore-btn" onclick='alert("Loading model...")'>
+                                            <i class="bi bi-vr"></i> Explore Now
+                                        </button>
+                                    </div>
                                 </div>
-                                <i class="bi bi-star-fill text-warning fs-1"></i>
-                                <h6 class="mt-2 fw-bold">${rec.name}</h6>
-                                <p class="small text-muted">AI Recommended</p>
-                                <button class="btn btn-sm btn-warning w-100 explore-btn" onclick='loadModelById(${rec.id}, "${rec.name}")'>
-                                    <i class="bi bi-vr"></i> Explore Now
-                                </button>
                             </div>
-                        </div>
+                        `).join('')}
                     </div>
-                `).join('');
+                    <div class="alert alert-info mt-3 text-center">
+                        <i class="bi bi-robot"></i> 
+                        <strong>🤖 AI Agent Insight:</strong> Based on your interests, we recommend starting with ${data.recommendations[0]?.name || 'heritage sites'}!
+                    </div>
+                `;
             }
         } catch (error) {
             console.error('Error loading AI recommendations:', error);
@@ -295,7 +452,6 @@
     
     // ==================== LOAD HERITAGE ITEMS ====================
     function loadHeritageItems() {
-        // Load sites
         const sitesRow = document.getElementById('sitesRow');
         sitesRow.innerHTML = heritageItems.sites.map(item => `
             <div class="col-md-6 col-lg-4">
@@ -317,7 +473,6 @@
             </div>
         `).join('');
         
-        // Load artifacts
         const artifactsRow = document.getElementById('artifactsRow');
         artifactsRow.innerHTML = heritageItems.artifacts.map(item => `
             <div class="col-md-6 col-lg-4">
@@ -339,7 +494,6 @@
             </div>
         `).join('');
         
-        // Load desert items
         const desertRow = document.getElementById('desertRow');
         desertRow.innerHTML = heritageItems.desert.map(item => `
             <div class="col-md-6 col-lg-4">
@@ -370,63 +524,47 @@
         
         if (tab === 'sites') {
             document.getElementById('sitesTab').style.display = 'block';
-            document.getElementById('tabSitesBtn').classList.add('btn-warning');
-            document.getElementById('tabSitesBtn').classList.remove('btn-outline-warning');
-            document.getElementById('tabArtifactsBtn').classList.add('btn-outline-warning');
-            document.getElementById('tabArtifactsBtn').classList.remove('btn-warning');
-            document.getElementById('tabDesertBtn').classList.add('btn-outline-warning');
-            document.getElementById('tabDesertBtn').classList.remove('btn-warning');
+            updateTabButtons('tabSitesBtn', 'tabArtifactsBtn', 'tabDesertBtn');
         } else if (tab === 'artifacts') {
             document.getElementById('artifactsTab').style.display = 'block';
-            document.getElementById('tabArtifactsBtn').classList.add('btn-warning');
-            document.getElementById('tabArtifactsBtn').classList.remove('btn-outline-warning');
-            document.getElementById('tabSitesBtn').classList.add('btn-outline-warning');
-            document.getElementById('tabSitesBtn').classList.remove('btn-warning');
-            document.getElementById('tabDesertBtn').classList.add('btn-outline-warning');
-            document.getElementById('tabDesertBtn').classList.remove('btn-warning');
+            updateTabButtons('tabArtifactsBtn', 'tabSitesBtn', 'tabDesertBtn');
         } else if (tab === 'desert') {
             document.getElementById('desertTab').style.display = 'block';
-            document.getElementById('tabDesertBtn').classList.add('btn-warning');
-            document.getElementById('tabDesertBtn').classList.remove('btn-outline-warning');
-            document.getElementById('tabSitesBtn').classList.add('btn-outline-warning');
-            document.getElementById('tabSitesBtn').classList.remove('btn-warning');
-            document.getElementById('tabArtifactsBtn').classList.add('btn-outline-warning');
-            document.getElementById('tabArtifactsBtn').classList.remove('btn-warning');
+            updateTabButtons('tabDesertBtn', 'tabSitesBtn', 'tabArtifactsBtn');
         }
+    }
+    
+    function updateTabButtons(activeBtn, btn2, btn3) {
+        document.getElementById(activeBtn).classList.add('btn-warning');
+        document.getElementById(activeBtn).classList.remove('btn-outline-warning');
+        document.getElementById(btn2).classList.add('btn-outline-warning');
+        document.getElementById(btn2).classList.remove('btn-warning');
+        document.getElementById(btn3).classList.add('btn-outline-warning');
+        document.getElementById(btn3).classList.remove('btn-warning');
     }
     
     // ==================== LOAD MODEL ====================
     function loadModel(modelId, modelName, modelType, modelUrl) {
         const container = document.getElementById('modelContainer');
         currentModelId = modelId;
+        currentModelType = modelType;
+        currentModelUrl = modelUrl;
         currentStoryTitle = modelName;
         
         const story = stories[modelId];
-        currentStoryText = story ? (currentLanguage === 'en' ? story.en : story.ar) : (currentLanguage === 'en' ? modelName : modelName);
+        currentStoryText = story ? (currentLanguage === 'en' ? story.en : story.ar) : modelName;
         
         if (modelType === 'sketchfab') {
             container.innerHTML = `<iframe src="https://sketchfab.com/models/${modelUrl}/embed" frameborder="0" allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen style="width:100%; height:60vh; min-height:450px; background: #0a0a0a; border-radius: 12px;"></iframe>`;
         } else {
-            container.innerHTML = `<model-viewer src="${modelUrl}" ar ar-modes="webxr scene-viewer quick-look" camera-controls auto-rotate style="width:100%; height:60vh; min-height:450px; background: #1a1a1a; border-radius: 12px;"><button slot="ar-button" style="background: #DAA520; border: none; color: white; padding: 8px 16px; border-radius: 30px; font-size: 12px;">🕶️ View in AR</button></model-viewer>`;
+            container.innerHTML = `<model-viewer src="${modelUrl}" ar ar-modes="webxr scene-viewer quick-look" camera-controls auto-rotate style="width:100%; height:60vh; min-height:450px; background: #1a1a1a; border-radius: 12px;"><button slot="ar-button" style="background: #DAA520; border: none; color: white; padding: 8px 16px; border-radius: 30px;">🕶️ View in AR</button></model-viewer>`;
         }
         
         setTimeout(() => {
             showStoryPanel();
-            playSpeech(currentStoryText, modelId);
+            playSpeech(currentStoryText);
             recordExploration(modelId, 1, 0);
         }, 500);
-    }
-    
-    function loadModelById(modelId, modelName) {
-        // Find model details
-        let modelDetails = null;
-        for (let category in heritageItems) {
-            modelDetails = heritageItems[category].find(m => m.id == modelId);
-            if (modelDetails) break;
-        }
-        if (modelDetails) {
-            loadModel(modelDetails.id, modelDetails.name, modelDetails.type, modelDetails.url);
-        }
     }
     
     // ==================== RECORD EXPLORATION ====================
@@ -467,8 +605,8 @@
         updateCardStats(modelId, timeSpent, storiesCount);
     }
     
-    // ==================== AUDIO STORY FUNCTIONS ====================
-    function playSpeech(text, modelId) {
+    // ==================== AUDIO FUNCTIONS ====================
+    function playSpeech(text) {
         if (!speechSynth) return;
         if (currentUtterance) speechSynth.cancel();
         if (progressInterval) clearInterval(progressInterval);
@@ -502,7 +640,7 @@
             if (progressInterval) clearInterval(progressInterval);
             progressBar.style.width = '100%';
             setTimeout(() => { progressBar.style.width = '0%'; }, 500);
-            if (modelId) recordExploration(modelId, 0, 1);
+            if (currentModelId) recordExploration(currentModelId, 0, 1);
         };
         
         speechSynth.speak(currentUtterance);
@@ -516,7 +654,7 @@
             const playBtn = document.getElementById('playPauseBtn');
             playBtn.innerHTML = '<i class="bi bi-play-circle-fill"></i> 🎧 Story';
         } else if (currentStoryText) {
-            playSpeech(currentStoryText, currentModelId);
+            playSpeech(currentStoryText);
         }
     }
     
@@ -560,20 +698,11 @@
     }
     
     function toggleHotspots() {
-        hotspotsVisible = !hotspotsVisible;
-        const overlay = document.getElementById('hotspotsOverlay');
-        const btn = document.getElementById('toggleHotspotsBtn');
-        if (hotspotsVisible) {
-            overlay.innerHTML = '<div class="alert alert-info m-3">Hotspots feature coming soon! Click on the 3D model to explore.</div>';
-            btn.style.background = 'rgba(218,165,32,0.4)';
-        } else {
-            overlay.innerHTML = '';
-            btn.style.background = 'rgba(255,255,255,0.15)';
-        }
+        alert('🤖 AI Agent: Hotspots feature will be available in the next update! Stay tuned for interactive points on the 3D model.');
     }
     
     function playHotspotAudio() {
-        alert('Hotspot audio coming soon!');
+        alert('🤖 AI Agent: Audio narration for hotspots coming soon!');
     }
     
     function closeHotspotPanel() {
@@ -585,6 +714,12 @@
         loadHeritageItems();
         showTab('sites');
         loadAIRecommendations();
+        updateTourNavigation();
+        
+        // AI Agent welcome message
+        setTimeout(() => {
+            console.log('🤖 AI Agent: Welcome to AlUla Heritage Experience! I will help you discover the best heritage sites based on your interests.');
+        }, 1000);
     });
 </script>
 
@@ -593,6 +728,9 @@
     .model-card, .artifact-card, .desert-card { transition: transform 0.2s; background: white; border-radius: 12px; cursor: pointer; border: 1px solid rgba(0,0,0,0.05); }
     .model-card:hover, .artifact-card:hover, .desert-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
     .btn-gold:hover, .btn-outline-gold:hover { transform: scale(1.05); filter: brightness(1.1); }
+    .tour-stop-card { transition: all 0.3s ease; cursor: pointer; }
+    .tour-stop-card:hover { transform: translateY(-3px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .bg-gradient { background: linear-gradient(135deg, #DAA520, #B8860B); }
     @media (max-width: 768px) { iframe, model-viewer { height: 45vh !important; min-height: 350px; } }
 </style>
 {% endblock %}
