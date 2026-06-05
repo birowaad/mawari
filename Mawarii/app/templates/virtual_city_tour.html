@@ -1,0 +1,646 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid px-0">
+
+    <!-- Header with AI Agent - Bilingual -->
+    <div class="text-center py-3" style="background: linear-gradient(135deg, #1a1a2e, #16213e); color: white;">
+        <div class="d-flex justify-content-between align-items-center px-4">
+            <div>
+                <span class="badge bg-warning text-dark">
+                    <i class="bi bi-trophy-fill"></i> 
+                    <span id="userPoints">0</span> 
+                    <span class="en-text">Points</span><span class="ar-text" style="display: none;">نقطة</span>
+                </span>
+            </div>
+            <div>
+                <h1 class="display-6 fw-bold">
+                    <span class="en-text">🏙️ AlUla Virtual Heritage Tour</span>
+                    <span class="ar-text" style="display: none;">🏙️ جولة تراث العلا الافتراضية</span>
+                </h1>
+                <p>
+                    <span class="en-text">Explore Ancient Sites, Earn Points & Discover Hidden Treasures</span>
+                    <span class="ar-text" style="display: none;">استكشف المواقع القديمة، اجمع النقاط، واكتشف الكنوز المخفية</span>
+                </p>
+            </div>
+            <div>
+                <span class="badge bg-gradient" style="background: linear-gradient(135deg, #DAA520, #B8860B);">
+                    <i class="bi bi-robot"></i> 
+                    <span class="en-text">AI Agent Active</span>
+                    <span class="ar-text" style="display: none;">الوكيل الذكي نشط</span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main 3D Heritage Viewer -->
+    <div class="row mx-0 py-3" style="background: #1a1a2e;">
+        <div class="col-12">
+            <div class="position-relative">
+                <div class="bg-dark p-2 rounded-4">
+                    <div id="modelViewerContainer" style="height: 500px; background: #0a0a0a; border-radius: 12px;">
+                        <model-viewer
+                            id="mainViewer"
+                            src="/static/models/96a3c1.glb"
+                            ar
+                            ar-modes="webxr scene-viewer quick-look"
+                            camera-controls
+                            auto-rotate
+                            style="width:100%; height:500px; background: #1a1a1a; border-radius: 12px;">
+                            <button slot="ar-button" style="background: #DAA520; border: none; color: white; padding: 8px 16px; border-radius: 30px;">
+                                <span class="en-text">🕶️ View in AR</span><span class="ar-text" style="display: none;">🕶️ عرض بالواقع المعزز</span>
+                            </button>
+                        </model-viewer>
+                    </div>
+                </div>
+                
+                <!-- Floating Points Panel -->
+                <div class="position-absolute top-0 start-0 m-3">
+                    <div class="card bg-dark bg-opacity-75 text-white p-2">
+                        <small><i class="bi bi-star-fill text-warning"></i> 
+                            <span class="en-text">Points:</span><span class="ar-text" style="display: none;">النقاط:</span> 
+                            <span id="floatingPoints">0</span>
+                        </small>
+                        <small><i class="bi bi-trophy-fill text-warning"></i> 
+                            <span class="en-text">Level:</span><span class="ar-text" style="display: none;">المستوى:</span> 
+                            <span id="userLevel">Explorer</span>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Heritage Locations Grid -->
+    <div class="container my-4">
+        <h3 class="text-center mb-4">
+            <i class="bi bi-geo-alt-fill text-warning"></i> 
+            <span class="en-text">🏛️ Explore AlUla's Heritage Sites</span>
+            <span class="ar-text" style="display: none;">🏛️ اكتشف مواقع تراث العلا</span>
+        </h3>
+        <div class="row g-4" id="locationsGrid">
+            <!-- Location cards with bilingual content - same structure as before but with bilingual text -->
+        </div>
+    </div>
+
+    <!-- AI Recommendations Panel - Enhanced Design -->
+    <div class="container my-4">
+        <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+            <div class="card-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="pulse-animation">
+                        <i class="bi bi-robot fs-3"></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-0">
+                            <span class="en-text">🤖 AI Heritage Assistant</span>
+                            <span class="ar-text" style="display: none;">🤖 مساعد التراث الذكي</span>
+                        </h5>
+                        <small>
+                            <span class="en-text">Powered by Smart Recommendation Engine</span>
+                            <span class="ar-text" style="display: none;">مدعوم بمحرك التوصيات الذكي</span>
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body" id="aiRecommendationsPanel">
+                <div class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-2 text-muted">
+                        <span class="en-text">Analyzing your preferences...</span>
+                        <span class="ar-text" style="display: none;">جاري تحليل تفضيلاتك...</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress & Achievements - Enhanced -->
+    <div class="container my-4">
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 rounded-4">
+                    <div class="card-header bg-transparent border-0 pt-3">
+                        <h5>
+                            <i class="bi bi-bar-chart-steps text-warning"></i> 
+                            <span class="en-text">📊 Your Heritage Journey</span>
+                            <span class="ar-text" style="display: none;">📊 رحلتك التراثية</span>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <small>
+                                    <span class="en-text">Exploration Progress</span>
+                                    <span class="ar-text" style="display: none;">تقدم الاستكشاف</span>
+                                </small>
+                                <small id="completionPercent" class="text-warning fw-bold">0%</small>
+                            </div>
+                            <div class="progress" style="height: 10px; border-radius: 10px;">
+                                <div id="completionBar" class="progress-bar bg-warning" style="width: 0%; border-radius: 10px;"></div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <small>
+                                    <span class="en-text">Points Collected</span>
+                                    <span class="ar-text" style="display: none;">النقاط المجمعة</span>
+                                </small>
+                                <small id="totalPointsDisplay" class="text-success fw-bold">0</small>
+                            </div>
+                            <div class="progress" style="height: 10px; border-radius: 10px;">
+                                <div id="pointsBar" class="progress-bar bg-success" style="width: 0%; border-radius: 10px;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="d-flex justify-content-between">
+                                <small>
+                                    <span class="en-text">Next Level Goal</span>
+                                    <span class="ar-text" style="display: none;">هدف المستوى التالي</span>
+                                </small>
+                                <small id="nextLevelPoints" class="text-info fw-bold">100</small>
+                            </div>
+                            <div class="progress" style="height: 10px; border-radius: 10px;">
+                                <div id="levelBar" class="progress-bar bg-info" style="width: 0%; border-radius: 10px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 rounded-4">
+                    <div class="card-header bg-transparent border-0 pt-3">
+                        <h5>
+                            <i class="bi bi-trophy-fill text-warning"></i> 
+                            <span class="en-text">🏆 Achievements Unlocked</span>
+                            <span class="ar-text" style="display: none;">🏆 الإنجازات المفتوحة</span>
+                        </h5>
+                    </div>
+                    <div class="card-body" id="achievementsList">
+                        <div class="text-center text-muted py-3">
+                            <i class="bi bi-info-circle"></i>
+                            <span class="en-text">Complete heritage sites to unlock achievements!</span>
+                            <span class="ar-text" style="display: none;">أكمل استكشاف المواقع التراثية لفتح الإنجازات!</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Research Data Export -->
+    <div class="container my-4">
+        <div class="alert alert-info text-center" style="background: linear-gradient(135deg, #e8f4f8, #d1ecf1); border: none;">
+            <i class="bi bi-graph-up fs-4 me-2"></i>
+            <strong>
+                <span class="en-text">📊 Research Data Collection:</span>
+                <span class="ar-text" style="display: none;">📊 جمع البيانات البحثية:</span>
+            </strong>
+            <span class="en-text">Your interactions help improve AI heritage recommendations.</span>
+            <span class="ar-text" style="display: none;">تفاعلاتك تساعد في تحسين توصيات الذكاء الاصطناعي للتراث.</span>
+            <button class="btn btn-sm btn-outline-primary ms-2 rounded-pill" onclick="exportUserData()">
+                <i class="bi bi-download"></i> 
+                <span class="en-text">Export My Data (CSV)</span>
+                <span class="ar-text" style="display: none;">تصدير بياناتي (CSV)</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Add Animation Styles -->
+<style>
+    @keyframes pulse {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.1); opacity: 0.8; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+    
+    .pulse-animation {
+        animation: pulse 2s infinite;
+    }
+    
+    .location-card .card {
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 1px solid rgba(218,165,32,0.2);
+    }
+    
+    .location-card .card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        border-color: #DAA520;
+    }
+    
+    .bg-gradient {
+        background: linear-gradient(135deg, #DAA520, #B8860B);
+    }
+    
+    .progress-bar {
+        transition: width 0.5s ease;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .ai-card {
+        animation: fadeInUp 0.5s ease-out;
+    }
+    
+    @media (max-width: 768px) {
+        model-viewer, iframe {
+            height: 350px !important;
+        }
+        .display-6 {
+            font-size: 1.2rem;
+        }
+        .location-card .card {
+            margin-bottom: 1rem;
+        }
+    }
+</style>
+
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+
+<script>
+    // ==================== USER DATA STORAGE ====================
+    let currentLanguage = '{{ current_lang }}';
+    let userData = {
+        userId: '{{ current_user.id if current_user.is_authenticated else "guest_" + Date.now() }}',
+        username: '{{ current_user.username if current_user.is_authenticated else "Guest" }}',
+        points: 0,
+        completedLocations: [],
+        explorationHistory: [],
+        achievements: [],
+        startTime: Date.now()
+    };
+    
+    // Location data with bilingual names
+    const locations = {
+        1: { nameEn: 'Qasr al-Farid', nameAr: 'قصر الفريد', points: 50, category: 'site', modelType: 'sketchfab', modelUrl: '9b18367aac28420bbc066d65e73b9acd', descEn: 'The Lonely Castle of Hegra | 1st Century CE', descAr: 'القصر الوحيد في الحجر | القرن الأول الميلادي' },
+        2: { nameEn: 'Ancient Bridge', nameAr: 'الجسر القديم', points: 40, category: 'structure', modelType: 'glb', modelUrl: '/static/models/Bridges.glb', descEn: 'Historical Trade Route Bridge', descAr: 'جسر طريق التجارة التاريخي' },
+        3: { nameEn: 'Hegra Tombs', nameAr: 'مقابر الحجر', points: 60, category: 'site', modelType: 'glb', modelUrl: '/static/models/96a3c1.glb', descEn: 'Nabataean Necropolis | UNESCO Site', descAr: 'مقبرة نبطية | موقع يونسكو' },
+        4: { nameEn: 'AlUla Old Town', nameAr: 'البلدة القديمة', points: 45, category: 'site', modelType: 'glb', modelUrl: '/static/models/96a3c1.glb', descEn: 'Ancient Mudbrick Village | 12th Century', descAr: 'قرية الطوب اللبن القديمة | القرن الثاني عشر' },
+        5: { nameEn: 'Dadan Lion Tombs', nameAr: 'مقابر الأسود', points: 55, category: 'artifact', modelType: 'glb', modelUrl: '/static/models/Bridges.glb', descEn: 'Lihyanite Royal Tombs | 6th Century BCE', descAr: 'مقابر لحيان الملكية | القرن السادس قبل الميلاد' },
+        6: { nameEn: 'Desert Oasis', nameAr: 'واحة الصحراء', points: 30, category: 'nature', modelType: 'glb', modelUrl: '/static/models/96a3c1.glb', descEn: 'Natural Spring in AlUla Valley', descAr: 'ينبوع طبيعي في وادي العلا' }
+    };
+    
+    // Achievements with bilingual names
+    const achievements = [
+        { id: 'first_step', nameEn: 'First Explorer', nameAr: 'المستكشف الأول', descEn: 'Explore your first heritage site', descAr: 'استكشف أول موقع تراثي', icon: '🚀', points: 10, requirement: 1 },
+        { id: 'heritage_seeker', nameEn: 'Heritage Seeker', nameAr: 'باحث عن التراث', descEn: 'Explore 3 heritage sites', descAr: 'استكشف 3 مواقع تراثية', icon: '🗺️', points: 25, requirement: 3 },
+        { id: 'master_historian', nameEn: 'Master Historian', nameAr: 'مؤرخ محترف', descEn: 'Explore all 6 heritage sites', descAr: 'استكشف جميع المواقع الستة', icon: '📜', points: 50, requirement: 6 },
+        { id: 'point_collector', nameEn: 'Point Collector', nameAr: 'جامع النقاط', descEn: 'Collect 100 points', descAr: 'اجمع 100 نقطة', icon: '💰', points: 15, requirement: 100 },
+        { id: 'heritage_master', nameEn: 'Heritage Master', nameAr: 'خبير التراث', descEn: 'Collect 200 points', descAr: 'اجمع 200 نقطة', icon: '🏆', points: 30, requirement: 200 }
+    ];
+    
+    // Helper function for translations
+    function t(textEn, textAr) {
+        return currentLanguage === 'en' ? textEn : textAr;
+    }
+    
+    // Generate location cards dynamically
+    function generateLocationCards() {
+        const grid = document.getElementById('locationsGrid');
+        if (!grid) return;
+        
+        grid.innerHTML = '';
+        for (let i = 1; i <= 6; i++) {
+            const loc = locations[i];
+            grid.innerHTML += `
+                <div class="col-md-4 location-card" data-location-id="${i}" data-points="${loc.points}">
+                    <div class="card h-100 shadow-sm border-0 rounded-4">
+                        <div class="card-body text-center">
+                            <div class="position-relative">
+                                ${getIconForLocation(i)}
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">${loc.points} pts</span>
+                            </div>
+                            <h5 class="mt-2">${t(loc.nameEn, loc.nameAr)}</h5>
+                            <p class="small text-muted">${t(loc.descEn, loc.descAr)}</p>
+                            <div class="d-flex justify-content-center gap-2 mb-2">
+                                <span class="badge bg-info"><i class="bi bi-clock"></i> ${t('5 min', '٥ دقائق')}</span>
+                                <span class="badge bg-success"><i class="bi bi-star"></i> ${t('Heritage', 'تراثي')}</span>
+                            </div>
+                            <button class="btn btn-sm btn-warning explore-location w-100" onclick="exploreLocation(${i}, '${t(loc.nameEn, loc.nameAr)}', ${loc.points}, '${loc.modelType}', '${loc.modelUrl}')">
+                                <i class="bi bi-vr"></i> ${t('Explore & Earn Points', 'استكشف واكسب النقاط')}
+                            </button>
+                            <div class="mt-2">
+                                <small class="text-muted completed-badge" style="display: none;">✅ ${t('Completed', 'مكتمل')}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    }
+    
+    function getIconForLocation(id) {
+        const icons = {
+            1: '<i class="bi bi-building fs-1 text-primary"></i>',
+            2: '<i class="bi bi-bridge fs-1 text-success"></i>',
+            3: '<i class="bi bi-tree-fill fs-1 text-danger"></i>',
+            4: '<i class="bi bi-shop fs-1 text-info"></i>',
+            5: '<i class="bi bi-crop fs-1 text-warning"></i>',
+            6: '<i class="bi bi-water fs-1 text-primary"></i>'
+        };
+        return icons[id] || '<i class="bi bi-building fs-1"></i>';
+    }
+    
+    // Load saved data
+    function loadUserData() {
+        const saved = localStorage.getItem('heritageTourData');
+        if (saved) {
+            const parsed = JSON.parse(saved);
+            userData.points = parsed.points || 0;
+            userData.completedLocations = parsed.completedLocations || [];
+            userData.achievements = parsed.achievements || [];
+            userData.explorationHistory = parsed.explorationHistory || [];
+        }
+        updateUI();
+    }
+    
+    // Save user data
+    function saveUserData() {
+        localStorage.setItem('heritageTourData', JSON.stringify(userData));
+        sendDataToServer();
+    }
+    
+    async function sendDataToServer() {
+        try {
+            await fetch('/api/tour/log-data', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    user_id: userData.userId,
+                    username: userData.username,
+                    points: userData.points,
+                    completed_locations: userData.completedLocations,
+                    achievements: userData.achievements,
+                    total_time: Math.floor((Date.now() - userData.startTime) / 1000)
+                })
+            });
+        } catch(e) { console.log('Data sync error:', e); }
+    }
+    
+    // Explore location
+    function exploreLocation(locationId, locationName, points, modelType, modelUrl) {
+        if (userData.completedLocations.includes(locationId)) {
+            showToast(t('⚠️ Already explored!', '⚠️ تم الاستكشاف مسبقاً!'), 'warning');
+            return;
+        }
+        
+        const container = document.getElementById('modelViewerContainer');
+        const timeSpent = Math.floor(Math.random() * 60) + 30;
+        
+        if (modelType === 'sketchfab') {
+            container.innerHTML = `<iframe src="https://sketchfab.com/models/${modelUrl}/embed" frameborder="0" allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen style="width:100%; height:500px; background: #0a0a0a; border-radius: 12px;"></iframe>`;
+        } else {
+            container.innerHTML = `<model-viewer src="${modelUrl}" ar ar-modes="webxr scene-viewer quick-look" camera-controls auto-rotate style="width:100%; height:500px; background: #1a1a1a; border-radius: 12px;"><button slot="ar-button" style="background: #DAA520; border: none; color: white; padding: 8px 16px; border-radius: 30px;">${t('🕶️ View in AR', '🕶️ عرض بالواقع المعزز')}</button></model-viewer>`;
+        }
+        
+        userData.points += points;
+        userData.completedLocations.push(locationId);
+        locations[locationId].timeSpent = timeSpent;
+        
+        userData.explorationHistory.push({
+            location_id: locationId,
+            location_name: locationName,
+            points_earned: points,
+            time_spent: timeSpent,
+            timestamp: Date.now()
+        });
+        
+        checkAchievements();
+        updateUI();
+        saveUserData();
+        
+        showToast(`🎉 +${points} ${t('points for exploring', 'نقطة لاستكشاف')} ${locationName}!`, 'success');
+        
+        const card = document.querySelector(`.location-card[data-location-id="${locationId}"]`);
+        if (card) {
+            const btn = card.querySelector('.explore-location');
+            btn.disabled = true;
+            btn.textContent = t('✅ Completed', '✅ مكتمل');
+            btn.classList.remove('btn-warning');
+            btn.classList.add('btn-secondary');
+            const badge = card.querySelector('.completed-badge');
+            if (badge) badge.style.display = 'inline';
+        }
+        
+        getAIRecommendations();
+    }
+    
+    // Check achievements
+    function checkAchievements() {
+        const completedCount = userData.completedLocations.length;
+        const newAchievements = [];
+        
+        achievements.forEach(ach => {
+            if (!userData.achievements.includes(ach.id)) {
+                let achieved = false;
+                if (ach.id === 'first_step' && completedCount >= 1) achieved = true;
+                if (ach.id === 'heritage_seeker' && completedCount >= 3) achieved = true;
+                if (ach.id === 'master_historian' && completedCount >= 6) achieved = true;
+                if (ach.id === 'point_collector' && userData.points >= 100) achieved = true;
+                if (ach.id === 'heritage_master' && userData.points >= 200) achieved = true;
+                
+                if (achieved) {
+                    userData.achievements.push(ach.id);
+                    newAchievements.push(ach);
+                    userData.points += ach.points;
+                    showToast(`🏆 ${t(ach.nameEn, ach.nameAr)} ${t('Unlocked!', 'تم الفتح!')} (+${ach.points} pts)`, 'achievement');
+                }
+            }
+        });
+        
+        if (newAchievements.length > 0) {
+            updateUI();
+            saveUserData();
+        }
+    }
+    
+    // Update UI
+    function updateUI() {
+        document.getElementById('userPoints').textContent = userData.points;
+        document.getElementById('floatingPoints').textContent = userData.points;
+        document.getElementById('totalPointsDisplay').textContent = userData.points;
+        
+        const completedCount = userData.completedLocations.length;
+        let levelEn = 'Explorer', levelAr = 'مستكشف';
+        if (completedCount >= 6) { levelEn = 'Master Historian'; levelAr = 'مؤرخ محترف'; }
+        else if (completedCount >= 4) { levelEn = 'Heritage Expert'; levelAr = 'خبير تراثي'; }
+        else if (completedCount >= 2) { levelEn = 'Adventurer'; levelAr = 'مغامر'; }
+        document.getElementById('userLevel').textContent = t(levelEn, levelAr);
+        
+        const completionPercent = (completedCount / 6) * 100;
+        document.getElementById('completionPercent').textContent = `${Math.round(completionPercent)}%`;
+        document.getElementById('completionBar').style.width = `${completionPercent}%`;
+        
+        const pointsPercent = Math.min((userData.points / 300) * 100, 100);
+        document.getElementById('pointsBar').style.width = `${pointsPercent}%`;
+        
+        const nextLevel = userData.points < 100 ? 100 : userData.points < 200 ? 200 : 300;
+        document.getElementById('nextLevelPoints').textContent = nextLevel;
+        const levelPercent = Math.min((userData.points / nextLevel) * 100, 100);
+        document.getElementById('levelBar').style.width = `${levelPercent}%`;
+        
+        // Update achievements
+        const achievementsList = document.getElementById('achievementsList');
+        const unlocked = achievements.filter(a => userData.achievements.includes(a.id));
+        if (unlocked.length > 0) {
+            achievementsList.innerHTML = unlocked.map(ach => `
+                <div class="d-flex align-items-center gap-3 p-2 border-bottom">
+                    <span class="fs-2">${ach.icon}</span>
+                    <div>
+                        <h6 class="mb-0">${t(ach.nameEn, ach.nameAr)}</h6>
+                        <small class="text-muted">${t(ach.descEn, ach.descAr)}</small>
+                        <div><span class="badge bg-success mt-1">+${ach.points} pts</span></div>
+                    </div>
+                </div>
+            `).join('');
+        } else {
+            achievementsList.innerHTML = `<div class="text-center text-muted py-3">${t('Complete heritage sites to unlock achievements!', 'أكمل استكشاف المواقع التراثية لفتح الإنجازات!')}</div>`;
+        }
+    }
+    
+    // Get AI recommendations - Enhanced
+    async function getAIRecommendations() {
+        try {
+            const completed = userData.completedLocations;
+            const remaining = [1,2,3,4,5,6].filter(id => !completed.includes(id));
+            const completedCount = completed.length;
+            
+            const panel = document.getElementById('aiRecommendationsPanel');
+            
+            if (remaining.length === 0) {
+                panel.innerHTML = `
+                    <div class="alert alert-success text-center mb-0 ai-card">
+                        <i class="bi bi-trophy-fill fs-1"></i>
+                        <h5>${t('Congratulations Heritage Master! 🎉', 'تهانينا خبير التراث! 🎉')}</h5>
+                        <p>${t('You\'ve completed all 6 heritage sites of AlUla!', 'لقد أكملت جميع المواقع التراثية الستة في العلا!')}</p>
+                        <p>${t('Total Points:', 'إجمالي النقاط:')} ${userData.points} | ${t('Achievements:', 'الإنجازات:')} ${userData.achievements.length}/5</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const nextLocationId = remaining[0];
+            const nextLocation = locations[nextLocationId];
+            const nextLocationName = t(nextLocation.nameEn, nextLocation.nameAr);
+            
+            let message = '';
+            let insight = '';
+            let bgColor = '';
+            
+            if (completedCount === 0) {
+                message = t(`🌟 Welcome to AlUla Heritage! Start your journey at ${nextLocationName} to earn ${nextLocation.points} points.`, `🌟 مرحباً بك في تراث العلا! ابدأ رحلتك في ${nextLocationName} لكسب ${nextLocation.points} نقطة.`);
+                insight = t('💡 AI Insight: Qasr al-Farid is the most visited heritage site in AlUla.', '💡 رؤية الذكاء الاصطناعي: قصر الفريد هو الموقع التراثي الأكثر زيارة في العلا.');
+                bgColor = 'primary';
+            } else if (completedCount === 2) {
+                message = t(`📚 You're becoming a heritage expert! ${nextLocationName} is ${nextLocation.points} points away.`, `📚 أنت تصبح خبيراً تراثياً! ${nextLocationName} يبعد ${nextLocation.points} نقطة.`);
+                insight = t('💡 AI Insight: Hegra was Saudi Arabia\'s first UNESCO World Heritage Site (2008).', '💡 رؤية الذكاء الاصطناعي: كانت الحجر أول موقع تراث عالمي لليونسكو في السعودية (2008).');
+                bgColor = 'warning';
+            } else {
+                message = t(`🤖 Based on your exploration pattern, we recommend ${nextLocationName} next (${nextLocation.points} points).`, `🤖 بناءً على نمط استكشافك، نوصي بزيارة ${nextLocationName} بعد ذلك (${nextLocation.points} نقطة).`);
+                insight = t(`💡 AI Insight: You've explored ${completedCount}/6 sites. Keep going!`, `💡 رؤية الذكاء الاصطناعي: لقد استكشفت ${completedCount}/6 مواقع. استمر!`);
+                bgColor = 'info';
+            }
+            
+            panel.innerHTML = `
+                <div class="row align-items-center ai-card">
+                    <div class="col-md-1 text-center">
+                        <i class="bi bi-robot fs-1 text-${bgColor}"></i>
+                    </div>
+                    <div class="col-md-7">
+                        <p class="mb-1 fw-bold">${message}</p>
+                        <small class="text-muted"><i class="bi bi-lightbulb"></i> ${insight}</small>
+                    </div>
+                    <div class="col-md-4 text-md-end mt-2 mt-md-0">
+                        <div class="d-flex gap-2 justify-content-md-end">
+                            <span class="badge bg-warning text-dark px-3 py-2">🏆 ${userData.points} pts</span>
+                            <span class="badge bg-info px-3 py-2">📊 ${completedCount}/6</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        } catch(e) {
+            console.error('AI error:', e);
+        }
+    }
+    
+    // Export data
+    function exportUserData() {
+        let csv = "Location Name,Points Earned,Time Spent (seconds),Category,Timestamp\n";
+        userData.explorationHistory.forEach(exp => {
+            const location = locations[exp.location_id];
+            csv += `"${exp.location_name}",${exp.points_earned},${exp.time_spent},"${location?.category || 'heritage'}","${new Date(exp.timestamp).toLocaleString()}"\n`;
+        });
+        
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `alula_heritage_data_${userData.userId}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+        
+        showToast(t('📊 Research data exported successfully!', '📊 تم تصدير البيانات البحثية بنجاح!'), 'info');
+    }
+    
+    // Show toast
+    function showToast(message, type) {
+        let toast = document.getElementById('heritageToast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'heritageToast';
+            toast.style.position = 'fixed';
+            toast.style.bottom = '20px';
+            toast.style.right = '20px';
+            toast.style.zIndex = '1100';
+            toast.style.padding = '12px 20px';
+            toast.style.borderRadius = '8px';
+            toast.style.color = 'white';
+            toast.style.fontWeight = 'bold';
+            document.body.appendChild(toast);
+        }
+        
+        if (type === 'success') toast.style.background = '#28a745';
+        else if (type === 'achievement') toast.style.background = 'linear-gradient(135deg, #DAA520, #B8860B)';
+        else toast.style.background = '#17a2b8';
+        
+        toast.textContent = message;
+        toast.style.display = 'block';
+        setTimeout(() => { toast.style.display = 'none'; }, 3000);
+    }
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+        generateLocationCards();
+        loadUserData();
+        getAIRecommendations();
+        
+        // Mark completed locations from saved data
+        userData.completedLocations.forEach(locId => {
+            const card = document.querySelector(`.location-card[data-location-id="${locId}"]`);
+            if (card) {
+                const btn = card.querySelector('.explore-location');
+                if (btn && btn.textContent.includes('Explore')) {
+                    btn.disabled = true;
+                    btn.textContent = t('✅ Completed', '✅ مكتمل');
+                    btn.classList.remove('btn-warning');
+                    btn.classList.add('btn-secondary');
+                    const badge = card.querySelector('.completed-badge');
+                    if (badge) badge.style.display = 'inline';
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}
