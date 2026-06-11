@@ -7,7 +7,7 @@
 
     <!-- PWA Meta Tags -->
     <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
-    <meta name="theme-color" content="#C2A575">
+    <meta name="theme-color" content="#2E8B57">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="HeritageGuide AI">
@@ -32,6 +32,10 @@
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
     <style>
+        /* ============================================
+           HeritageGuide.AI - Color Variables
+           Inspired by AlUla Heritage & Saudi Vision 2030
+           ============================================ */
         :root {
             --sand-light: #F5E6D3;
             --sand-medium: #E8D5B7;
@@ -41,10 +45,14 @@
             --gold: #DAA520;
             --gold-dark: #B8860B;
             --oasis-green: #2E8B57;
+            --oasis-green-dark: #1F6B43;
+            --oasis-green-light: #4CAF79;
             --crimson: #B22222;
             --text-dark: #4A3728;
             --text-light: #F5F0E8;
             --shadow: rgba(74, 55, 40, 0.1);
+            --navbar-bg-light: #2E8B57;
+            --navbar-bg-dark: #1F6B43;
         }
         
         [data-theme="dark"] {
@@ -55,6 +63,8 @@
             --text-light: #E8E0D5;
             --text-dark: #D4C4B0;
             --shadow: rgba(0, 0, 0, 0.3);
+            --navbar-bg-light: #1F6B43;
+            --navbar-bg-dark: #0E4A2E;
         }
         
         body {
@@ -64,10 +74,11 @@
             min-height: 100vh;
         }
         
+        /* Modern Navbar - Color different from background */
         .navbar-modern {
-            background: rgba(245, 230, 211, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 20px var(--shadow);
+            background: linear-gradient(135deg, var(--navbar-bg-light) 0%, var(--navbar-bg-dark) 100%);
+            backdrop-filter: blur(0px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
             padding: 0.8rem 0;
             position: sticky;
             top: 0;
@@ -75,7 +86,57 @@
         }
         
         [data-theme="dark"] .navbar-modern {
-            background: rgba(42, 36, 30, 0.95);
+            background: linear-gradient(135deg, var(--navbar-bg-light) 0%, var(--navbar-bg-dark) 100%);
+        }
+        
+        /* Navbar text colors */
+        .navbar-modern .logo-text h1 {
+            color: white;
+            background: none;
+            -webkit-background-clip: unset;
+            background-clip: unset;
+            color: #FFFFFF;
+        }
+        
+        .navbar-modern .logo-text p {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .navbar-modern .nav-link-modern {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .navbar-modern .nav-link-modern:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        .navbar-modern .nav-link-modern.active {
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+        }
+        
+        .navbar-modern .dropdown-modern .dropdown-toggle {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .navbar-modern .dropdown-modern .dropdown-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        .navbar-modern .lang-btn {
+            color: white;
+        }
+        
+        .navbar-modern .lang-btn.active {
+            background: white;
+            color: var(--oasis-green);
+        }
+        
+        .navbar-modern .theme-toggle {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
         }
         
         .logo-img {
@@ -83,39 +144,22 @@
             height: 50px;
             object-fit: cover;
             border-radius: 12px;
-            border: 2px solid var(--oasis-green);
+            border: 2px solid white;
         }
         
         .logo-text h1 {
             font-size: 1.6rem;
             font-weight: 700;
-            background: linear-gradient(135deg, var(--oasis-green), var(--gold));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            margin-bottom: 0;
         }
         
         .logo-text p {
             font-size: 0.75rem;
-            color: var(--terracotta);
             font-style: italic;
         }
         
-        .dropdown-modern .dropdown-toggle {
-            background: transparent;
-            border: none;
-            padding: 0.5rem 1rem;
-            font-weight: 500;
-            color: var(--text-dark);
-            border-radius: 40px;
-        }
-        
-        .dropdown-modern .dropdown-toggle:hover {
-            background: rgba(46, 139, 87, 0.1);
-            color: var(--oasis-green);
-        }
-        
-        .dropdown-modern .dropdown-menu {
+        /* Dropdown menus inside navbar */
+        .navbar-modern .dropdown-modern .dropdown-menu {
             background: var(--sand-light);
             border: none;
             border-radius: 16px;
@@ -123,65 +167,22 @@
             padding: 0.5rem;
         }
         
-        .dropdown-modern .dropdown-item {
+        [data-theme="dark"] .navbar-modern .dropdown-modern .dropdown-menu {
+            background: var(--sand-medium);
+        }
+        
+        .navbar-modern .dropdown-modern .dropdown-item {
             padding: 0.6rem 1rem;
             border-radius: 12px;
             color: var(--text-dark);
         }
         
-        .dropdown-modern .dropdown-item:hover {
+        .navbar-modern .dropdown-modern .dropdown-item:hover {
             background: linear-gradient(135deg, var(--oasis-green), var(--gold));
             color: white;
         }
         
-        .nav-link-modern {
-            padding: 0.5rem 1rem;
-            font-weight: 500;
-            border-radius: 40px;
-            color: var(--text-dark);
-        }
-        
-        .nav-link-modern:hover {
-            background: rgba(46, 139, 87, 0.1);
-            color: var(--oasis-green);
-        }
-        
-        .nav-link-modern.active {
-            background: linear-gradient(135deg, var(--oasis-green), var(--gold));
-            color: white;
-        }
-        
-        .lang-switch {
-            display: flex;
-            gap: 5px;
-            background: rgba(46, 139, 87, 0.1);
-            border-radius: 40px;
-            padding: 4px;
-        }
-        
-        .lang-btn {
-            padding: 6px 14px;
-            border-radius: 30px;
-            font-weight: 600;
-            background: transparent;
-            border: none;
-            color: var(--text-dark);
-        }
-        
-        .lang-btn.active {
-            background: var(--oasis-green);
-            color: white;
-        }
-        
-        .theme-toggle {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(46, 139, 87, 0.1);
-            border: none;
-            color: var(--oasis-green);
-        }
-        
+        /* Footer */
         .footer-modern {
             background: var(--sand-dark);
             color: var(--text-light);
@@ -193,6 +194,7 @@
             background: var(--sand-medium);
         }
         
+        /* Cards */
         .heritage-card {
             background: rgba(255, 248, 240, 0.9);
             border: 1px solid rgba(46, 139, 87, 0.2);
@@ -205,6 +207,7 @@
             box-shadow: 0 15px 35px var(--shadow);
         }
         
+        /* Custom Buttons */
         .btn-heritage {
             background: linear-gradient(135deg, var(--oasis-green), var(--gold));
             border: none;
