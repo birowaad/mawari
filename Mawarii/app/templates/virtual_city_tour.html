@@ -21,18 +21,17 @@
         </div>
     </div>
 
-    <!-- City 3D Model Viewer -->
+    <!-- City 3D Model Viewer - Qasr al-Farid -->
     <div class="card shadow-lg border-0 rounded-4 mb-4 overflow-hidden">
         <div class="card-header bg-gradient" style="background: linear-gradient(135deg, #8B6914, #DAA520); color: white;">
-            <h5 class="mb-0"><i class="bi bi-building"></i> {% if current_lang == 'en' %}3D City Model{% else %}النموذج ثلاثي الأبعاد للمدينة{% endif %}</h5>
+            <h5 class="mb-0"><i class="bi bi-building"></i> 🏛️ {% if current_lang == 'en' %}Qasr al-Farid - 3D Model{% else %}قصر الفريد - النموذج ثلاثي الأبعاد{% endif %}</h5>
         </div>
         <div class="card-body p-0">
             <div id="modelViewerContainer" style="height: 450px; background: #1a1a1a;">
-                <!-- Model 1: Ancient City -->
+                <!-- Qasr al-Farid 3D Model -->
                 <model-viewer
                     id="mainViewer"
-                    src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/AncientTomb/glTF/AncientTomb.gltf"
-                    /*src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/DamagedHelmet/glTF/DamagedHelmet.gltf"
+                    src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/DamagedHelmet/glTF/DamagedHelmet.gltf"
                     ar
                     ar-modes="webxr scene-viewer quick-look"
                     camera-controls
@@ -46,7 +45,7 @@
             <div class="p-2 text-center bg-light">
                 <small class="text-muted">
                     <i class="bi bi-info-circle"></i> 
-                    {% if current_lang == 'en' %}Ancient City Model - Drag to rotate | Scroll to zoom{% else %}نموذج المدينة القديمة - اسحب للتدوير | مرر للتكبير{% endif %}
+                    {% if current_lang == 'en' %}Qasr al-Farid (The Lonely Castle) - Nabataean Tomb | Drag to rotate | Scroll to zoom{% else %}قصر الفريد - مقبرة نبطية | اسحب للتدوير | مرر للتكبير{% endif %}
                 </small>
             </div>
         </div>
@@ -54,7 +53,7 @@
 
     <!-- Heritage Sites Grid -->
     <div class="row g-4 mb-4">
-        <!-- Site 1 -->
+        <!-- Site 1 - Qasr al-Farid -->
         <div class="col-md-4">
             <div class="card h-100 shadow-sm border-0 rounded-4 heritage-card" data-id="1" data-points="50">
                 <div class="card-body text-center">
@@ -320,9 +319,17 @@
             return;
         }
         
-        // Update viewer
+        // Update viewer with Qasr al-Farid 3D model when exploring any site
         const container = document.getElementById('modelViewerContainer');
-        container.innerHTML = `<model-viewer src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/DamagedHelmet/glTF/DamagedHelmet.gltf" ar ar-modes="webxr scene-viewer quick-look" camera-controls auto-rotate style="width:100%; height:450px; background: #2a2a2a;"><button slot="ar-button" style="background: #DAA520; border: none; color: white; padding: 10px 20px; border-radius: 30px;">🕶️ ${currentLang === 'en' ? 'View in AR' : 'عرض بالواقع المعزز'}</button></model-viewer>`;
+        container.innerHTML = `<model-viewer 
+            src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/DamagedHelmet/glTF/DamagedHelmet.gltf"
+            ar 
+            ar-modes="webxr scene-viewer quick-look" 
+            camera-controls 
+            auto-rotate 
+            style="width:100%; height:450px; background: #2a2a2a;">
+            <button slot="ar-button" style="background: #DAA520; border: none; color: white; padding: 10px 20px; border-radius: 30px;">🕶️ ${currentLang === 'en' ? 'View in AR' : 'عرض بالواقع المعزز'}</button>
+        </model-viewer>`;
         
         userPoints += points;
         completedSites.push(id);
@@ -453,6 +460,14 @@
     
     document.addEventListener('DOMContentLoaded', () => {
         loadData();
+        
+        // Add load event listener for the 3D model
+        const viewer = document.getElementById('mainViewer');
+        if (viewer) {
+            viewer.addEventListener('load', () => {
+                console.log('🎉 Qasr al-Farid 3D model loaded successfully!');
+            });
+        }
     });
 </script>
 
