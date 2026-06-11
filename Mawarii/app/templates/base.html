@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>{{ title }} - Mawari</title>
+    <title>{{ title }} - HeritageGuide.AI</title>
 
     <!-- PWA Meta Tags -->
     <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
-    <meta name="theme-color" content="#8B6914">
+    <meta name="theme-color" content="#C2A575">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Mawari AR">
+    <meta name="apple-mobile-web-app-title" content="HeritageGuide AI">
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -32,7 +32,10 @@
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
     <style>
-        /* Color Variables - Inspired by AlUla Heritage */
+        /* ============================================
+           HeritageGuide.AI - Color Variables
+           Inspired by AlUla Heritage & Saudi Vision 2030
+           ============================================ */
         :root {
             --sand-light: #F5E6D3;
             --sand-medium: #E8D5B7;
@@ -41,6 +44,8 @@
             --olive: #8B7D3C;
             --gold: #DAA520;
             --gold-dark: #B8860B;
+            --oasis-green: #2E8B57;
+            --crimson: #B22222;
             --text-dark: #4A3728;
             --text-light: #F5F0E8;
             --shadow: rgba(74, 55, 40, 0.1);
@@ -53,6 +58,7 @@
             --terracotta: #9B6B52;
             --text-light: #E8E0D5;
             --text-dark: #D4C4B0;
+            --shadow: rgba(0, 0, 0, 0.3);
         }
         
         body {
@@ -64,7 +70,7 @@
         
         /* Modern Navbar */
         .navbar-modern {
-            background: rgba(255, 248, 240, 0.95);
+            background: rgba(245, 230, 211, 0.95);
             backdrop-filter: blur(10px);
             box-shadow: 0 4px 20px var(--shadow);
             padding: 0.8rem 0;
@@ -82,14 +88,14 @@
             width: 50px;
             height: 50px;
             object-fit: cover;
-            border-radius: 50%;
-            border: 2px solid var(--gold);
+            border-radius: 12px;
+            border: 2px solid var(--oasis-green);
         }
         
         .logo-text h1 {
             font-size: 1.6rem;
             font-weight: 700;
-            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            background: linear-gradient(135deg, var(--oasis-green), var(--gold));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -112,8 +118,8 @@
         }
         
         .dropdown-modern .dropdown-toggle:hover {
-            background: rgba(218, 165, 32, 0.1);
-            color: var(--gold);
+            background: rgba(46, 139, 87, 0.1);
+            color: var(--oasis-green);
         }
         
         .dropdown-modern .dropdown-menu {
@@ -131,7 +137,7 @@
         }
         
         .dropdown-modern .dropdown-item:hover {
-            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            background: linear-gradient(135deg, var(--oasis-green), var(--gold));
             color: white;
         }
         
@@ -144,12 +150,12 @@
         }
         
         .nav-link-modern:hover {
-            background: rgba(218, 165, 32, 0.1);
-            color: var(--gold);
+            background: rgba(46, 139, 87, 0.1);
+            color: var(--oasis-green);
         }
         
         .nav-link-modern.active {
-            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            background: linear-gradient(135deg, var(--oasis-green), var(--gold));
             color: white;
         }
         
@@ -157,7 +163,7 @@
         .lang-switch {
             display: flex;
             gap: 5px;
-            background: rgba(218, 165, 32, 0.1);
+            background: rgba(46, 139, 87, 0.1);
             border-radius: 40px;
             padding: 4px;
         }
@@ -172,7 +178,7 @@
         }
         
         .lang-btn.active {
-            background: var(--gold);
+            background: var(--oasis-green);
             color: white;
         }
         
@@ -181,9 +187,9 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: rgba(218, 165, 32, 0.1);
+            background: rgba(46, 139, 87, 0.1);
             border: none;
-            color: var(--gold);
+            color: var(--oasis-green);
         }
         
         /* Footer */
@@ -201,7 +207,7 @@
         /* Cards */
         .heritage-card {
             background: rgba(255, 248, 240, 0.9);
-            border: 1px solid rgba(218, 165, 32, 0.2);
+            border: 1px solid rgba(46, 139, 87, 0.2);
             border-radius: 20px;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
@@ -209,6 +215,21 @@
         .heritage-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 35px var(--shadow);
+        }
+        
+        /* Custom Buttons */
+        .btn-heritage {
+            background: linear-gradient(135deg, var(--oasis-green), var(--gold));
+            border: none;
+            padding: 10px 24px;
+            border-radius: 40px;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .btn-heritage:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 139, 87, 0.3);
         }
         
         @media (max-width: 768px) {
@@ -224,10 +245,10 @@
         <div class="container">
             <div class="d-flex justify-content-between align-items-center flex-wrap">
                 <div class="logo-container d-flex align-items-center gap-3">
-                    <img src="{{ url_for('static', filename='image/11.jpeg') }}" alt="Logo" class="logo-img">
+                    <img src="{{ url_for('static', filename='image/11.jpeg') }}" alt="HeritageGuide.AI Logo" class="logo-img">
                     <div class="logo-text">
-                        <h1>مواري</h1>
-                        <p>{% if current_lang == 'en' %}Inspired by AlUla Heritage{% else %}مستوحى من تراث العلا{% endif %}</p>
+                        <h1>HeritageGuide.AI</h1>
+                        <p>{% if current_lang == 'en' %}AI-Powered AR Heritage Experiences{% else %}تجارب تراثية بالواقع المعزز والذكاء الاصطناعي{% endif %}</p>
                     </div>
                 </div>
                 
@@ -253,25 +274,26 @@
                     
                     <li class="nav-item dropdown-modern">
                         <button class="dropdown-toggle" data-bs-toggle="dropdown">
-                            <i class="bi bi-map-fill"></i> {% if current_lang == 'en' %}Heritage{% else %}التراث{% endif %}
+                            <i class="bi bi-vr"></i> {% if current_lang == 'en' %}AR Explorer{% else %}المستكشف{% endif %}
                             <i class="bi bi-chevron-down ms-1"></i>
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ url_for('heritage') }}" class="dropdown-item"><i class="bi bi-vr"></i> {% if current_lang == 'en' %}AR Explorer{% else %}المستكشف{% endif %}</a></li>
-                            <li><a href="{{ url_for('virtual_city_tour') }}" class="dropdown-item"><i class="bi bi-building"></i> {% if current_lang == 'en' %}Virtual Tour{% else %}جولة افتراضية{% endif %}</a></li>
+                            <li><a href="{{ url_for('heritage') }}" class="dropdown-item"><i class="bi bi-3d"></i> {% if current_lang == 'en' %}3D Heritage Sites{% else %}مواقع تراثية ثلاثية الأبعاد{% endif %}</a></li>
+                            <li><a href="{{ url_for('virtual_city_tour') }}" class="dropdown-item"><i class="bi bi-building"></i> {% if current_lang == 'en' %}Virtual City Tour{% else %}جولة المدينة الافتراضية{% endif %}</a></li>
+                            <li><a href="{{ url_for('xrd_analysis') }}" class="dropdown-item"><i class="bi bi-graph-up"></i> {% if current_lang == 'en' %}XRD Analysis{% else %}تحليل XRD{% endif %}</a></li>
                         </ul>
                     </li>
                     
                     {% if 'user_id' in session or current_user.is_authenticated %}
                     <li class="nav-item dropdown-modern">
                         <button class="dropdown-toggle" data-bs-toggle="dropdown">
-                            <i class="bi bi-person-circle"></i> {% if current_lang == 'en' %}Account{% else %}حسابي{% endif %}
+                            <i class="bi bi-person-circle"></i> {% if current_lang == 'en' %}My Profile{% else %}حسابي{% endif %}
                             <i class="bi bi-chevron-down ms-1"></i>
                         </button>
                         <ul class="dropdown-menu">
                             <li><a href="{{ url_for('dashboard') }}" class="dropdown-item"><i class="bi bi-speedometer2"></i> {% if current_lang == 'en' %}Dashboard{% else %}لوحة التحكم{% endif %}</a></li>
-                            <li><a href="{{ url_for('profile') }}" class="dropdown-item"><i class="bi bi-person-gear"></i> {% if current_lang == 'en' %}Profile{% else %}الملف الشخصي{% endif %}</a></li>
-                            <li><a href="{{ url_for('edit_preferences') }}" class="dropdown-item"><i class="bi bi-sliders2"></i> {% if current_lang == 'en' %}Preferences{% else %}التفضيلات{% endif %}</a></li>
+                            <li><a href="{{ url_for('profile') }}" class="dropdown-item"><i class="bi bi-person-gear"></i> {% if current_lang == 'en' %}Profile Settings{% else %}إعدادات الملف{% endif %}</a></li>
+                            <li><a href="{{ url_for('edit_preferences') }}" class="dropdown-item"><i class="bi bi-sliders2"></i> {% if current_lang == 'en' %}Learning Preferences{% else %}تفضيلات التعلم{% endif %}</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a href="{{ url_for('logout') }}" class="dropdown-item text-danger"><i class="bi bi-box-arrow-right"></i> {% if current_lang == 'en' %}Logout{% else %}تسجيل خروج{% endif %}</a></li>
                         </ul>
@@ -279,24 +301,25 @@
                     {% else %}
                     <li class="nav-item dropdown-modern">
                         <button class="dropdown-toggle" data-bs-toggle="dropdown">
-                            <i class="bi bi-box-arrow-in-right"></i> {% if current_lang == 'en' %}Join{% else %}انضم{% endif %}
+                            <i class="bi bi-box-arrow-in-right"></i> {% if current_lang == 'en' %}Join Us{% else %}انضم إلينا{% endif %}
                             <i class="bi bi-chevron-down ms-1"></i>
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ url_for('login') }}" class="dropdown-item"><i class="bi bi-box-arrow-in-right"></i> {% if current_lang == 'en' %}Login{% else %}دخول{% endif %}</a></li>
-                            <li><a href="{{ url_for('register') }}" class="dropdown-item"><i class="bi bi-person-plus-fill"></i> {% if current_lang == 'en' %}Register{% else %}تسجيل{% endif %}</a></li>
+                            <li><a href="{{ url_for('login') }}" class="dropdown-item"><i class="bi bi-box-arrow-in-right"></i> {% if current_lang == 'en' %}Login{% else %}تسجيل دخول{% endif %}</a></li>
+                            <li><a href="{{ url_for('register') }}" class="dropdown-item"><i class="bi bi-person-plus-fill"></i> {% if current_lang == 'en' %}Create Account{% else %}إنشاء حساب{% endif %}</a></li>
                         </ul>
                     </li>
                     {% endif %}
                     
                     <li class="nav-item dropdown-modern">
                         <button class="dropdown-toggle" data-bs-toggle="dropdown">
-                            <i class="bi bi-info-circle-fill"></i> {% if current_lang == 'en' %}Info{% else %}معلومات{% endif %}
+                            <i class="bi bi-info-circle-fill"></i> {% if current_lang == 'en' %}About{% else %}عن المنصة{% endif %}
                             <i class="bi bi-chevron-down ms-1"></i>
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ url_for('about') }}" class="dropdown-item"><i class="bi bi-quote"></i> {% if current_lang == 'en' %}About{% else %}عن التطبيق{% endif %}</a></li>
-                            <li><a href="{{ url_for('contact') }}" class="dropdown-item"><i class="bi bi-envelope-fill"></i> {% if current_lang == 'en' %}Contact{% else %}اتصل بنا{% endif %}</a></li>
+                            <li><a href="{{ url_for('about') }}" class="dropdown-item"><i class="bi bi-quote"></i> {% if current_lang == 'en' %}Our Mission{% else %}رسالتنا{% endif %}</a></li>
+                            <li><a href="{{ url_for('research') }}" class="dropdown-item"><i class="bi bi-journal-bookmark-fill"></i> {% if current_lang == 'en' %}Research{% else %}البحث العلمي{% endif %}</a></li>
+                            <li><a href="{{ url_for('contact') }}" class="dropdown-item"><i class="bi bi-envelope-fill"></i> {% if current_lang == 'en' %}Contact Us{% else %}اتصل بنا{% endif %}</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -328,23 +351,28 @@
         <div class="container text-center">
             <div class="row">
                 <div class="col-md-4 mb-3">
-                    <h5><i class="bi bi-gem"></i> مواري</h5>
-                    <p class="small opacity-75">{% if current_lang == 'en' %}Preserving AlUla's heritage through AR{% else %}الحفاظ على تراث العلا من خلال الواقع المعزز{% endif %}</p>
+                    <h5><i class="bi bi-gem" style="color: var(--oasis-green);"></i> HeritageGuide.AI</h5>
+                    <p class="small opacity-75">{% if current_lang == 'en' %}AI-Powered Augmented Reality for Cultural Heritage{% else %}الواقع المعزز بالذكاء الاصطناعي للتراث الثقافي{% endif %}</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <h5><i class="bi bi-link-45deg"></i> {% if current_lang == 'en' %}Quick Links{% else %}روابط سريعة{% endif %}</h5>
                     <ul class="list-unstyled small">
-                        <li><a href="{{ url_for('heritage') }}" class="text-decoration-none opacity-75">🎨 {% if current_lang == 'en' %}AR Experience{% else %}تجربة AR{% endif %}</a></li>
+                        <li><a href="{{ url_for('heritage') }}" class="text-decoration-none opacity-75">🎨 {% if current_lang == 'en' %}AR Experience{% else %}تجربة الواقع المعزز{% endif %}</a></li>
                         <li><a href="{{ url_for('virtual_city_tour') }}" class="text-decoration-none opacity-75">🏙️ {% if current_lang == 'en' %}Virtual Tour{% else %}جولة افتراضية{% endif %}</a></li>
+                        <li><a href="{{ url_for('xrd_analysis') }}" class="text-decoration-none opacity-75">🔬 {% if current_lang == 'en' %}XRD Analysis{% else %}تحليل XRD{% endif %}</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <h5><i class="bi bi-people-fill"></i> {% if current_lang == 'en' %}Team{% else %}الفريق{% endif %}</h5>
-                    <p class="small opacity-75">{% if current_lang == 'en' %}10th Level CS, Ranyah{% else %}المستوى العاشر علوم حاسوب، رنية{% endif %}</p>
+                    <h5><i class="bi bi-people-fill"></i> {% if current_lang == 'en' %}Research Team{% else %}الفريق البحثي{% endif %}</h5>
+                    <p class="small opacity-75">{% if current_lang == 'en' %}Taif University | University of Bisha | Alneelain University{% else %}جامعة الطائف | جامعة بيشة | جامعة النيلين{% endif %}</p>
+                    <p class="small opacity-75 mt-2">
+                        <i class="bi bi-envelope"></i> heritageguide.ai@tu.edu.sa
+                    </p>
                 </div>
             </div>
             <hr class="opacity-25">
-            <p class="small mb-0 opacity-50">© 2025 مواري. {% if current_lang == 'en' %}All rights reserved.{% else %}جميع الحقوق محفوظة.{% endif %}</p>
+            <p class="small mb-0 opacity-50">© 2025 HeritageGuide.AI. {% if current_lang == 'en' %}All rights reserved.{% else %}جميع الحقوق محفوظة.{% endif %}</p>
+            <p class="small opacity-50 mt-1">{% if current_lang == 'en' %}Supported by the Deanship of Graduate Studies and Scientific Research, Taif University{% else %}بدعم من عمادة الدراسات العليا والبحث العلمي، جامعة الطائف{% endif %}</p>
         </div>
     </footer>
 
