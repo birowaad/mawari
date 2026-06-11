@@ -156,7 +156,7 @@ def create_app():
         if not admin:
             admin_user = User(
                 username='admin',
-                email='admin@mawari.com',
+                email='admin@heritageguide.ai',
                 role='admin',
                 interests='',
                 experience_level='expert'
@@ -347,11 +347,11 @@ def create_app():
     @app.route('/about')
     def about():
         about_info = {
-            "title": "About Mawari",
-            "description": "Mawari is a web app inspired by the heritage and landscapes of AlUla, Saudi Arabia.",
+            "title": "About HeritageGuide.AI",
+            "description": "HeritageGuide.AI is a web app inspired by the heritage and landscapes of AlUla, Saudi Arabia, using AI-powered augmented reality.",
             "image": "12.jpg"
         }
-        return render_template('about.html', title="About Mawari", about=about_info)
+        return render_template('about.html', title="About HeritageGuide.AI", about=about_info)
 
     @app.route('/contact', methods=['GET', 'POST'])
     def contact():
