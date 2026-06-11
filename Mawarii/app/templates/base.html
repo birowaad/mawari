@@ -280,7 +280,7 @@
                         <ul class="dropdown-menu">
                             <li><a href="{{ url_for('heritage') }}" class="dropdown-item"><i class="bi bi-3d"></i> {% if current_lang == 'en' %}3D Heritage Sites{% else %}مواقع تراثية ثلاثية الأبعاد{% endif %}</a></li>
                             <li><a href="{{ url_for('virtual_city_tour') }}" class="dropdown-item"><i class="bi bi-building"></i> {% if current_lang == 'en' %}Virtual City Tour{% else %}جولة المدينة الافتراضية{% endif %}</a></li>
-                            <li><a href="{{ url_for('xrd_analysis') }}" class="dropdown-item"><i class="bi bi-graph-up"></i> {% if current_lang == 'en' %}XRD Analysis{% else %}تحليل XRD{% endif %}</a></li>
+                            <!-- تم إزالة رابط XRD Analysis مؤقتاً حتى يتم إضافة المسار -->
                         </ul>
                     </li>
                     
@@ -359,7 +359,6 @@
                     <ul class="list-unstyled small">
                         <li><a href="{{ url_for('heritage') }}" class="text-decoration-none opacity-75">🎨 {% if current_lang == 'en' %}AR Experience{% else %}تجربة الواقع المعزز{% endif %}</a></li>
                         <li><a href="{{ url_for('virtual_city_tour') }}" class="text-decoration-none opacity-75">🏙️ {% if current_lang == 'en' %}Virtual Tour{% else %}جولة افتراضية{% endif %}</a></li>
-                        <li><a href="{{ url_for('xrd_analysis') }}" class="text-decoration-none opacity-75">🔬 {% if current_lang == 'en' %}XRD Analysis{% else %}تحليل XRD{% endif %}</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4 mb-3">
