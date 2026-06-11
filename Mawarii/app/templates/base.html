@@ -89,54 +89,22 @@
             background: linear-gradient(135deg, var(--navbar-bg-light) 0%, var(--navbar-bg-dark) 100%);
         }
         
-        /* Navbar text colors */
+        /* Logo text - white for contrast on green background */
         .navbar-modern .logo-text h1 {
-            color: white;
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 0;
+            color: #FFFFFF;
             background: none;
             -webkit-background-clip: unset;
             background-clip: unset;
-            color: #FFFFFF;
         }
         
         .navbar-modern .logo-text p {
-            color: rgba(255, 255, 255, 0.8);
-        }
-        
-        .navbar-modern .nav-link-modern {
-            color: rgba(255, 255, 255, 0.9);
-        }
-        
-        .navbar-modern .nav-link-modern:hover {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-        }
-        
-        .navbar-modern .nav-link-modern.active {
-            background: rgba(255, 255, 255, 0.25);
-            color: white;
-        }
-        
-        .navbar-modern .dropdown-modern .dropdown-toggle {
-            color: rgba(255, 255, 255, 0.9);
-        }
-        
-        .navbar-modern .dropdown-modern .dropdown-toggle:hover {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-        }
-        
-        .navbar-modern .lang-btn {
-            color: white;
-        }
-        
-        .navbar-modern .lang-btn.active {
-            background: white;
-            color: var(--oasis-green);
-        }
-        
-        .navbar-modern .theme-toggle {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
+            font-size: 0.75rem;
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 0;
         }
         
         .logo-img {
@@ -144,27 +112,51 @@
             height: 50px;
             object-fit: cover;
             border-radius: 12px;
-            border: 2px solid white;
+            border: 2px solid #FFFFFF;
         }
         
-        .logo-text h1 {
-            font-size: 1.6rem;
-            font-weight: 700;
-            margin-bottom: 0;
+        /* Navigation links - white for contrast */
+        .navbar-modern .nav-link-modern {
+            color: #FFFFFF !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            transition: all 0.3s ease;
         }
         
-        .logo-text p {
-            font-size: 0.75rem;
-            font-style: italic;
+        .navbar-modern .nav-link-modern:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #FFFFFF !important;
         }
         
-        /* Dropdown menus inside navbar */
+        .navbar-modern .nav-link-modern.active {
+            background: rgba(255, 255, 255, 0.25);
+            color: #FFFFFF !important;
+        }
+        
+        /* Dropdown toggle button */
+        .navbar-modern .dropdown-modern .dropdown-toggle {
+            color: #FFFFFF !important;
+            background: transparent;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            font-weight: 500;
+        }
+        
+        .navbar-modern .dropdown-modern .dropdown-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #FFFFFF !important;
+        }
+        
+        /* Dropdown menu */
         .navbar-modern .dropdown-modern .dropdown-menu {
             background: var(--sand-light);
             border: none;
             border-radius: 16px;
             box-shadow: 0 10px 30px var(--shadow);
             padding: 0.5rem;
+            margin-top: 8px;
         }
         
         [data-theme="dark"] .navbar-modern .dropdown-modern .dropdown-menu {
@@ -175,11 +167,57 @@
             padding: 0.6rem 1rem;
             border-radius: 12px;
             color: var(--text-dark);
+            transition: all 0.2s ease;
         }
         
         .navbar-modern .dropdown-modern .dropdown-item:hover {
             background: linear-gradient(135deg, var(--oasis-green), var(--gold));
             color: white;
+        }
+        
+        /* Language switcher buttons */
+        .navbar-modern .lang-switch {
+            display: flex;
+            gap: 5px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 40px;
+            padding: 4px;
+        }
+        
+        .navbar-modern .lang-btn {
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-weight: 600;
+            background: transparent;
+            border: none;
+            color: #FFFFFF !important;
+            transition: all 0.2s ease;
+        }
+        
+        .navbar-modern .lang-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #FFFFFF !important;
+        }
+        
+        .navbar-modern .lang-btn.active {
+            background: #FFFFFF;
+            color: var(--oasis-green) !important;
+        }
+        
+        /* Theme toggle button */
+        .navbar-modern .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: #FFFFFF !important;
+            transition: all 0.2s ease;
+        }
+        
+        .navbar-modern .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
         }
         
         /* Footer */
@@ -215,6 +253,7 @@
             border-radius: 40px;
             color: white;
             font-weight: 600;
+            transition: all 0.3s ease;
         }
         
         .btn-heritage:hover {
