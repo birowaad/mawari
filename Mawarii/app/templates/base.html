@@ -32,10 +32,6 @@
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
     <style>
-        /* ============================================
-           HeritageGuide.AI - Color Variables
-           Inspired by AlUla Heritage & Saudi Vision 2030
-           ============================================ */
         :root {
             --sand-light: #F5E6D3;
             --sand-medium: #E8D5B7;
@@ -68,7 +64,6 @@
             min-height: 100vh;
         }
         
-        /* Modern Navbar */
         .navbar-modern {
             background: rgba(245, 230, 211, 0.95);
             backdrop-filter: blur(10px);
@@ -83,7 +78,6 @@
             background: rgba(42, 36, 30, 0.95);
         }
         
-        /* Logo Container */
         .logo-img {
             width: 50px;
             height: 50px;
@@ -107,7 +101,6 @@
             font-style: italic;
         }
         
-        /* Dropdown */
         .dropdown-modern .dropdown-toggle {
             background: transparent;
             border: none;
@@ -141,7 +134,6 @@
             color: white;
         }
         
-        /* Nav Links */
         .nav-link-modern {
             padding: 0.5rem 1rem;
             font-weight: 500;
@@ -159,7 +151,6 @@
             color: white;
         }
         
-        /* Language Switcher */
         .lang-switch {
             display: flex;
             gap: 5px;
@@ -182,7 +173,6 @@
             color: white;
         }
         
-        /* Theme Toggle */
         .theme-toggle {
             width: 40px;
             height: 40px;
@@ -192,7 +182,6 @@
             color: var(--oasis-green);
         }
         
-        /* Footer */
         .footer-modern {
             background: var(--sand-dark);
             color: var(--text-light);
@@ -204,7 +193,6 @@
             background: var(--sand-medium);
         }
         
-        /* Cards */
         .heritage-card {
             background: rgba(255, 248, 240, 0.9);
             border: 1px solid rgba(46, 139, 87, 0.2);
@@ -217,7 +205,6 @@
             box-shadow: 0 15px 35px var(--shadow);
         }
         
-        /* Custom Buttons */
         .btn-heritage {
             background: linear-gradient(135deg, var(--oasis-green), var(--gold));
             border: none;
@@ -280,7 +267,6 @@
                         <ul class="dropdown-menu">
                             <li><a href="{{ url_for('heritage') }}" class="dropdown-item"><i class="bi bi-3d"></i> {% if current_lang == 'en' %}3D Heritage Sites{% else %}مواقع تراثية ثلاثية الأبعاد{% endif %}</a></li>
                             <li><a href="{{ url_for('virtual_city_tour') }}" class="dropdown-item"><i class="bi bi-building"></i> {% if current_lang == 'en' %}Virtual City Tour{% else %}جولة المدينة الافتراضية{% endif %}</a></li>
-                            <!-- تم إزالة رابط XRD Analysis مؤقتاً حتى يتم إضافة المسار -->
                         </ul>
                     </li>
                     
@@ -318,7 +304,6 @@
                         </button>
                         <ul class="dropdown-menu">
                             <li><a href="{{ url_for('about') }}" class="dropdown-item"><i class="bi bi-quote"></i> {% if current_lang == 'en' %}Our Mission{% else %}رسالتنا{% endif %}</a></li>
-                            <li><a href="{{ url_for('research') }}" class="dropdown-item"><i class="bi bi-journal-bookmark-fill"></i> {% if current_lang == 'en' %}Research{% else %}البحث العلمي{% endif %}</a></li>
                             <li><a href="{{ url_for('contact') }}" class="dropdown-item"><i class="bi bi-envelope-fill"></i> {% if current_lang == 'en' %}Contact Us{% else %}اتصل بنا{% endif %}</a></li>
                         </ul>
                     </li>
