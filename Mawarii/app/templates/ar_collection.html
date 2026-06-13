@@ -5,175 +5,116 @@
     <!-- Hero Section -->
     <div class="text-center py-5" style="background: linear-gradient(135deg, #2E8B57, #1F6B43);">
         <h1 class="display-5 fw-bold text-white">
-            🏛️ {% if current_lang == 'en' %}AlUla Heritage Collection{% else %}مجموعة العلا التراثية{% endif %}
+            🏛️ {% if current_lang == 'en' %}Qasr al-Farid - Augmented Reality{% else %}قصر الفريد - الواقع المعزز{% endif %}
         </h1>
         <p class="text-white-50 lead">
-            {% if current_lang == 'en' %}Explore Nabataean tombs in 3D and Augmented Reality{% else %}استكشف المقابر النبطية بتقنية ثلاثية الأبعاد والواقع المعزز{% endif %}
+            {% if current_lang == 'en' %}Experience the Nabataean tomb directly in your space{% else %}جرب المقبرة النبطية مباشرة في مكانك{% endif %}
         </p>
         <div class="mt-3">
             <span class="badge bg-warning text-dark rounded-pill px-3 py-2 me-2">
-                <i class="bi bi-vr"></i> VR Ready
+                <i class="bi bi-apple"></i> AR Quick Look
             </span>
             <span class="badge bg-info rounded-pill px-3 py-2">
-                <i class="bi bi-phone"></i> AR Support
+                <i class="bi bi-vr"></i> iOS 12+
             </span>
         </div>
     </div>
 
     <!-- =========================================================== -->
-    <!-- iOS AR BUTTON - USING LOCAL USDZ FILE (NO SKETCHFAB) -->
+    <!-- iOS AR BUTTON - LOCAL USDZ FILE ONLY (NO SKETCHFAB) -->
     <!-- =========================================================== -->
     <div class="container my-4">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 
-                <!-- AR Info Alert -->
+                <!-- Info Alert -->
                 <div class="alert alert-success text-center rounded-4 mb-3" style="background: linear-gradient(135deg, #d4f5e8, #b8e6d4); border: none;">
-                    <i class="bi bi-apple"></i>
-                    {% if current_lang == 'en' %}
-                    <strong>iPhone / iPad Augmented Reality:</strong> Click the button below to experience Qasr al-Farid directly in AR Quick Look.
-                    {% else %}
-                    <strong>الواقع المعزز لأجهزة iPhone / iPad:</strong> اضغط الزر أدناه لتجربة قصر الفريد مباشرة في AR Quick Look.
-                    {% endif %}
+                    <i class="bi bi-apple fs-3"></i>
+                    <h5 class="mt-2 mb-1"><strong>iPhone / iPad Augmented Reality</strong></h5>
+                    <p class="mb-0">Click the button below to place Qasr al-Farid in your real environment.</p>
                 </div>
                 
-                <!-- Main AR Button - Local USDZ File -->
+                <!-- Main AR Button - Local USDZ File Only -->
                 <div class="d-grid gap-2">
                     <a href="{{ url_for('static', filename='models/qasr_al_farid.usdz') }}" 
                        rel="ar" 
                        class="btn btn-success btn-lg rounded-pill py-3"
                        style="background: linear-gradient(135deg, #28a745, #20c997); font-size: 1.3rem; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
                         <i class="bi bi-apple"></i> 🕶️ 
-                        {% if current_lang == 'en' %}Experience Qasr al-Farid in AR (iPhone/iPad){% else %}جرب قصر الفريد بالواقع المعزز (iPhone/iPad){% endif %}
-                        <i class="bi bi-box-arrow-up-right ms-2"></i>
+                        {% if current_lang == 'en' %}Experience Qasr al-Farid in AR{% else %}جرب قصر الفريد بالواقع المعزز{% endif %}
                     </a>
                 </div>
                 
-                <!-- Instructions for iOS -->
+                <!-- Instructions -->
                 <div class="text-center mt-3">
                     <p class="small text-muted">
                         <i class="bi bi-check-circle-fill text-success"></i> 
                         {% if current_lang == 'en' %}
-                        <strong>How it works:</strong> The button links to a USDZ file hosted on our server. Opens in AR Quick Look automatically.
+                        Opens in AR Quick Look | Move your device to place the model | iOS 12+ required
                         {% else %}
-                        <strong>كيف يعمل:</strong> الزر يرتبط بملف USDZ مستضاف على خادمنا. يفتح تلقائياً في AR Quick Look.
+                        يفتح في AR Quick Look | حرك جهازك لوضع المجسم | يتطلب iOS 12+
                         {% endif %}
                     </p>
                     <p class="small text-muted">
                         <i class="bi bi-info-circle"></i> 
                         {% if current_lang == 'en' %}
-                        <strong>Requirements:</strong> iOS 12+ | Safari browser | No additional apps needed
+                        <strong>Note:</strong> This experience uses a local USDZ file hosted on our server, not Sketchfab.
                         {% else %}
-                        <strong>المتطلبات:</strong> iOS 12+ | متصفح Safari | لا يحتاج تطبيقات إضافية
+                        <strong>ملاحظة:</strong> هذه التجربة تستخدم ملف USDZ محلي مستضاف على خادمنا، وليس من Sketchfab.
                         {% endif %}
                     </p>
                 </div>
                 
-                <!-- Alternative Viewer for Android/Desktop -->
-                <hr class="my-4">
-                <div class="alert alert-secondary text-center rounded-4 mb-3">
+                <!-- Warning for Android/PC users -->
+                <div class="alert alert-secondary text-center rounded-4 mt-4">
                     <i class="bi bi-android2"></i> <i class="bi bi-windows"></i>
                     {% if current_lang == 'en' %}
-                    <strong>For Android / Desktop users:</strong> Use the interactive 3D viewer below.
+                    <strong>For Android / PC users:</strong> This experience is optimized for iPhone/iPad. For Android, please use Chrome browser with ARCore support.
                     {% else %}
-                    <strong>لمستخدمي Android / الكمبيوتر:</strong> استخدم العارض التفاعلي ثلاثي الأبعاد أدناه.
+                    <strong>لمستخدمي Android / الكمبيوتر:</strong> هذه التجربة محسّنة لـ iPhone/iPad. لمستخدمي Android، يرجى استخدام متصفح Chrome مع دعم ARCore.
                     {% endif %}
                 </div>
                 
                 <!-- Huawei/Honor Warning Container -->
-                <div id="huawei-ar-warning" class="mt-2"></div>
+                <div id="huawei-warning" class="mt-2"></div>
             </div>
         </div>
     </div>
-
+    
     <!-- =========================================================== -->
-    <!-- 3D Model Viewer - Alternative for Android/Desktop (Sketchfab) -->
+    <!-- PREVIEW OF THE 3D MODEL (Static Image - Not Interactive) -->
     <!-- =========================================================== -->
     <div class="container my-4">
         <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
             <div class="card-header bg-gradient" style="background: linear-gradient(135deg, #DAA520, #B8860B);">
                 <h5 class="mb-0 text-white">
-                    <i class="bi bi-vr"></i> 
-                    {% if current_lang == 'en' %}AlUla 3D Models - Interactive Viewer (Android/PC){% else %}عارض النماذج ثلاثية الأبعاد للعلا (Android/PC){% endif %}
+                    <i class="bi bi-building"></i> 
+                    {% if current_lang == 'en' %}About Qasr al-Farid{% else %}عن قصر الفريد{% endif %}
                 </h5>
             </div>
-            <div class="card-body p-0">
-                <div id="modelViewerContainer" style="position: relative; width: 100%; height: 60vh; min-height: 450px; background: #0a0a0a;">
-                    
-                    <!-- Sketchfab Playlist Embed (fallback for non-iOS) -->
-                    <iframe 
-                        id="sketchfabIframe"
-                        src="https://sketchfab.com/playlists/embed?collection=80ef67b9a7314be0baf0335152d5a25a&autostart=1&ui_controls=1&ui_infos=1&ui_stop=1&ui_watermark=0&ui_related=0&ui_inspector=0&ui_settings=0&ui_annotations=1&ui_vr=1"
-                        title="AlUla Heritage Collection - 3D Models"
-                        frameborder="0"
-                        allowfullscreen
-                        mozallowfullscreen="true"
-                        webkitallowfullscreen="true"
-                        allow="autoplay; fullscreen; xr-spatial-tracking; vr"
-                        style="width: 100%; height: 100%; border: none; background: #0a0a0a;">
-                    </iframe>
-                    
-                    <!-- Info Badge -->
-                    <div class="position-absolute bottom-0 start-0 m-3">
-                        <span class="badge bg-dark bg-opacity-75 text-warning rounded-pill px-3 py-2" style="backdrop-filter: blur(8px);">
-                            <i class="bi bi-vr"></i> 🕶️ {% if current_lang == 'en' %}VR Ready - Click headset icon{% else %}يدعم الواقع الافتراضي - اضغط أيقونة السماعة{% endif %}
-                        </span>
+            <div class="card-body text-center">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <img src="{{ url_for('static', filename='images/qasr_preview.jpg') }}" 
+                             alt="Qasr al-Farid" 
+                             class="img-fluid rounded-3"
+                             style="max-height: 250px; width: auto;"
+                             onerror="this.src='https://via.placeholder.com/300x200?text=Qasr+al-Farid'">
                     </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Viewer Instructions -->
-        <div class="text-center mt-3">
-            <p class="small text-muted">
-                <i class="bi bi-hand-index-thumb"></i> 
-                {% if current_lang == 'en' %}
-                Drag to rotate | Pinch to zoom | Click VR button (headset icon) for immersive VR experience
-                {% else %}
-                اسحب لتدوير | اقرص للتكبير | اضغط زر VR (أيقونة السماعة) لتجربة VR غامرة
-                {% endif %}
-            </p>
-        </div>
-    </div>
-    
-    <!-- =========================================================== -->
-    <!-- HERITAGE SITES INFO CARDS -->
-    <!-- =========================================================== -->
-    <div class="container my-5">
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm rounded-4">
-                    <div class="card-body text-center">
-                        <div class="bg-warning bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
-                            <i class="bi bi-building fs-1 text-warning"></i>
-                        </div>
-                        <h5 class="fw-bold">🏛️ Qasr al-Farid</h5>
-                        <p class="small text-muted">The Lonely Castle | 1st Century CE | Hegra</p>
+                    <div class="col-md-6 text-start">
+                        <h4 class="text-warning">🏛️ Qasr al-Farid</h4>
+                        <p class="small text-muted">
+                            {% if current_lang == 'en' %}
+                            Also known as "The Lonely Castle," this magnificent tomb is carved entirely from a single sandstone monolith. 
+                            It dates back to the 1st century CE and is located at Hegra (Mada'in Salih), Saudi Arabia's first UNESCO World Heritage Site.
+                            {% else %}
+                            يُعرف أيضاً باسم "القصر الوحيد"، هذا المقبرة الرائعة منحوتة بالكامل من كتلة واحدة من الحجر الرملي.
+                            يعود تاريخها إلى القرن الأول الميلادي وتقع في الحجر (مدائن صالح)، أول موقع تراث عالمي لليونسكو في المملكة العربية السعودية.
+                            {% endif %}
+                        </p>
                         <span class="badge bg-secondary">Nabataean Tomb</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm rounded-4">
-                    <div class="card-body text-center">
-                        <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
-                            <i class="bi bi-tree-fill fs-1 text-success"></i>
-                        </div>
-                        <h5 class="fw-bold">🗿 Hegra Tombs</h5>
-                        <p class="small text-muted">Nabataean Necropolis | UNESCO World Heritage</p>
-                        <span class="badge bg-secondary">UNESCO Site</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm rounded-4">
-                    <div class="card-body text-center">
-                        <div class="bg-secondary bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
-                            <i class="bi bi-mountain fs-1 text-secondary"></i>
-                        </div>
-                        <h5 class="fw-bold">📜 Jabal Ikmah</h5>
-                        <p class="small text-muted">Open Library of Inscriptions | Ancient Writings</p>
-                        <span class="badge bg-secondary">Archaeological Site</span>
+                        <span class="badge bg-info ms-1">1st Century CE</span>
+                        <span class="badge bg-warning ms-1">UNESCO</span>
                     </div>
                 </div>
             </div>
@@ -181,7 +122,7 @@
     </div>
     
     <!-- =========================================================== -->
-    <!-- QR CODE SECTION -->
+    <!-- QR CODE SECTION - SHORT URL -->
     <!-- =========================================================== -->
     <div class="container my-4">
         <div class="row justify-content-center">
@@ -193,10 +134,12 @@
                             {% if current_lang == 'en' %}Scan to View on Mobile{% else %}امسح QR للعرض على الجوال{% endif %}
                         </h5>
                         <div class="d-flex justify-content-center">
-                            <img id="qrCode" src="https://chart.googleapis.com/chart?chs=180x180&cht=qr&chl=https://mawari-1hif.onrender.com/ar-collection&choe=UTF-8" alt="QR Code" style="width: 140px; height: 140px;">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://mawari-1hif.onrender.com/a&choe=UTF-8" 
+                                 alt="QR Code" 
+                                 style="width: 150px; height: 150px;">
                         </div>
                         <p class="small text-muted mt-3 mb-0">
-                            📱 {% if current_lang == 'en' %}Scan with your phone camera to open this page{% else %}امسح الرمز بكاميرا هاتفك لفتح هذه الصفحة{% endif %}
+                            📱 {% if current_lang == 'en' %}Scan with your iPhone camera to open AR experience{% else %}امسح الرمز بكاميرا iPhone لفتح تجربة الواقع المعزز{% endif %}
                         </p>
                     </div>
                 </div>
@@ -205,44 +148,30 @@
     </div>
 </div>
 
-<!-- =========================================================== -->
-<!-- JAVASCRIPT -->
-<!-- =========================================================== -->
 <script>
-    // ============================================================
-    // كشف وتوجيه مستخدمي أجهزة Huawei / Honor
-    // ============================================================
-    function detectHuaweiARSupport() {
-        const userAgent = navigator.userAgent;
-        const isHuawei = /huawei/i.test(userAgent);
-        const isHonor = /honor/i.test(userAgent);
-        
-        if (isHuawei || isHonor) {
-            const message = `
-                <div class="alert alert-warning text-center" style="border-right: 4px solid #ffc107; background: #fff8e7;">
-                    <i class="bi bi-exclamation-triangle-fill" style="color: #ffc107;"></i>
-                    <strong>📱 لأجهزة Huawei/Honor:</strong><br>
-                    لتجربة الواقع المعزز على iPhone، تأكد من تثبيت <strong>HUAWEI AR Engine</strong> من متجر AppGallery.
-                    <hr>
-                    <a href="https://consumer.huawei.com/en/support/ar-engine/" target="_blank" class="btn btn-sm btn-warning mt-1">
-                        <i class="bi bi-box-arrow-up-right"></i> معلومات عن AR Engine
-                    </a>
-                </div>
-            `;
-            const container = document.getElementById('huawei-ar-warning');
-            if (container) container.innerHTML = message;
+    // كشف أجهزة Huawei/Honor
+    function detectHuawei() {
+        const ua = navigator.userAgent;
+        if (/huawei|honor/i.test(ua)) {
+            const warning = document.getElementById('huawei-warning');
+            if (warning) {
+                warning.innerHTML = `
+                    <div class="alert alert-warning text-center mt-3">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <strong>📱 لأجهزة Huawei/Honor:</strong><br>
+                        لتجربة الواقع المعزز، تأكد من تثبيت <strong>HUAWEI AR Engine</strong> من متجر AppGallery.
+                        <a href="https://consumer.huawei.com/en/support/ar-engine/" target="_blank" class="btn btn-sm btn-warning ms-2 mt-1">المزيد</a>
+                    </div>
+                `;
+            }
         }
     }
     
-    // Initialize on page load
     document.addEventListener('DOMContentLoaded', function() {
-        // Detect Huawei/Honor devices
-        detectHuaweiARSupport();
-        
-        // Log successful load
-        console.log('🎉 AlUla Heritage Collection loaded');
-        console.log('📱 iOS users: Use GREEN button for direct AR (local USDZ file)');
-        console.log('📍 Local USDZ path: /static/models/qasr_al_farid.usdz');
+        detectHuawei();
+        console.log('🎉 Qasr al-Farid AR page loaded');
+        console.log('📱 Local USDZ file path: /static/models/qasr_al_farid.usdz');
+        console.log('🍎 For iPhone: Click the green button for AR Quick Look');
     });
 </script>
 {% endblock %}
