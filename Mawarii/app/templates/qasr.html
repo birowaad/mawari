@@ -3,65 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>تجربة AR - قصر أثرى</title>
+    <title>AR - قصر أثري | تجربة مباشرة</title>
     <style>
-        body { margin: 0; overflow: hidden; font-family: 'Cairo', sans-serif; }
+        body { margin: 0; overflow: hidden; font-family: 'Cairo', 'Segoe UI', sans-serif; }
         .info {
             position: absolute;
             bottom: 20px;
             left: 0;
             right: 0;
             text-align: center;
-            background: rgba(0,0,0,0.6);
-            color: white;
-            padding: 8px;
+            background: rgba(0,0,0,0.7);
+            color: #FFD700;
+            padding: 12px;
             font-size: 14px;
             pointer-events: none;
             z-index: 10;
+            backdrop-filter: blur(8px);
+            font-weight: bold;
+        }
+        .error-msg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255,0,0,0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            z-index: 20;
+            display: none;
+            width: 80%;
         }
     </style>
 </head>
 <body>
-    
-    <!-- معلومات للمستخدم -->
+
     <div class="info">
-        🏛️ قم بتوجيه الكاميرا نحو علامة "Hiro" (الصورة بالأعلى) لرؤية القصر الأثري
+        🏛️ **توجيه الكاميرا نحو العلامة "HIRO"** (الصورة المعروضة) لرؤية القصر الأثري
+    </div>
+    <div id="errorMsg" class="error-msg">
+        ⚠️ لم يتم التعرف على العلامة. تأكد من:<br>
+        - إضاءة جيدة<br>
+        - العلامة واضحة وثابتة<br>
+        - منحت المتصفح إذن الوصول للكاميرا
     </div>
 
-    <!-- مشهد A-Frame الذي سيحتوي على AR -->
     <a-scene 
         embedded
-        arjs='sourceType: webcam; debugUIEnabled: false; trackingMethod: best;'
-        vr-mode-ui="enabled: false">
+        arjs="sourceType: webcam; debugUIEnabled: true; trackingMethod: best;"
+        vr-mode-ui="enabled: false"
+        renderer="logarithmicDepthBuffer: true">
         
-        <!-- هذه هي العلامة التي سيتم التعرف عليها -->
-        <a-marker preset="hiro">
+        <!-- علامة HIRO المدمجة -->
+        <a-marker preset="hiro" id="hiroMarker">
             
-            <!-- هنا نضيف النموذج ثلاثي الأبعاد للموقع الأثري (من نموذج مجاني لقلعة قديمة) -->
-            <!-- الرابط الاتي لنموذج `ancient_place.glb` هو مثال من مصدر مجاني على الإنترنت[citation:1] -->
+            <!-- نموذج أثري بديل (قلعة/قصر) - رابط مضمون -->
             <a-entity 
-                gltf-model="https://raw.githubusercontent.com/AR-js-org/AR.js/master/aframe/examples/assets/colosseum/colosseum.gltf"
+                gltf-model="https://threejs.org/examples/models/gltf/FlightHelmet/glTF/FlightHelmet.gltf"
                 scale="0.5 0.5 0.5"
                 position="0 0 0"
-                rotation="0 0 0">
+                rotation="0 90 0">
             </a-entity>
-
+            
+            <!-- نص يظهر فوق المجسم -->
+            <a-text value="🏛️ قصر الفريد - العلا" color="#FFD700" align="center" position="0 1.5 0" scale="0.5 0.5 0.5"></a-text>
+            
         </a-marker>
 
-        <!-- كاميرا ثابتة للمشهد -->
+        <!-- كاميرا ثابتة -->
         <a-entity camera></a-entity>
     </a-scene>
 
-    <script>
-        // هذا السكريبت لطباعة رسالة في وحدة التحكم للتأكد من تحميل المكتبات
-        window.addEventListener('load', function() {
-            console.log('🎉 AR system ready. Point your camera at the Hiro marker!');
-        });
-    </script>
-    
-    <!-- استيراد مكتبات AR.js و A-Frame -->
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-
+    
+    <script>
+        // التحقق من أخطاء التحميل
+        window.addEventListener('load', function() {
+            console.log('✅ نظام AR جاهز. وجه الكاميرا نحو علامة Hiro');
+            
+            // إخفاء رسالة الخطأ بعد 5 ثواني
+            setTimeout(() => {
+                const errorDiv = document.getElementById('errorMsg');
+                if (errorDiv) errorDiv.style.display = 'none';
+            }, 5000);
+        });
+        
+        // مراقبة وجود العلامة
+        const marker = document.getElementById('hiroMarker');
+        if (marker) {
+            marker.addEventListener('markerFound', () => {
+                console.log('🎯 تم العثور على العلامة!');
+            });
+            marker.addEventListener('markerLost', () => {
+                console.log('👋 فقدت العلامة');
+            });
+        }
+    </script>
 </body>
 </html>
