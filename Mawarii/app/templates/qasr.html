@@ -1,105 +1,118 @@
-<!DOCTYPE html>
+<!DOCTYPE html your-server="needed">
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>AR - قصر أثري | تجربة مباشرة</title>
+    <title>AR - تجربة قصر أثري | نظام عملي</title>
     <style>
-        body { margin: 0; overflow: hidden; font-family: 'Cairo', 'Segoe UI', sans-serif; }
+        body { margin: 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         .info {
             position: absolute;
             bottom: 20px;
             left: 0;
             right: 0;
             text-align: center;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.8);
             color: #FFD700;
             padding: 12px;
             font-size: 14px;
             pointer-events: none;
             z-index: 10;
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(5px);
             font-weight: bold;
+            border-radius: 10px;
+            margin: 10px;
         }
-        .error-msg {
+        .status {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(255,0,0,0.8);
-            color: white;
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-            z-index: 20;
-            display: none;
-            width: 80%;
+            top: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.6);
+            color: #0f0;
+            padding: 5px 10px;
+            font-size: 11px;
+            border-radius: 5px;
+            font-family: monospace;
+            z-index: 10;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            100% { opacity: 1; }
         }
     </style>
 </head>
 <body>
 
+    <div class="status" id="statusMsg">🔄 جاري تحميل النظام...</div>
     <div class="info">
-        🏛️ **توجيه الكاميرا نحو العلامة "HIRO"** (الصورة المعروضة) لرؤية القصر الأثري
-    </div>
-    <div id="errorMsg" class="error-msg">
-        ⚠️ لم يتم التعرف على العلامة. تأكد من:<br>
-        - إضاءة جيدة<br>
-        - العلامة واضحة وثابتة<br>
-        - منحت المتصفح إذن الوصول للكاميرا
+        🏛️ **وجه الكاميرا نحو علامة "HIRO"** (الصورة المعروضة) لرؤية النموذج الأثري<br>
+        📍 تأكد من إضاءة جيدة وثبات اليد
     </div>
 
+    <!-- مشهد AR الرئيسي -->
     <a-scene 
         embedded
-        arjs="sourceType: webcam; debugUIEnabled: true; trackingMethod: best;"
+        arjs="sourceType: webcam; debugUIEnabled: false; trackingMethod: best;"
         vr-mode-ui="enabled: false"
         renderer="logarithmicDepthBuffer: true">
         
         <!-- علامة HIRO المدمجة -->
-        <a-marker preset="hiro" id="hiroMarker">
+        <a-marker preset="hiro" id="arMarker">
             
-            <!-- نموذج أثري بديل (قلعة/قصر) - رابط مضمون -->
+            <!-- نموذج أثري (قصر/معبد) - رابط مضمون من نموذج افتراضي -->
             <a-entity 
-                gltf-model="https://threejs.org/examples/models/gltf/FlightHelmet/glTF/FlightHelmet.gltf"
-                scale="0.5 0.5 0.5"
+                gltf-model="https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/FlightHelmet/glTF/FlightHelmet.gltf"
+                scale="0.3 0.3 0.3"
                 position="0 0 0"
                 rotation="0 90 0">
             </a-entity>
             
-            <!-- نص يظهر فوق المجسم -->
-            <a-text value="🏛️ قصر الفريد - العلا" color="#FFD700" align="center" position="0 1.5 0" scale="0.5 0.5 0.5"></a-text>
+            <!-- نص توضيحي فوق النموذج -->
+            <a-text value="🏛️ قصر أثري - العلا" color="#FFD700" align="center" position="0 1.2 0" scale="0.8 0.8 0.8"></a-text>
             
         </a-marker>
 
-        <!-- كاميرا ثابتة -->
+        <!-- كاميرا المشهد -->
         <a-entity camera></a-entity>
     </a-scene>
 
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-    
+
     <script>
-        // التحقق من أخطاء التحميل
+        // مراقبة حالة النظام
+        const statusDiv = document.getElementById('statusMsg');
+        
+        // رسالة عند تحميل الصفحة
         window.addEventListener('load', function() {
-            console.log('✅ نظام AR جاهز. وجه الكاميرا نحو علامة Hiro');
-            
-            // إخفاء رسالة الخطأ بعد 5 ثواني
-            setTimeout(() => {
-                const errorDiv = document.getElementById('errorMsg');
-                if (errorDiv) errorDiv.style.display = 'none';
-            }, 5000);
+            statusDiv.innerHTML = '✅ النظام جاهز | وجه الكاميرا نحو العلامة "Hiro"';
+            statusDiv.style.color = '#0f0';
+            console.log('✅ AR system loaded successfully!');
         });
         
-        // مراقبة وجود العلامة
-        const marker = document.getElementById('hiroMarker');
+        // مراقبة العثور على العلامة
+        const marker = document.getElementById('arMarker');
         if (marker) {
             marker.addEventListener('markerFound', () => {
-                console.log('🎯 تم العثور على العلامة!');
+                statusDiv.innerHTML = '🎯 تم العثور على العلامة! النموذج معروض';
+                statusDiv.style.color = '#FFD700';
+                console.log('🎯 HIRO marker found!');
             });
+            
             marker.addEventListener('markerLost', () => {
-                console.log('👋 فقدت العلامة');
+                statusDiv.innerHTML = '🔍 تم فقد العلامة. وجه الكاميرا نحو العلامة مرة أخرى';
+                statusDiv.style.color = '#ffaa00';
+                console.log('👋 HIRO marker lost');
             });
         }
+        
+        // في حالة حدوث خطأ في تحميل النموذج
+        window.addEventListener('error', (e) => {
+            if (e.message && e.message.includes('gltf')) {
+                statusDiv.innerHTML = '⚠️ خطأ في تحميل النموذج. تأكد من الاتصال بالإنترنت';
+                statusDiv.style.color = '#ff0000';
+            }
+        });
     </script>
 </body>
 </html>
