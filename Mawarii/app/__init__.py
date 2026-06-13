@@ -189,6 +189,7 @@ def create_app():
     def set_language(lang):
         if lang in ['en', 'ar']:
             session['language'] = lang
+            session['current_lang'] = lang
         return redirect(request.referrer or url_for('index'))
 
     @app.context_processor
@@ -203,6 +204,8 @@ def create_app():
     def set_default_language():
         if 'language' not in session:
             session['language'] = 'en'
+        if 'current_lang' not in session:
+            session['current_lang'] = session['language']
 
     # ===========================================================
     # Main Routes
@@ -250,18 +253,38 @@ def create_app():
         """Virtual city tour page with gamification and AI recommendations"""
         return render_template('virtual_city_tour.html', title='Virtual City Tour | AlUla Heritage')
 
-    # ===========================================================
-    # NEW: Qasr al-Farid Full AR Experience Route
-    # ===========================================================
+    # ==================== NEW AR ROUTES ====================
     
     @app.route('/qasr')
     def qasr_full_ar():
-        """Full AR experience for Qasr al-Farid (The Lonely Castle)"""
+        """Full AR experience for Qasr al-Farid - The Lonely Castle"""
         current_lang = session.get('language', 'en')
         return render_template('qasr.html', 
                              current_lang=current_lang,
                              is_rtl=current_lang == 'ar',
                              title='Qasr al-Farid AR Experience')
+    
+    @app.route('/ar/site/<int:site_id>')
+    def ar_site_viewer(site_id):
+        """AR viewer for individual heritage sites"""
+        current_lang = session.get('language', 'en')
+        
+        heritage_sites = {
+            1: {'name_en': 'Qasr al-Farid', 'name_ar': 'قصر الفريد', 'model_file': 'qasr_al_farid.glb'},
+            2: {'name_en': 'AlUla Old Town', 'name_ar': 'البلدة القديمة', 'model_file': 'alula_old_town.glb'},
+            3: {'name_en': 'Hegra Tombs', 'name_ar': 'مقابر الحجر', 'model_file': 'hegra_tombs.glb'},
+            4: {'name_en': 'Dadan Lion Tombs', 'name_ar': 'مقابر الأسود', 'model_file': 'dadan_tombs.glb'},
+            5: {'name_en': 'Jabal Ikmah', 'name_ar': 'جبل عكمة', 'model_file': 'jabal_ikmah.glb'},
+            6: {'name_en': 'Desert Oasis', 'name_ar': 'واحة الصحراء', 'model_file': 'desert_oasis.glb'}
+        }
+        
+        site = heritage_sites.get(site_id, heritage_sites[1])
+        return render_template('ar_site_viewer.html',
+                             current_lang=current_lang,
+                             is_rtl=current_lang == 'ar',
+                             site=site,
+                             site_id=site_id,
+                             title=f"{site['name_en']} - AR Experience")
 
     # ===========================================================
     # Authentication Routes
