@@ -74,10 +74,9 @@
             min-height: 100vh;
         }
         
-        /* Modern Navbar - Color different from background */
+        /* Modern Navbar */
         .navbar-modern {
             background: linear-gradient(135deg, var(--navbar-bg-light) 0%, var(--navbar-bg-dark) 100%);
-            backdrop-filter: blur(0px);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
             padding: 0.8rem 0;
             position: sticky;
@@ -85,19 +84,12 @@
             z-index: 1000;
         }
         
-        [data-theme="dark"] .navbar-modern {
-            background: linear-gradient(135deg, var(--navbar-bg-light) 0%, var(--navbar-bg-dark) 100%);
-        }
-        
-        /* Logo text - white for contrast on green background */
+        /* Logo text */
         .navbar-modern .logo-text h1 {
             font-size: 1.6rem;
             font-weight: 700;
             margin-bottom: 0;
             color: #FFFFFF;
-            background: none;
-            -webkit-background-clip: unset;
-            background-clip: unset;
         }
         
         .navbar-modern .logo-text p {
@@ -115,7 +107,7 @@
             border: 2px solid #FFFFFF;
         }
         
-        /* Navigation links - white for contrast */
+        /* Navigation links */
         .navbar-modern .nav-link-modern {
             color: #FFFFFF !important;
             font-weight: 500;
@@ -132,6 +124,26 @@
         .navbar-modern .nav-link-modern.active {
             background: rgba(255, 255, 255, 0.25);
             color: #FFFFFF !important;
+        }
+        
+        /* Special AR Button */
+        .nav-link-ar {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white !important;
+            padding: 0.5rem 1.2rem !important;
+            border-radius: 40px;
+            animation: pulse-ar 2s infinite;
+        }
+        
+        .nav-link-ar:hover {
+            background: linear-gradient(135deg, #1f8b3a, #1aaf80);
+            transform: scale(1.02);
+        }
+        
+        @keyframes pulse-ar {
+            0% { opacity: 0.9; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.02); }
+            100% { opacity: 0.9; transform: scale(1); }
         }
         
         /* Dropdown toggle button */
@@ -175,7 +187,7 @@
             color: white;
         }
         
-        /* Language switcher buttons */
+        /* Language switcher */
         .navbar-modern .lang-switch {
             display: flex;
             gap: 5px;
@@ -204,7 +216,7 @@
             color: var(--oasis-green) !important;
         }
         
-        /* Theme toggle button */
+        /* Theme toggle */
         .navbar-modern .theme-toggle {
             width: 40px;
             height: 40px;
@@ -245,7 +257,7 @@
             box-shadow: 0 15px 35px var(--shadow);
         }
         
-        /* Custom Buttons */
+        /* Buttons */
         .btn-heritage {
             background: linear-gradient(135deg, var(--oasis-green), var(--gold));
             border: none;
@@ -259,15 +271,6 @@
         .btn-heritage:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(46, 139, 87, 0.3);
-        }
-        
-        /* Special styling for Qasr al-Farid AR link */
-        .dropdown-item-qasr {
-            background: linear-gradient(135deg, rgba(218,165,32,0.1), rgba(139,109,20,0.05));
-        }
-        
-        .dropdown-item-qasr:hover {
-            background: linear-gradient(135deg, var(--gold), var(--gold-dark)) !important;
         }
         
         @media (max-width: 768px) {
@@ -304,13 +307,28 @@
             <!-- Navigation Menu -->
             <div class="mt-3">
                 <ul class="nav justify-content-center gap-2 flex-wrap">
+                    <!-- Home -->
                     <li class="nav-item">
                         <a href="{{ url_for('index') }}" class="nav-link-modern {% if request.endpoint == 'index' %}active{% endif %}">
                             <i class="bi bi-house-fill"></i> {% if current_lang == 'en' %}Home{% else %}الرئيسية{% endif %}
                         </a>
                     </li>
                     
-                    <!-- AR Explorer Dropdown with Qasr al-Farid Full AR Experience -->
+                    <!-- AR Collection - NEW BUTTON -->
+                    <li class="nav-item">
+                        <a href="{{ url_for('ar_collection') }}" class="nav-link-modern nav-link-ar">
+                            <i class="bi bi-vr"></i> 🕶️ {% if current_lang == 'en' %}AR Collection{% else %}المجموعة التفاعلية{% endif %}
+                        </a>
+                    </li>
+                    
+                    <!-- Virtual City Tour -->
+                    <li class="nav-item">
+                        <a href="{{ url_for('virtual_city_tour') }}" class="nav-link-modern">
+                            <i class="bi bi-building"></i> {% if current_lang == 'en' %}Virtual Tour{% else %}جولة افتراضية{% endif %}
+                        </a>
+                    </li>
+                    
+                    <!-- AR Explorer Dropdown -->
                     <li class="nav-item dropdown-modern">
                         <button class="dropdown-toggle" data-bs-toggle="dropdown">
                             <i class="bi bi-vr"></i> {% if current_lang == 'en' %}AR Explorer{% else %}المستكشف{% endif %}
@@ -318,15 +336,15 @@
                         </button>
                         <ul class="dropdown-menu">
                             <li><a href="{{ url_for('heritage') }}" class="dropdown-item"><i class="bi bi-3d"></i> {% if current_lang == 'en' %}3D Heritage Sites{% else %}مواقع تراثية ثلاثية الأبعاد{% endif %}</a></li>
-                            <li><a href="{{ url_for('virtual_city_tour') }}" class="dropdown-item"><i class="bi bi-building"></i> {% if current_lang == 'en' %}Virtual City Tour{% else %}جولة المدينة الافتراضية{% endif %}</a></li>
+                            <li><a href="{{ url_for('qasr_full_ar') }}" class="dropdown-item"><i class="bi bi-building"></i> 🏛️ {% if current_lang == 'en' %}Qasr al-Farid{% else %}قصر الفريد{% endif %}</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <!-- Qasr al-Farid Full AR Experience Link -->
-                            <li><a href="{{ url_for('qasr_full_ar') }}" class="dropdown-item text-warning fw-bold">
-                                <i class="bi bi-arrow-repeat"></i> 🕶️ {% if current_lang == 'en' %}Qasr al-Farid - Full AR Experience{% else %}قصر الفريد - تجربة واقع معزز كاملة{% endif %}
+                            <li><a href="{{ url_for('ar_collection') }}" class="dropdown-item text-warning fw-bold">
+                                <i class="bi bi-stars"></i> 🕶️ {% if current_lang == 'en' %}AlUla AR Collection (Full Experience){% else %}مجموعة العلا - تجربة واقع معزز كاملة{% endif %}
                             </a></li>
                         </ul>
                     </li>
                     
+                    <!-- Authentication / Profile -->
                     {% if 'user_id' in session or current_user.is_authenticated %}
                     <li class="nav-item dropdown-modern">
                         <button class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -354,6 +372,7 @@
                     </li>
                     {% endif %}
                     
+                    <!-- About -->
                     <li class="nav-item dropdown-modern">
                         <button class="dropdown-toggle" data-bs-toggle="dropdown">
                             <i class="bi bi-info-circle-fill"></i> {% if current_lang == 'en' %}About{% else %}عن المنصة{% endif %}
@@ -401,7 +420,7 @@
                     <ul class="list-unstyled small">
                         <li><a href="{{ url_for('heritage') }}" class="text-decoration-none opacity-75">🎨 {% if current_lang == 'en' %}AR Experience{% else %}تجربة الواقع المعزز{% endif %}</a></li>
                         <li><a href="{{ url_for('virtual_city_tour') }}" class="text-decoration-none opacity-75">🏙️ {% if current_lang == 'en' %}Virtual Tour{% else %}جولة افتراضية{% endif %}</a></li>
-                        <li><a href="{{ url_for('qasr_full_ar') }}" class="text-decoration-none opacity-75 text-warning">🕶️ {% if current_lang == 'en' %}Qasr al-Farid AR{% else %}قصر الفريد - واقع معزز{% endif %}</a></li>
+                        <li><a href="{{ url_for('ar_collection') }}" class="text-decoration-none opacity-75 text-warning">🕶️ {% if current_lang == 'en' %}AlUla AR Collection{% else %}مجموعة العلا للواقع المعزز{% endif %}</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4 mb-3">
