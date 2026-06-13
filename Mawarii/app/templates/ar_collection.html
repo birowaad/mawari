@@ -21,7 +21,7 @@
     </div>
 
     <!-- =========================================================== -->
-    <!-- iOS AR BUTTON - LOCAL USDZ FILE ONLY (NO SKETCHFAB) -->
+    <!-- iOS AR BUTTON - LOCAL USDZ FILE -->
     <!-- =========================================================== -->
     <div class="container my-4">
         <div class="row justify-content-center">
@@ -34,7 +34,7 @@
                     <p class="mb-0">Click the button below to place Qasr al-Farid in your real environment.</p>
                 </div>
                 
-                <!-- Main AR Button - Local USDZ File Only -->
+                <!-- Main AR Button - Local USDZ File -->
                 <div class="d-grid gap-2">
                     <a href="{{ url_for('static', filename='models/qasr_al_farid.usdz') }}" 
                        rel="ar" 
@@ -58,9 +58,9 @@
                     <p class="small text-muted">
                         <i class="bi bi-info-circle"></i> 
                         {% if current_lang == 'en' %}
-                        <strong>Note:</strong> This experience uses a local USDZ file hosted on our server, not Sketchfab.
+                        <strong>Note:</strong> This experience uses a local USDZ file hosted on our server.
                         {% else %}
-                        <strong>ملاحظة:</strong> هذه التجربة تستخدم ملف USDZ محلي مستضاف على خادمنا، وليس من Sketchfab.
+                        <strong>ملاحظة:</strong> هذه التجربة تستخدم ملف USDZ محلي مستضاف على خادمنا.
                         {% endif %}
                     </p>
                 </div>
@@ -69,9 +69,9 @@
                 <div class="alert alert-secondary text-center rounded-4 mt-4">
                     <i class="bi bi-android2"></i> <i class="bi bi-windows"></i>
                     {% if current_lang == 'en' %}
-                    <strong>For Android / PC users:</strong> This experience is optimized for iPhone/iPad. For Android, please use Chrome browser with ARCore support.
+                    <strong>For Android / PC users:</strong> This experience is optimized for iPhone/iPad.
                     {% else %}
-                    <strong>لمستخدمي Android / الكمبيوتر:</strong> هذه التجربة محسّنة لـ iPhone/iPad. لمستخدمي Android، يرجى استخدام متصفح Chrome مع دعم ARCore.
+                    <strong>لمستخدمي Android / الكمبيوتر:</strong> هذه التجربة محسّنة لـ iPhone/iPad.
                     {% endif %}
                 </div>
                 
@@ -82,7 +82,7 @@
     </div>
     
     <!-- =========================================================== -->
-    <!-- PREVIEW OF THE 3D MODEL (Static Image - Not Interactive) -->
+    <!-- PREVIEW OF THE 3D MODEL -->
     <!-- =========================================================== -->
     <div class="container my-4">
         <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
@@ -95,11 +95,10 @@
             <div class="card-body text-center">
                 <div class="row align-items-center">
                     <div class="col-md-6">
-                        <img src="{{ url_for('static', filename='image/qasr_farid.jpg') }}" 
+                        <img src="https://via.placeholder.com/400x250?text=Qasr+al-Farid" 
                              alt="Qasr al-Farid" 
                              class="img-fluid rounded-3"
-                             style="max-height: 250px; width: auto;"
-                             onerror="this.src='https://via.placeholder.com/300x200?text=Qasr+al-Farid'">
+                             style="max-height: 250px; width: auto;">
                     </div>
                     <div class="col-md-6 text-start">
                         <h4 class="text-warning">🏛️ Qasr al-Farid</h4>
@@ -108,7 +107,7 @@
                             Also known as "The Lonely Castle," this magnificent tomb is carved entirely from a single sandstone monolith. 
                             It dates back to the 1st century CE and is located at Hegra (Mada'in Salih), Saudi Arabia's first UNESCO World Heritage Site.
                             {% else %}
-                            يُعرف أيضاً باسم "القصر الوحيد"، هذا المقبرة الرائعة منحوتة بالكامل من كتلة واحدة من الحجر الرملي.
+                            يُعرف أيضاً باسم "القصر الوحيد"، هذه المقبرة الرائعة منحوتة بالكامل من كتلة واحدة من الحجر الرملي.
                             يعود تاريخها إلى القرن الأول الميلادي وتقع في الحجر (مدائن صالح)، أول موقع تراث عالمي لليونسكو في المملكة العربية السعودية.
                             {% endif %}
                         </p>
@@ -134,7 +133,7 @@
                             {% if current_lang == 'en' %}Scan to View on Mobile{% else %}امسح QR للعرض على الجوال{% endif %}
                         </h5>
                         <div class="d-flex justify-content-center">
-                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://mawari-1hif.onrender.com/a&choe=UTF-8" 
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://mawari-1hif.onrender.com/a&choe=UTF-8" 
                                  alt="QR Code" 
                                  style="width: 150px; height: 150px;">
                         </div>
