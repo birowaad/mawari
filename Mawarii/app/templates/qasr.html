@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid p-0">
+    <!-- AR Experience Section -->
+    <div class="position-relative" style="min-height: 100vh; background: #1a1a1a;">
+        
+        <!-- Back Button -->
+        <div class="position-absolute top-0 start-0 p-3" style="z-index: 100;">
+            <a href="{{ url_for('index') }}" class="btn btn-outline-warning rounded-pill">
+                <i class="bi bi-arrow-left"></i> {% if current_lang == 'en' %}Back{% else %}رجوع{% endif %}
+            </a>
+        </div>
+        
+        <!-- AR Viewer -->
+        <model-viewer 
+            id="qasr-viewer"
+            src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/DamagedHelmet/glTF/DamagedHelmet.gltf"
+            alt="Qasr al-Farid - The Lonely Castle, AlUla, Saudi Arabia"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            ar-scale="auto"
+            camera-controls
+            touch-action="pan-y"
+            auto-rotate
+            auto-rotate-delay="0"
+            rotation-per-second="20deg"
+            interaction-prompt="auto"
+            exposure="1.0"
+            shadow-intensity="1"
+            environment-image="neutral"
+            style="width:100%; height:100vh; --poster-color: #1a1a1a; --progress-bar-color: #DAA520; --progress-bar-height: 4px;">
+            
+            <!-- Custom AR Button -->
+            <button slot="ar-button" class="btn-ar-custom">
+                🕶️ {% if current_lang == 'en' %}View Qasr al-Farid in AR{% else %}عرض قصر الفريد بالواقع المعزز{% endif %}
+            </button>
+            
+            <!-- Progress Bar -->
+            <div slot="progress-bar">
+                <div style="background: linear-gradient(135deg, #DAA520, #B8860B); height: 4px; width: 0%; transition: width 0.3s;"></div>
+            </div>
+        </model-viewer>
+        
+        <!-- Info Panel -->
+        <div class="position-absolute bottom-0 start-0 end-0 p-3" style="background: linear-gradient(90deg, rgba(0,0,0,0.8), rgba(0,0,0,0.6)); backdrop-filter: blur(10px); z-index: 100;">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h4 class="text-warning mb-1">
+                            <i class="bi bi-building"></i> 
+                            {% if current_lang == 'en' %}Qasr al-Farid (The Lonely Castle){% else %}قصر الفريد (القصر الوحيد){% endif %}
+                        </h4>
+                        <p class="text-white-50 mb-0 small">
+                            {% if current_lang == 'en' %}
+                            Nabataean Tomb | 1st Century CE | Hegra (Mada'in Salih) | UNESCO World Heritage Site
+                            {% else %}
+                            مقبرة نبطية | القرن الأول الميلادي | الحجر (مدائن صالح) | موقع التراث العالمي لليونسكو
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-md-end mt-2 mt-md-0">
+                        <span class="badge bg-warning text-dark p-2 rounded-pill">
+                            <i class="bi bi-info-circle"></i> 
+                            {% if current_lang == 'en' %}Drag to rotate | Pinch to zoom{% else %}اسحب للتدوير | اقرص للتكبير{% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Controls Hint -->
+        <div class="position-absolute top-0 end-0 p-3" style="z-index: 100;">
+            <div class="bg-dark bg-opacity-75 rounded-pill px-3 py-2 small text-white-50">
+                <i class="bi bi-hand-index-thumb"></i> 
+                {% if current_lang == 'en' %}6-DoF Controls{% else %}تحكم كامل الحركة{% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Model-Viewer Library -->
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+
+<!-- Custom CSS for AR Button -->
+<style>
+    .btn-ar-custom {
+        background: linear-gradient(135deg, #DAA520, #B8860B);
+        border: none;
+        border-radius: 50px;
+        padding: 14px 28px;
+        font-size: 18px;
+        font-weight: bold;
+        color: white;
+        cursor: pointer;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        transition: all 0.3s ease;
+        font-family: inherit;
+        animation: pulse-ar 2s infinite;
+    }
+    
+    .btn-ar-custom:hover {
+        transform: scale(1.03);
+        box-shadow: 0 6px 25px rgba(218,165,32,0.4);
+    }
+    
+    @keyframes pulse-ar {
+        0% { transform: scale(1); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        50% { transform: scale(1.02); box-shadow: 0 6px 30px rgba(218,165,32,0.5); }
+        100% { transform: scale(1); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+    }
+    
+    /* Mobile optimizations */
+    @media (max-width: 768px) {
+        .btn-ar-custom {
+            padding: 10px 20px;
+            font-size: 14px;
+        }
+        .info-panel h4 {
+            font-size: 16px;
+        }
+    }
+    
+    /* Ensure model-viewer fills the screen */
+    model-viewer {
+        width: 100%;
+        height: 100vh;
+        --poster-color: #1a1a1a;
+        --progress-bar-color: #DAA520;
+        --progress-bar-height: 4px;
+    }
+    
+    /* Hide default AR button, show custom one */
+    model-viewer::part(default-ar-button) {
+        display: none !important;
+    }
+</style>
+
+<script>
+    // Model-Viewer Event Listeners
+    const viewer = document.getElementById('qasr-viewer');
+    
+    if (viewer) {
+        viewer.addEventListener('load', () => {
+            console.log('✅ Qasr al-Farid 3D model loaded successfully!');
+        });
+        
+        viewer.addEventListener('error', (error) => {
+            console.error('❌ Error loading model:', error);
+        });
+        
+        viewer.addEventListener('ar-status', (event) => {
+            console.log('AR Status:', event.detail.status);
+            if (event.detail.status === 'session-started') {
+                // AR session started
+                console.log('🎉 AR session started! User is in AR mode.');
+            }
+        });
+        
+        viewer.addEventListener('camera-change', () => {
+            // User is interacting with the model
+            console.log('📷 Camera changed - user interaction detected');
+        });
+    }
+</script>
+{% endblock %}
