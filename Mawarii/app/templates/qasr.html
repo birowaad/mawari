@@ -12,6 +12,20 @@
             </a>
         </div>
         
+        <!-- Points & Achievements Badge -->
+        <div class="position-absolute top-0 start-50 translate-middle-x p-3" style="z-index: 100;">
+            <div class="d-flex gap-2 bg-dark bg-opacity-75 rounded-pill px-3 py-2 backdrop-blur">
+                <span class="badge bg-warning text-dark">
+                    <i class="bi bi-trophy-fill"></i> 
+                    <span id="userPointsDisplay">0</span> {% if current_lang == 'en' %}pts{% else %}نقطة{% endif %}
+                </span>
+                <span class="badge bg-info">
+                    <i class="bi bi-stopwatch"></i> 
+                    <span id="exploreTimeDisplay">0</span> {% if current_lang == 'en' %}min{% else %}دقيقة{% endif %}
+                </span>
+            </div>
+        </div>
+        
         <!-- 3D Model Viewer Container -->
         <div id="modelContainer" style="width:100%; height:100vh; background: #0a0a0a;">
             <!-- Sketchfab Iframe for Qasr al-Farid -->
@@ -69,6 +83,15 @@
                 <i class="bi bi-qr-code"></i> 
                 {% if current_lang == 'en' %}AR Mobile View{% else %}عرض AR للجوال{% endif %}
             </button>
+        </div>
+        
+        <!-- Achievement Toast -->
+        <div id="achievementToast" class="position-fixed top-50 start-50 translate-middle" style="z-index: 1050; display: none;">
+            <div class="bg-gradient rounded-4 p-4 text-center shadow-lg" style="background: linear-gradient(135deg, #DAA520, #B8860B); min-width: 250px;">
+                <i class="bi bi-trophy-fill fs-1 text-white"></i>
+                <h5 class="text-white mt-2 mb-0" id="achievementName">🏆 Achievement Unlocked!</h5>
+                <p class="text-white-50 small mb-0" id="achievementDesc">You earned +10 points</p>
+            </div>
         </div>
     </div>
 </div>
@@ -144,10 +167,281 @@
     #sketchfab-frame {
         border: none;
     }
+    
+    .backdrop-blur {
+        backdrop-filter: blur(8px);
+    }
+    
+    @keyframes toastPop {
+        0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+        20% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+        80% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0; }
+    }
+    
+    #achievementToast.show {
+        display: block !important;
+        animation: toastPop 3s ease forwards;
+    }
 </style>
 
 <script>
-    // Function to scroll to QR section
+    // ==================== POINTS & ACHIEVEMENTS SYSTEM ====================
+    const SITE_ID = 'qasr_al_farid';
+    const SITE_NAME_EN = 'Qasr al-Farid';
+    const SITE_NAME_AR = 'قصر الفريد';
+    const SITE_POINTS = 50;
+    
+    let userPoints = 0;
+    let completedSites = [];
+    let achievements = [];
+    let startTime = Date.now();
+    let explorationTimer = null;
+    let isFirstVisit = true;
+    
+    // Load user data from localStorage
+    function loadUserData() {
+        const saved = localStorage.getItem('heritageGuide_userData');
+        if (saved) {
+            const data = JSON.parse(saved);
+            userPoints = data.points || 0;
+            completedSites = data.completed || [];
+            achievements = data.achievements || [];
+        }
+        updateUI();
+    }
+    
+    // Save user data to localStorage
+    function saveUserData() {
+        const data = {
+            points: userPoints,
+            completed: completedSites,
+            achievements: achievements,
+            lastUpdated: Date.now()
+        };
+        localStorage.setItem('heritageGuide_userData', JSON.stringify(data));
+        
+        // Also send to server if user is logged in
+        if ({{ current_user.is_authenticated|tojson }}) {
+            fetch('/api/save_progress', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            }).catch(err => console.error('Error saving to server:', err));
+        }
+    }
+    
+    // Update UI displays
+    function updateUI() {
+        document.getElementById('userPointsDisplay').innerText = userPoints;
+        
+        // Check if current site is completed
+        if (completedSites.includes(SITE_ID)) {
+            // Site already completed
+            document.getElementById('exploreTimeDisplay').innerText = '✓';
+        }
+    }
+    
+    // Update exploration time
+    function updateExplorationTime() {
+        const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+        const elapsedMinutes = Math.floor(elapsedSeconds / 60);
+        document.getElementById('exploreTimeDisplay').innerText = elapsedMinutes;
+    }
+    
+    // Show achievement toast
+    function showAchievement(name, description, bonusPoints) {
+        const toast = document.getElementById('achievementToast');
+        document.getElementById('achievementName').innerHTML = name;
+        document.getElementById('achievementDesc').innerHTML = description;
+        
+        toast.classList.add('show');
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
+        
+        if (bonusPoints > 0) {
+            userPoints += bonusPoints;
+            updateUI();
+            saveUserData();
+        }
+    }
+    
+    // Check and unlock achievements
+    function checkAchievements() {
+        const count = completedSites.length;
+        
+        // Achievement 1: First Explorer (1 site)
+        if (count >= 1 && !achievements.includes('explorer')) {
+            achievements.push('explorer');
+            showAchievement(
+                '🏆 First Explorer', 
+                'You explored your first heritage site! +10 points', 
+                10
+            );
+        }
+        
+        // Achievement 2: Heritage Seeker (3 sites)
+        if (count >= 3 && !achievements.includes('seeker')) {
+            achievements.push('seeker');
+            showAchievement(
+                '🗺️ Heritage Seeker', 
+                'You explored 3 heritage sites! +25 points', 
+                25
+            );
+        }
+        
+        // Achievement 3: Master Historian (6 sites)
+        if (count >= 6 && !achievements.includes('master')) {
+            achievements.push('master');
+            showAchievement(
+                '📜 Master Historian', 
+                'You explored all 6 heritage sites! +50 points', 
+                50
+            );
+        }
+        
+        // Achievement 4: Point Collector (100 points)
+        if (userPoints >= 100 && !achievements.includes('collector')) {
+            achievements.push('collector');
+            showAchievement(
+                '💰 Point Collector', 
+                'You collected 100 points! +15 points', 
+                15
+            );
+        }
+        
+        // Achievement 5: Time Traveler (30 minutes explored)
+        const totalTime = localStorage.getItem('totalExploreTime') || 0;
+        if (totalTime >= 30 && !achievements.includes('time_traveler')) {
+            achievements.push('time_traveler');
+            showAchievement(
+                '⏰ Time Traveler', 
+                'You spent 30+ minutes exploring heritage! +20 points', 
+                20
+            );
+        }
+    }
+    
+    // Complete current site
+    function completeSite() {
+        if (completedSites.includes(SITE_ID)) {
+            return; // Already completed
+        }
+        
+        // Calculate time spent
+        const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+        const elapsedMinutes = Math.floor(elapsedSeconds / 60);
+        
+        // Add to total explore time
+        let totalTime = localStorage.getItem('totalExploreTime') || 0;
+        totalTime = parseInt(totalTime) + elapsedMinutes;
+        localStorage.setItem('totalExploreTime', totalTime);
+        
+        // Add points for this site
+        userPoints += SITE_POINTS;
+        completedSites.push(SITE_ID);
+        
+        // Save to localStorage
+        saveUserData();
+        
+        // Update UI
+        updateUI();
+        
+        // Check achievements
+        checkAchievements();
+        
+        // Show completion message
+        const msg = `🎉 +${SITE_POINTS} points for exploring ${currentLang === 'en' ? SITE_NAME_EN : SITE_NAME_AR}!`;
+        showCompletionMessage(msg);
+        
+        // Send to server
+        if ({{ current_user.is_authenticated|tojson }}) {
+            fetch('/api/complete_site', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    site_id: SITE_ID,
+                    site_name: currentLang === 'en' ? SITE_NAME_EN : SITE_NAME_AR,
+                    points_earned: SITE_POINTS,
+                    time_spent: elapsedMinutes
+                })
+            }).catch(err => console.error('Error:', err));
+        }
+    }
+    
+    // Show completion message
+    function showCompletionMessage(msg) {
+        let toast = document.getElementById('completionToast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'completionToast';
+            toast.style.position = 'fixed';
+            toast.style.bottom = '20px';
+            toast.style.left = '50%';
+            toast.style.transform = 'translateX(-50%)';
+            toast.style.zIndex = '9999';
+            toast.style.padding = '12px 24px';
+            toast.style.borderRadius = '50px';
+            toast.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
+            toast.style.color = 'white';
+            toast.style.fontWeight = 'bold';
+            toast.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+            document.body.appendChild(toast);
+        }
+        toast.textContent = msg;
+        toast.style.display = 'block';
+        setTimeout(() => {
+            toast.style.display = 'none';
+        }, 4000);
+    }
+    
+    // Check if site should be marked as completed
+    function checkSiteCompletion() {
+        // Mark as completed after 2 minutes of viewing (120000 ms)
+        setTimeout(() => {
+            if (!completedSites.includes(SITE_ID)) {
+                completeSite();
+            }
+        }, 120000); // 2 minutes
+    }
+    
+    // Start exploration timer
+    function startExplorationTimer() {
+        if (explorationTimer) clearInterval(explorationTimer);
+        explorationTimer = setInterval(() => {
+            updateExplorationTime();
+        }, 1000);
+    }
+    
+    // ==================== SKETCHFAB INTERACTION TRACKING ====================
+    // Track user interaction with the 3D model via iframe messages
+    window.addEventListener('message', function(event) {
+        if (event.origin === 'https://sketchfab.com') {
+            console.log('Sketchfab event:', event.data);
+            
+            // Track when user interacts with the model
+            if (event.data && event.data.type === 'viewer-ready') {
+                console.log('🎨 Sketchfab viewer ready');
+                startExplorationTimer();
+                checkSiteCompletion();
+            }
+            
+            // Track when user clicks on annotations
+            if (event.data && event.data.type === 'annotation-click') {
+                console.log('📍 Annotation clicked:', event.data.annotationId);
+                // Bonus points for exploring annotations
+                if (!completedSites.includes(SITE_ID)) {
+                    userPoints += 2;
+                    updateUI();
+                    saveUserData();
+                    showCompletionMessage('📍 +2 points for exploring details!');
+                }
+            }
+        }
+    });
+    
+    // ==================== PAGE LOAD AND UNLOAD ====================
     function scrollToQR() {
         document.getElementById('qrSection').scrollIntoView({ 
             behavior: 'smooth', 
@@ -155,22 +449,51 @@
         });
     }
     
-    // Log when iframe loads
+    // On page unload, save total time
+    window.addEventListener('beforeunload', function() {
+        if (explorationTimer) clearInterval(explorationTimer);
+        const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+        const elapsedMinutes = Math.floor(elapsedSeconds / 60);
+        let totalTime = localStorage.getItem('totalExploreTime') || 0;
+        totalTime = parseInt(totalTime) + elapsedMinutes;
+        localStorage.setItem('totalExploreTime', totalTime);
+        saveUserData();
+    });
+    
+    // Initialize on page load
     document.addEventListener('DOMContentLoaded', function() {
-        const frame = document.getElementById('sketchfab-frame');
-        if (frame) {
-            frame.addEventListener('load', function() {
-                console.log('✅ Qasr al-Farid 3D model loaded from Sketchfab!');
-                console.log('🎉 Model ID: 9b18367aac28420bbc066d65e73b9acd');
-                console.log('📍 Hegra (Mada\'in Salih), AlUla, Saudi Arabia - UNESCO World Heritage Site');
-            });
-        }
+        const currentLang = '{{ current_lang }}';
+        
+        // Load user data
+        loadUserData();
         
         // Update QR code with current URL
         const qrImage = document.getElementById('qrCodeImage');
         if (qrImage) {
             qrImage.src = "https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=" + encodeURIComponent(window.location.href);
         }
+        
+        // If site already completed, show checkmark
+        if (completedSites.includes(SITE_ID)) {
+            document.getElementById('exploreTimeDisplay').innerHTML = '<i class="bi bi-check-circle-fill"></i>';
+        }
+        
+        console.log('✅ Qasr al-Farif page loaded with points system');
+        console.log('🎯 Site ID:', SITE_ID);
+        console.log('💰 Points awarded:', SITE_POINTS);
+        console.log('🏆 Current points:', userPoints);
+        console.log('📊 Completed sites:', completedSites);
+        
+        // Start timer automatically
+        startExplorationTimer();
+        
+        // AI Agent welcome message
+        setTimeout(() => {
+            console.log('🤖 AI Agent: Welcome to Qasr al-Farid! Explore the 3D model to earn ' + SITE_POINTS + ' points.');
+            if (!completedSites.includes(SITE_ID)) {
+                showCompletionMessage(`🤖 +${SITE_POINTS} points available! Explore Qasr al-Farid to earn them.`);
+            }
+        }, 2000);
     });
 </script>
 {% endblock %}
