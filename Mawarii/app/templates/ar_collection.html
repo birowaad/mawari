@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid p-0">
+    <!-- Hero Section -->
+    <div class="text-center py-5" style="background: linear-gradient(135deg, #2E8B57, #1F6B43);">
+        <h1 class="display-5 fw-bold text-white">
+            🏛️ {% if current_lang == 'en' %}AlUla Heritage Collection{% else %}مجموعة العلا التراثية{% endif %}
+        </h1>
+        <p class="text-white-50 lead">
+            {% if current_lang == 'en' %}Explore Nabataean tombs in 3D and Augmented Reality{% else %}استكشف المقابر النبطية بتقنية ثلاثية الأبعاد والواقع المعزز{% endif %}
+        </p>
+        <div class="mt-3">
+            <span class="badge bg-warning text-dark rounded-pill px-3 py-2 me-2">
+                <i class="bi bi-vr"></i> VR Ready
+            </span>
+            <span class="badge bg-info rounded-pill px-3 py-2">
+                <i class="bi bi-phone"></i> AR Support
+            </span>
+        </div>
+    </div>
+
+    <!-- 3D Model Viewer Section -->
+    <div class="container my-4">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                    <div class="card-header bg-gradient" style="background: linear-gradient(135deg, #DAA520, #B8860B);">
+                        <h5 class="mb-0 text-white">
+                            <i class="bi bi-vr"></i> 
+                            {% if current_lang == 'en' %}AlUla 3D Models - Interactive Viewer{% else %}عارض النماذج ثلاثية الأبعاد للعلا{% endif %}
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div style="position: relative; width: 100%; height: 65vh; min-height: 500px; background: #0a0a0a;">
+                            
+                            <iframe 
+                                src="https://sketchfab.com/playlists/embed?collection=80ef67b9a7314be0baf0335152d5a25a&autostart=1&ui_ar=1&ui_vr=1&ui_controls=1&ui_infos=1&ui_stop=1&ui_watermark=0&ui_related=0&ui_inspector=0&ui_settings=0&ui_annotations=1"
+                                title="AlUla Heritage Collection - 3D Models"
+                                frameborder="0"
+                                allowfullscreen
+                                mozallowfullscreen="true"
+                                webkitallowfullscreen="true"
+                                allow="autoplay; fullscreen; xr-spatial-tracking; vr"
+                                xr-spatial-tracking
+                                execution-while-out-of-viewport
+                                execution-while-not-rendered
+                                web-share
+                                style="width: 100%; height: 100%; border: none; background: #0a0a0a;">
+                            </iframe>
+                            
+                            <!-- AR/VR Info Badge -->
+                            <div class="position-absolute bottom-0 start-0 m-3">
+                                <span class="badge bg-dark bg-opacity-75 text-warning rounded-pill px-3 py-2" style="backdrop-filter: blur(8px);">
+                                    <i class="bi bi-vr"></i> 🕶️ {% if current_lang == 'en' %}AR / VR Ready{% else %}يدعم الواقع المعزز والافتراضي{% endif %}
+                                </span>
+                            </div>
+                            
+                            <!-- Heritage Info Badge -->
+                            <div class="position-absolute top-0 end-0 m-3">
+                                <span class="badge bg-dark bg-opacity-75 text-light rounded-pill px-3 py-2" style="backdrop-filter: blur(8px);">
+                                    <i class="bi bi-building"></i> 🏛️ {% if current_lang == 'en' %}Hegra - Mada'in Salih{% else %}الحجر - مدائن صالح{% endif %}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Instructions -->
+                <div class="text-center mt-3">
+                    <p class="small text-muted">
+                        <i class="bi bi-hand-index-thumb"></i> 
+                        {% if current_lang == 'en' %}
+                        Drag to rotate | Pinch to zoom | Click VR/AR button for immersive experience
+                        {% else %}
+                        اسحب لتدوير | اقرص للتكبير | اضغط زر VR/AR للتجربة الغامرة
+                        {% endif %}
+                    </p>
+                    <p class="small text-muted">
+                        📱 
+                        {% if current_lang == 'en' %}
+                        For AR on mobile: Tap the VR button (headset icon) then select "Enter AR"
+                        {% else %}
+                        للواقع المعزز على الجوال: اضغط زر VR (أيقونة السماعة) ثم اختر "Enter AR"
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- QR Code for Mobile -->
+    <div class="container my-4">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm rounded-4 bg-light">
+                    <div class="card-body text-center">
+                        <h5 class="text-warning mb-3">
+                            <i class="bi bi-qr-code"></i> 
+                            {% if current_lang == 'en' %}Scan to View on Mobile{% else %}امسح QR للعرض على الجوال{% endif %}
+                        </h5>
+                        <div class="d-flex justify-content-center">
+                            <img id="qrCode" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ request.url }}" alt="QR Code" style="width: 120px; height: 120px;">
+                        </div>
+                        <p class="small text-muted mt-3 mb-0">
+                            📱 {% if current_lang == 'en' %}Open this page on your mobile device for AR experience{% else %}افتح هذه الصفحة على جهازك الجوال لتجربة الواقع المعزز{% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-gradient {
+        background: linear-gradient(135deg, #DAA520, #B8860B) !important;
+    }
+    iframe {
+        transition: opacity 0.3s ease;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const qrImg = document.getElementById('qrCode');
+        if (qrImg) {
+            qrImg.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(window.location.href);
+        }
+        console.log('🎉 AlUla Heritage Collection loaded with AR/VR support');
+        
+        // Track AR session start
+        const iframe = document.querySelector('iframe');
+        if (iframe) {
+            iframe.addEventListener('load', function() {
+                console.log('✅ Sketchfab viewer loaded');
+            });
+        }
+    });
+</script>
+{% endblock %}
