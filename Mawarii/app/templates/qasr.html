@@ -1,499 +1,67 @@
-{% extends "base.html" %}
-
-{% block content %}
-<div class="container-fluid p-0">
-    <!-- AR Experience Section -->
-    <div class="position-relative" style="min-height: 100vh; background: #1a1a1a;">
-        
-        <!-- Back Button -->
-        <div class="position-absolute top-0 start-0 p-3" style="z-index: 100;">
-            <a href="{{ url_for('virtual_city_tour') }}" class="btn btn-outline-warning rounded-pill">
-                <i class="bi bi-arrow-left"></i> {% if current_lang == 'en' %}Back to Tour{% else %}رجوع إلى الجولة{% endif %}
-            </a>
-        </div>
-        
-        <!-- Points & Achievements Badge -->
-        <div class="position-absolute top-0 start-50 translate-middle-x p-3" style="z-index: 100;">
-            <div class="d-flex gap-2 bg-dark bg-opacity-75 rounded-pill px-3 py-2 backdrop-blur">
-                <span class="badge bg-warning text-dark">
-                    <i class="bi bi-trophy-fill"></i> 
-                    <span id="userPointsDisplay">0</span> {% if current_lang == 'en' %}pts{% else %}نقطة{% endif %}
-                </span>
-                <span class="badge bg-info">
-                    <i class="bi bi-stopwatch"></i> 
-                    <span id="exploreTimeDisplay">0</span> {% if current_lang == 'en' %}min{% else %}دقيقة{% endif %}
-                </span>
-            </div>
-        </div>
-        
-        <!-- 3D Model Viewer Container -->
-        <div id="modelContainer" style="width:100%; height:100vh; background: #0a0a0a;">
-            <!-- Sketchfab Iframe for Qasr al-Farid -->
-            <iframe 
-                id="sketchfab-frame"
-                title="Qasr al-Farid - 3D Model"
-                src="https://sketchfab.com/models/9b18367aac28420bbc066d65e73b9acd/embed?autostart=1&ui_controls=1&ui_infos=1&ui_stop=1&ui_watermark=0&ui_watermark_link=0&ui_related=0&ui_inspector=0&ui_settings=0&ui_annotations=1&ui_vr=1"
-                frameborder="0"
-                allow="autoplay; fullscreen; xr-spatial-tracking; vr"
-                allowfullscreen
-                mozallowfullscreen="true"
-                webkitallowfullscreen="true"
-                style="width:100%; height:100vh; background: #0a0a0a;">
-            </iframe>
-        </div>
-        
-        <!-- Info Panel -->
-        <div class="position-absolute bottom-0 start-0 end-0 p-3" style="background: linear-gradient(90deg, rgba(0,0,0,0.85), rgba(0,0,0,0.6)); backdrop-filter: blur(10px); z-index: 100;">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-md-8">
-                        <h4 class="text-warning mb-1">
-                            <i class="bi bi-building"></i> 
-                            {% if current_lang == 'en' %}Qasr al-Farid (The Lonely Castle){% else %}قصر الفريد (القصر الوحيد){% endif %}
-                        </h4>
-                        <p class="text-white-50 mb-0 small">
-                            {% if current_lang == 'en' %}
-                            🏛️ Nabataean Tomb | 1st Century CE | Hegra (Mada'in Salih) | UNESCO World Heritage Site
-                            {% else %}
-                            🏛️ مقبرة نبطية | القرن الأول الميلادي | الحجر (مدائن صالح) | موقع التراث العالمي لليونسكو
-                            {% endif %}
-                        </p>
-                    </div>
-                    <div class="col-md-4 text-md-end mt-2 mt-md-0">
-                        <span class="badge bg-warning text-dark p-2 rounded-pill">
-                            <i class="bi bi-info-circle"></i> 
-                            {% if current_lang == 'en' %}Drag to rotate | Pinch to zoom | VR Ready{% else %}اسحب للتدوير | اقرص للتكبير | دعم الواقع الافتراضي{% endif %}
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Controls Hint -->
-        <div class="position-absolute top-0 end-0 p-3" style="z-index: 100;">
-            <div class="bg-dark bg-opacity-75 rounded-pill px-3 py-2 small text-white-50">
-                <i class="bi bi-hand-index-thumb"></i> 
-                {% if current_lang == 'en' %}6-DoF Controls | VR Supported{% else %}تحكم كامل الحركة | دعم الواقع الافتراضي{% endif %}
-            </div>
-        </div>
-        
-        <!-- AR QR Code Button -->
-        <div class="position-absolute bottom-0 end-0 p-3 m-2" style="z-index: 101;">
-            <button class="btn btn-dark rounded-pill px-3 py-2" onclick="scrollToQR()" style="background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);">
-                <i class="bi bi-qr-code"></i> 
-                {% if current_lang == 'en' %}AR Mobile View{% else %}عرض AR للجوال{% endif %}
-            </button>
-        </div>
-        
-        <!-- Achievement Toast -->
-        <div id="achievementToast" class="position-fixed top-50 start-50 translate-middle" style="z-index: 1050; display: none;">
-            <div class="bg-gradient rounded-4 p-4 text-center shadow-lg" style="background: linear-gradient(135deg, #DAA520, #B8860B); min-width: 250px;">
-                <i class="bi bi-trophy-fill fs-1 text-white"></i>
-                <h5 class="text-white mt-2 mb-0" id="achievementName">🏆 Achievement Unlocked!</h5>
-                <p class="text-white-50 small mb-0" id="achievementDesc">You earned +10 points</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- QR Code Section -->
-<div id="qrSection" class="container py-4 mt-3" style="background: linear-gradient(135deg, #f8f9fa, #e9ecef); border-radius: 20px;">
-    <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-6">
-            <div class="text-center p-4 rounded-4 shadow-sm" style="background: white; border: 1px solid rgba(184,134,11,0.2);">
-                <h5 class="text-warning mb-3">
-                    <i class="bi bi-vr"></i> 
-                    {% if current_lang == 'en' %}View on Mobile AR{% else %}عرض على AR للجوال{% endif %}
-                </h5>
-                <div class="d-flex align-items-center justify-content-center gap-4 flex-wrap">
-                    <div style="background: white; padding: 10px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-                        <img id="qrCodeImage" src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data={{ request.url }}" alt="QR Code" style="width: 100px; height: 100px;">
-                    </div>
-                    <div class="text-start">
-                        <span class="badge bg-warning text-dark rounded-pill px-3 py-2 mb-2">
-                            <i class="bi bi-phone"></i> {% if current_lang == 'en' %}Scan to Open{% else %}امسح للفتح{% endif %}
-                        </span>
-                        <p class="small text-muted mb-1">
-                            <i class="bi bi-check-circle-fill text-success"></i> 
-                            {% if current_lang == 'en' %}Works on iOS 13+ (Safari) & Android 10+ (Chrome){% else %}يعمل على iOS 13+ (Safari) و Android 10+ (Chrome){% endif %}
-                        </p>
-                        <p class="small text-muted">
-                            <i class="bi bi-arrow-repeat"></i> 
-                            {% if current_lang == 'en' %}Tap "View in VR" or "Enter VR" for immersive experience{% else %}اضغط "عرض في الواقع الافتراضي" لتجربة غامرة{% endif %}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Custom CSS -->
-<style>
-    .btn-ar-custom {
-        background: linear-gradient(135deg, #DAA520, #B8860B);
-        border: none;
-        border-radius: 50px;
-        padding: 14px 28px;
-        font-size: 18px;
-        font-weight: bold;
-        color: white;
-        cursor: pointer;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-        transition: all 0.3s ease;
-        font-family: inherit;
-        animation: pulse-ar 2s infinite;
-    }
-    
-    .btn-ar-custom:hover {
-        transform: scale(1.03);
-        box-shadow: 0 6px 25px rgba(218,165,32,0.4);
-    }
-    
-    @keyframes pulse-ar {
-        0% { transform: scale(1); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
-        50% { transform: scale(1.02); box-shadow: 0 6px 30px rgba(218,165,32,0.5); }
-        100% { transform: scale(1); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
-    }
-    
-    @media (max-width: 768px) {
-        .btn-ar-custom {
-            padding: 10px 20px;
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>تجربة AR - قصر أثرى</title>
+    <style>
+        body { margin: 0; overflow: hidden; font-family: 'Cairo', sans-serif; }
+        .info {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            padding: 8px;
             font-size: 14px;
+            pointer-events: none;
+            z-index: 10;
         }
-    }
+    </style>
+</head>
+<body>
     
-    /* Hide default Sketchfab watermark if needed */
-    #sketchfab-frame {
-        border: none;
-    }
-    
-    .backdrop-blur {
-        backdrop-filter: blur(8px);
-    }
-    
-    @keyframes toastPop {
-        0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
-        20% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
-        80% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-        100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0; }
-    }
-    
-    #achievementToast.show {
-        display: block !important;
-        animation: toastPop 3s ease forwards;
-    }
-</style>
+    <!-- معلومات للمستخدم -->
+    <div class="info">
+        🏛️ قم بتوجيه الكاميرا نحو علامة "Hiro" (الصورة بالأعلى) لرؤية القصر الأثري
+    </div>
 
-<script>
-    // ==================== POINTS & ACHIEVEMENTS SYSTEM ====================
-    const SITE_ID = 'qasr_al_farid';
-    const SITE_NAME_EN = 'Qasr al-Farid';
-    const SITE_NAME_AR = 'قصر الفريد';
-    const SITE_POINTS = 50;
-    
-    let userPoints = 0;
-    let completedSites = [];
-    let achievements = [];
-    let startTime = Date.now();
-    let explorationTimer = null;
-    let isFirstVisit = true;
-    
-    // Load user data from localStorage
-    function loadUserData() {
-        const saved = localStorage.getItem('heritageGuide_userData');
-        if (saved) {
-            const data = JSON.parse(saved);
-            userPoints = data.points || 0;
-            completedSites = data.completed || [];
-            achievements = data.achievements || [];
-        }
-        updateUI();
-    }
-    
-    // Save user data to localStorage
-    function saveUserData() {
-        const data = {
-            points: userPoints,
-            completed: completedSites,
-            achievements: achievements,
-            lastUpdated: Date.now()
-        };
-        localStorage.setItem('heritageGuide_userData', JSON.stringify(data));
+    <!-- مشهد A-Frame الذي سيحتوي على AR -->
+    <a-scene 
+        embedded
+        arjs='sourceType: webcam; debugUIEnabled: false; trackingMethod: best;'
+        vr-mode-ui="enabled: false">
         
-        // Also send to server if user is logged in
-        if ({{ current_user.is_authenticated|tojson }}) {
-            fetch('/api/save_progress', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            }).catch(err => console.error('Error saving to server:', err));
-        }
-    }
-    
-    // Update UI displays
-    function updateUI() {
-        document.getElementById('userPointsDisplay').innerText = userPoints;
-        
-        // Check if current site is completed
-        if (completedSites.includes(SITE_ID)) {
-            // Site already completed
-            document.getElementById('exploreTimeDisplay').innerText = '✓';
-        }
-    }
-    
-    // Update exploration time
-    function updateExplorationTime() {
-        const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
-        const elapsedMinutes = Math.floor(elapsedSeconds / 60);
-        document.getElementById('exploreTimeDisplay').innerText = elapsedMinutes;
-    }
-    
-    // Show achievement toast
-    function showAchievement(name, description, bonusPoints) {
-        const toast = document.getElementById('achievementToast');
-        document.getElementById('achievementName').innerHTML = name;
-        document.getElementById('achievementDesc').innerHTML = description;
-        
-        toast.classList.add('show');
-        setTimeout(() => {
-            toast.classList.remove('show');
-        }, 3000);
-        
-        if (bonusPoints > 0) {
-            userPoints += bonusPoints;
-            updateUI();
-            saveUserData();
-        }
-    }
-    
-    // Check and unlock achievements
-    function checkAchievements() {
-        const count = completedSites.length;
-        
-        // Achievement 1: First Explorer (1 site)
-        if (count >= 1 && !achievements.includes('explorer')) {
-            achievements.push('explorer');
-            showAchievement(
-                '🏆 First Explorer', 
-                'You explored your first heritage site! +10 points', 
-                10
-            );
-        }
-        
-        // Achievement 2: Heritage Seeker (3 sites)
-        if (count >= 3 && !achievements.includes('seeker')) {
-            achievements.push('seeker');
-            showAchievement(
-                '🗺️ Heritage Seeker', 
-                'You explored 3 heritage sites! +25 points', 
-                25
-            );
-        }
-        
-        // Achievement 3: Master Historian (6 sites)
-        if (count >= 6 && !achievements.includes('master')) {
-            achievements.push('master');
-            showAchievement(
-                '📜 Master Historian', 
-                'You explored all 6 heritage sites! +50 points', 
-                50
-            );
-        }
-        
-        // Achievement 4: Point Collector (100 points)
-        if (userPoints >= 100 && !achievements.includes('collector')) {
-            achievements.push('collector');
-            showAchievement(
-                '💰 Point Collector', 
-                'You collected 100 points! +15 points', 
-                15
-            );
-        }
-        
-        // Achievement 5: Time Traveler (30 minutes explored)
-        const totalTime = localStorage.getItem('totalExploreTime') || 0;
-        if (totalTime >= 30 && !achievements.includes('time_traveler')) {
-            achievements.push('time_traveler');
-            showAchievement(
-                '⏰ Time Traveler', 
-                'You spent 30+ minutes exploring heritage! +20 points', 
-                20
-            );
-        }
-    }
-    
-    // Complete current site
-    function completeSite() {
-        if (completedSites.includes(SITE_ID)) {
-            return; // Already completed
-        }
-        
-        // Calculate time spent
-        const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
-        const elapsedMinutes = Math.floor(elapsedSeconds / 60);
-        
-        // Add to total explore time
-        let totalTime = localStorage.getItem('totalExploreTime') || 0;
-        totalTime = parseInt(totalTime) + elapsedMinutes;
-        localStorage.setItem('totalExploreTime', totalTime);
-        
-        // Add points for this site
-        userPoints += SITE_POINTS;
-        completedSites.push(SITE_ID);
-        
-        // Save to localStorage
-        saveUserData();
-        
-        // Update UI
-        updateUI();
-        
-        // Check achievements
-        checkAchievements();
-        
-        // Show completion message
-        const msg = `🎉 +${SITE_POINTS} points for exploring ${currentLang === 'en' ? SITE_NAME_EN : SITE_NAME_AR}!`;
-        showCompletionMessage(msg);
-        
-        // Send to server
-        if ({{ current_user.is_authenticated|tojson }}) {
-            fetch('/api/complete_site', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    site_id: SITE_ID,
-                    site_name: currentLang === 'en' ? SITE_NAME_EN : SITE_NAME_AR,
-                    points_earned: SITE_POINTS,
-                    time_spent: elapsedMinutes
-                })
-            }).catch(err => console.error('Error:', err));
-        }
-    }
-    
-    // Show completion message
-    function showCompletionMessage(msg) {
-        let toast = document.getElementById('completionToast');
-        if (!toast) {
-            toast = document.createElement('div');
-            toast.id = 'completionToast';
-            toast.style.position = 'fixed';
-            toast.style.bottom = '20px';
-            toast.style.left = '50%';
-            toast.style.transform = 'translateX(-50%)';
-            toast.style.zIndex = '9999';
-            toast.style.padding = '12px 24px';
-            toast.style.borderRadius = '50px';
-            toast.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
-            toast.style.color = 'white';
-            toast.style.fontWeight = 'bold';
-            toast.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
-            document.body.appendChild(toast);
-        }
-        toast.textContent = msg;
-        toast.style.display = 'block';
-        setTimeout(() => {
-            toast.style.display = 'none';
-        }, 4000);
-    }
-    
-    // Check if site should be marked as completed
-    function checkSiteCompletion() {
-        // Mark as completed after 2 minutes of viewing (120000 ms)
-        setTimeout(() => {
-            if (!completedSites.includes(SITE_ID)) {
-                completeSite();
-            }
-        }, 120000); // 2 minutes
-    }
-    
-    // Start exploration timer
-    function startExplorationTimer() {
-        if (explorationTimer) clearInterval(explorationTimer);
-        explorationTimer = setInterval(() => {
-            updateExplorationTime();
-        }, 1000);
-    }
-    
-    // ==================== SKETCHFAB INTERACTION TRACKING ====================
-    // Track user interaction with the 3D model via iframe messages
-    window.addEventListener('message', function(event) {
-        if (event.origin === 'https://sketchfab.com') {
-            console.log('Sketchfab event:', event.data);
+        <!-- هذه هي العلامة التي سيتم التعرف عليها -->
+        <a-marker preset="hiro">
             
-            // Track when user interacts with the model
-            if (event.data && event.data.type === 'viewer-ready') {
-                console.log('🎨 Sketchfab viewer ready');
-                startExplorationTimer();
-                checkSiteCompletion();
-            }
-            
-            // Track when user clicks on annotations
-            if (event.data && event.data.type === 'annotation-click') {
-                console.log('📍 Annotation clicked:', event.data.annotationId);
-                // Bonus points for exploring annotations
-                if (!completedSites.includes(SITE_ID)) {
-                    userPoints += 2;
-                    updateUI();
-                    saveUserData();
-                    showCompletionMessage('📍 +2 points for exploring details!');
-                }
-            }
-        }
-    });
-    
-    // ==================== PAGE LOAD AND UNLOAD ====================
-    function scrollToQR() {
-        document.getElementById('qrSection').scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'center' 
+            <!-- هنا نضيف النموذج ثلاثي الأبعاد للموقع الأثري (من نموذج مجاني لقلعة قديمة) -->
+            <!-- الرابط الاتي لنموذج `ancient_place.glb` هو مثال من مصدر مجاني على الإنترنت[citation:1] -->
+            <a-entity 
+                gltf-model="https://raw.githubusercontent.com/AR-js-org/AR.js/master/aframe/examples/assets/colosseum/colosseum.gltf"
+                scale="0.5 0.5 0.5"
+                position="0 0 0"
+                rotation="0 0 0">
+            </a-entity>
+
+        </a-marker>
+
+        <!-- كاميرا ثابتة للمشهد -->
+        <a-entity camera></a-entity>
+    </a-scene>
+
+    <script>
+        // هذا السكريبت لطباعة رسالة في وحدة التحكم للتأكد من تحميل المكتبات
+        window.addEventListener('load', function() {
+            console.log('🎉 AR system ready. Point your camera at the Hiro marker!');
         });
-    }
+    </script>
     
-    // On page unload, save total time
-    window.addEventListener('beforeunload', function() {
-        if (explorationTimer) clearInterval(explorationTimer);
-        const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
-        const elapsedMinutes = Math.floor(elapsedSeconds / 60);
-        let totalTime = localStorage.getItem('totalExploreTime') || 0;
-        totalTime = parseInt(totalTime) + elapsedMinutes;
-        localStorage.setItem('totalExploreTime', totalTime);
-        saveUserData();
-    });
-    
-    // Initialize on page load
-    document.addEventListener('DOMContentLoaded', function() {
-        const currentLang = '{{ current_lang }}';
-        
-        // Load user data
-        loadUserData();
-        
-        // Update QR code with current URL
-        const qrImage = document.getElementById('qrCodeImage');
-        if (qrImage) {
-            qrImage.src = "https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=" + encodeURIComponent(window.location.href);
-        }
-        
-        // If site already completed, show checkmark
-        if (completedSites.includes(SITE_ID)) {
-            document.getElementById('exploreTimeDisplay').innerHTML = '<i class="bi bi-check-circle-fill"></i>';
-        }
-        
-        console.log('✅ Qasr al-Farif page loaded with points system');
-        console.log('🎯 Site ID:', SITE_ID);
-        console.log('💰 Points awarded:', SITE_POINTS);
-        console.log('🏆 Current points:', userPoints);
-        console.log('📊 Completed sites:', completedSites);
-        
-        // Start timer automatically
-        startExplorationTimer();
-        
-        // AI Agent welcome message
-        setTimeout(() => {
-            console.log('🤖 AI Agent: Welcome to Qasr al-Farid! Explore the 3D model to earn ' + SITE_POINTS + ' points.');
-            if (!completedSites.includes(SITE_ID)) {
-                showCompletionMessage(`🤖 +${SITE_POINTS} points available! Explore Qasr al-Farid to earn them.`);
-            }
-        }, 2000);
-    });
-</script>
-{% endblock %}
+    <!-- استيراد مكتبات AR.js و A-Frame -->
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+
+</body>
+</html>
