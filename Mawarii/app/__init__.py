@@ -274,6 +274,16 @@ def create_app():
                              is_rtl=current_lang == 'ar',
                              title='AlUla Heritage - AR Collection')
     
+    # ==================== SHORT URL ROUTE ====================
+    @app.route('/ar')
+    def ar_shortcut():
+        """
+        Short URL redirect to AR Collection page
+        Usage: https://mawari-1hif.onrender.com/ar
+        This bypasses the need for external URL shorteners
+        """
+        return redirect(url_for('ar_collection'))
+    
     @app.route('/ar/site/<int:site_id>')
     def ar_site_viewer(site_id):
         """AR viewer for individual heritage sites"""
