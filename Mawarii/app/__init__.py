@@ -11,6 +11,7 @@ import json
 from datetime import datetime, timedelta
 import csv
 from io import StringIO
+from flask import send_from_directory
 
 # Initialize extensions
 db = SQLAlchemy()
@@ -718,5 +719,18 @@ def create_app():
         response.headers['Content-Disposition'] = 'attachment; filename=metrics_export.csv'
         response.headers['Content-type'] = 'text/csv'
         return response
-
+    # ===========================================================
+    # FIX MIME TYPES FOR USDZ FILES (iOS AR Quick Look)
+    # ===========================================================
+  
+    
+    @app.route('/static/models/<path:filename>')
+    def serve_usdz_file(filename):
+        """Serve USDZ files with correct MIME type for iOS AR Quick Look"""
+        if filename.endswith('.usdz'):
+            response = send_from_directory('static/models', filename)
+            response.headers['Content-Type'] = 'application/x-usdz'
+            response.headers['Content-Disposition'] = 'inline'
+            return response
+        return send_from_directory('static/models', filename)
     return app
