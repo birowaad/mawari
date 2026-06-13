@@ -20,76 +20,160 @@
         </div>
     </div>
 
-    <!-- 3D Model Viewer Section -->
+    <!-- =========================================================== -->
+    <!-- MANUAL AR BUTTON - MOST EFFECTIVE FOR iOS & Android -->
+    <!-- =========================================================== -->
     <div class="container my-4">
         <div class="row justify-content-center">
-            <div class="col-12">
-                <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
-                    <div class="card-header bg-gradient" style="background: linear-gradient(135deg, #DAA520, #B8860B);">
-                        <h5 class="mb-0 text-white">
-                            <i class="bi bi-vr"></i> 
-                            {% if current_lang == 'en' %}AlUla 3D Models - Interactive Viewer{% else %}عارض النماذج ثلاثية الأبعاد للعلا{% endif %}
-                        </h5>
-                    </div>
-                    <div class="card-body p-0">
-                        <div style="position: relative; width: 100%; height: 65vh; min-height: 500px; background: #0a0a0a;">
-                            
-                            <iframe 
-                                src="https://sketchfab.com/playlists/embed?collection=80ef67b9a7314be0baf0335152d5a25a&autostart=1&ui_ar=1&ui_vr=1&ui_controls=1&ui_infos=1&ui_stop=1&ui_watermark=0&ui_related=0&ui_inspector=0&ui_settings=0&ui_annotations=1"
-                                title="AlUla Heritage Collection - 3D Models"
-                                frameborder="0"
-                                allowfullscreen
-                                mozallowfullscreen="true"
-                                webkitallowfullscreen="true"
-                                allow="autoplay; fullscreen; xr-spatial-tracking; vr"
-                                xr-spatial-tracking
-                                execution-while-out-of-viewport
-                                execution-while-not-rendered
-                                web-share
-                                style="width: 100%; height: 100%; border: none; background: #0a0a0a;">
-                            </iframe>
-                            
-                            <!-- AR/VR Info Badge -->
-                            <div class="position-absolute bottom-0 start-0 m-3">
-                                <span class="badge bg-dark bg-opacity-75 text-warning rounded-pill px-3 py-2" style="backdrop-filter: blur(8px);">
-                                    <i class="bi bi-vr"></i> 🕶️ {% if current_lang == 'en' %}AR / VR Ready{% else %}يدعم الواقع المعزز والافتراضي{% endif %}
-                                </span>
-                            </div>
-                            
-                            <!-- Heritage Info Badge -->
-                            <div class="position-absolute top-0 end-0 m-3">
-                                <span class="badge bg-dark bg-opacity-75 text-light rounded-pill px-3 py-2" style="backdrop-filter: blur(8px);">
-                                    <i class="bi bi-building"></i> 🏛️ {% if current_lang == 'en' %}Hegra - Mada'in Salih{% else %}الحجر - مدائن صالح{% endif %}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
+            <div class="col-md-8">
+                
+                <!-- AR Info Alert -->
+                <div class="alert alert-info text-center rounded-4 mb-3" style="background: linear-gradient(135deg, #e8f4f8, #d4eaf0); border: none;">
+                    <i class="bi bi-info-circle-fill text-primary"></i>
+                    {% if current_lang == 'en' %}
+                    <strong>For Augmented Reality:</strong> Click the button below, then tap the VR/AR button in the viewer.
+                    {% else %}
+                    <strong>للحصول على تجربة الواقع المعزز:</strong> اضغط الزر أدناه، ثم اضغط زر VR/AR في العارض.
+                    {% endif %}
+                </div>
+                
+                <!-- Main AR Button (JavaScript powered) -->
+                <div class="d-grid gap-2">
+                    <button id="arLaunchButton" class="btn btn-warning btn-lg rounded-pill py-3" 
+                            style="background: linear-gradient(135deg, #DAA520, #B8860B); font-size: 1.3rem; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                        <i class="bi bi-vr"></i> 🕶️ 
+                        {% if current_lang == 'en' %}Launch Augmented Reality - Qasr al-Farid{% else %}تشغيل الواقع المعزز - قصر الفريد{% endif %}
+                        <i class="bi bi-arrow-repeat ms-2"></i>
+                    </button>
                 </div>
                 
                 <!-- Instructions -->
                 <div class="text-center mt-3">
                     <p class="small text-muted">
-                        <i class="bi bi-hand-index-thumb"></i> 
+                        <i class="bi bi-lightbulb"></i> 
                         {% if current_lang == 'en' %}
-                        Drag to rotate | Pinch to zoom | Click VR/AR button for immersive experience
+                        <strong>How to use:</strong> 1️⃣ Tap the button above → 2️⃣ Tap the VR headset icon in the viewer → 3️⃣ Select "Enter AR"
                         {% else %}
-                        اسحب لتدوير | اقرص للتكبير | اضغط زر VR/AR للتجربة الغامرة
+                        <strong>كيفية الاستخدام:</strong> 1️⃣ اضغط الزر أعلاه → 2️⃣ اضغط أيقونة سماعة VR في العارض → 3️⃣ اختر "Enter AR"
                         {% endif %}
                     </p>
                     <p class="small text-muted">
-                        📱 
+                        <i class="bi bi-apple"></i> 
                         {% if current_lang == 'en' %}
-                        For AR on mobile: Tap the VR button (headset icon) then select "Enter AR"
+                        <strong>iPhone users:</strong> Use Safari browser for best AR experience.
                         {% else %}
-                        للواقع المعزز على الجوال: اضغط زر VR (أيقونة السماعة) ثم اختر "Enter AR"
+                        <strong>مستخدمو iPhone:</strong> استخدم متصفح Safari للحصول على أفضل تجربة واقع معزز.
+                        {% endif %}
+                        &nbsp;|&nbsp;
+                        <i class="bi bi-android2"></i>
+                        {% if current_lang == 'en' %}
+                        <strong>Android users:</strong> Chrome + Google Play Services for AR required.
+                        {% else %}
+                        <strong>مستخدمو Android:</strong> مطلوب Chrome + خدمات AR من Google Play.
                         {% endif %}
                     </p>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- =========================================================== -->
+    <!-- 3D Model Viewer (Interactive) -->
+    <!-- =========================================================== -->
+    <div class="container my-4">
+        <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+            <div class="card-header bg-gradient" style="background: linear-gradient(135deg, #DAA520, #B8860B);">
+                <h5 class="mb-0 text-white">
+                    <i class="bi bi-vr"></i> 
+                    {% if current_lang == 'en' %}AlUla 3D Models - Interactive Viewer{% else %}عارض النماذج ثلاثية الأبعاد للعلا{% endif %}
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                <div id="modelViewerContainer" style="position: relative; width: 100%; height: 65vh; min-height: 500px; background: #0a0a0a;">
+                    
+                    <!-- Sketchfab Playlist Embed -->
+                    <iframe 
+                        id="sketchfabIframe"
+                        src="https://sketchfab.com/playlists/embed?collection=80ef67b9a7314be0baf0335152d5a25a&autostart=1&ui_controls=1&ui_infos=1&ui_stop=1&ui_watermark=0&ui_related=0&ui_inspector=0&ui_settings=0&ui_annotations=1"
+                        title="AlUla Heritage Collection - 3D Models"
+                        frameborder="0"
+                        allowfullscreen
+                        mozallowfullscreen="true"
+                        webkitallowfullscreen="true"
+                        allow="autoplay; fullscreen; xr-spatial-tracking; vr"
+                        style="width: 100%; height: 100%; border: none; background: #0a0a0a;">
+                    </iframe>
+                    
+                    <!-- Info Badge -->
+                    <div class="position-absolute bottom-0 start-0 m-3">
+                        <span class="badge bg-dark bg-opacity-75 text-warning rounded-pill px-3 py-2" style="backdrop-filter: blur(8px);">
+                            <i class="bi bi-vr"></i> 🕶️ {% if current_lang == 'en' %}VR Ready - Click headset icon{% else %}يدعم الواقع الافتراضي - اضغط أيقونة السماعة{% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Viewer Instructions -->
+        <div class="text-center mt-3">
+            <p class="small text-muted">
+                <i class="bi bi-hand-index-thumb"></i> 
+                {% if current_lang == 'en' %}
+                Drag to rotate | Pinch to zoom | Click the VR button (headset icon) for immersive experience
+                {% else %}
+                اسحب لتدوير | اقرص للتكبير | اضغط زر VR (أيقونة السماعة) للتجربة الغامرة
+                {% endif %}
+            </p>
+        </div>
+    </div>
     
-    <!-- QR Code for Mobile -->
+    <!-- =========================================================== -->
+    <!-- HERITAGE SITES INFO CARDS -->
+    <!-- =========================================================== -->
+    <div class="container my-5">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4">
+                    <div class="card-body text-center">
+                        <div class="bg-warning bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
+                            <i class="bi bi-building fs-1 text-warning"></i>
+                        </div>
+                        <h5 class="fw-bold">🏛️ Qasr al-Farid</h5>
+                        <p class="small text-muted">The Lonely Castle | 1st Century CE | Hegra</p>
+                        <span class="badge bg-secondary">Nabataean Tomb</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4">
+                    <div class="card-body text-center">
+                        <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
+                            <i class="bi bi-tree-fill fs-1 text-success"></i>
+                        </div>
+                        <h5 class="fw-bold">🗿 Hegra Tombs</h5>
+                        <p class="small text-muted">Nabataean Necropolis | UNESCO World Heritage</p>
+                        <span class="badge bg-secondary">UNESCO Site</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4">
+                    <div class="card-body text-center">
+                        <div class="bg-secondary bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
+                            <i class="bi bi-mountain fs-1 text-secondary"></i>
+                        </div>
+                        <h5 class="fw-bold">📜 Jabal Ikmah</h5>
+                        <p class="small text-muted">Open Library of Inscriptions | Ancient Writings</p>
+                        <span class="badge bg-secondary">Archaeological Site</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- =========================================================== -->
+    <!-- QR CODE SECTION -->
+    <!-- =========================================================== -->
     <div class="container my-4">
         <div class="row justify-content-center">
             <div class="col-md-6">
@@ -112,30 +196,205 @@
     </div>
 </div>
 
+<!-- =========================================================== -->
+<!-- JAVASCRIPT - MANUAL AR BUTTON (Most Effective) -->
+<!-- =========================================================== -->
 <style>
-    .bg-gradient {
-        background: linear-gradient(135deg, #DAA520, #B8860B) !important;
+    /* Custom AR Button Animation */
+    #arLaunchButton {
+        transition: all 0.3s ease;
+        animation: pulse-ar 2s infinite;
     }
-    iframe {
-        transition: opacity 0.3s ease;
+    
+    #arLaunchButton:hover {
+        transform: scale(1.02);
+        box-shadow: 0 6px 20px rgba(218,165,32,0.5);
+    }
+    
+    @keyframes pulse-ar {
+        0% { opacity: 0.9; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.01); }
+        100% { opacity: 0.9; transform: scale(1); }
+    }
+    
+    /* Modal overlay for AR launch */
+    .ar-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.9);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .ar-modal.active {
+        display: flex;
+    }
+    
+    .ar-modal-content {
+        width: 90%;
+        height: 80%;
+        background: #0a0a0a;
+        border-radius: 20px;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .close-ar-modal {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: rgba(0,0,0,0.7);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        font-size: 24px;
+        cursor: pointer;
+        z-index: 10000;
     }
 </style>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    // AR Model URLs
+    const AR_MODEL_URL = "https://sketchfab.com/models/9b18367aac28420bbc066d65e73b9acd/embed?autostart=1&ui_ar=1&ui_vr=1&ui_controls=1&ui_infos=1";
+    const PLAYLIST_URL = "https://sketchfab.com/playlists/embed?collection=80ef67b9a7314be0baf0335152d5a25a&autostart=1&ui_controls=1&ui_infos=1&ui_stop=1&ui_watermark=0&ui_related=0";
+    
+    let arModal = null;
+    
+    // Create AR Modal for better UX
+    function createARModal() {
+        // Check if modal already exists
+        if (document.getElementById('arModal')) return;
+        
+        const modal = document.createElement('div');
+        modal.id = 'arModal';
+        modal.className = 'ar-modal';
+        modal.innerHTML = `
+            <div class="ar-modal-content">
+                <button class="close-ar-modal" onclick="closeARModal()">✕</button>
+                <iframe id="arIframe" src="" frameborder="0" allow="autoplay; fullscreen; xr-spatial-tracking; vr" allowfullscreen style="width:100%; height:100%; border:none;"></iframe>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        arModal = modal;
+    }
+    
+    // Open AR Modal
+    function openARModal() {
+        createARModal();
+        const iframe = document.getElementById('arIframe');
+        if (iframe) {
+            iframe.src = AR_MODEL_URL;
+        }
+        arModal.classList.add('active');
+        
+        // Log AR launch
+        console.log('🎯 AR Modal launched - Qasr al-Farid');
+    }
+    
+    // Close AR Modal
+    function closeARModal() {
+        if (arModal) {
+            const iframe = document.getElementById('arIframe');
+            if (iframe) iframe.src = '';
+            arModal.classList.remove('active');
+        }
+    }
+    
+    // Open AR in new window (fallback)
+    function openARInNewWindow() {
+        window.open(AR_MODEL_URL, '_blank', 'width=1024,height=768');
+        console.log('🎯 AR launched in new window');
+    }
+    
+    // Detect mobile device
+    function isMobile() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+    
+    // Main AR Launch Function
+    function launchAR() {
+        const statusDiv = document.getElementById('arStatus');
+        
+        if (isMobile()) {
+            // On mobile - open modal for better UX
+            openARModal();
+            if (statusDiv) {
+                statusDiv.innerHTML = '<i class="bi bi-check-circle"></i> AR mode activated! Tap the VR headset icon in the viewer.';
+                setTimeout(() => {
+                    if (statusDiv) statusDiv.innerHTML = '';
+                }, 5000);
+            }
+        } else {
+            // On desktop - open new window
+            openARInNewWindow();
+        }
+    }
+    
+    // Update QR Code with current URL
+    function updateQRCode() {
         const qrImg = document.getElementById('qrCode');
         if (qrImg) {
             qrImg.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(window.location.href);
         }
-        console.log('🎉 AlUla Heritage Collection loaded with AR/VR support');
+    }
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && arModal && arModal.classList.contains('active')) {
+            closeARModal();
+        }
+    });
+    
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        // Update QR Code
+        updateQRCode();
         
-        // Track AR session start
-        const iframe = document.querySelector('iframe');
-        if (iframe) {
-            iframe.addEventListener('load', function() {
-                console.log('✅ Sketchfab viewer loaded');
+        // Attach AR button event
+        const arButton = document.getElementById('arLaunchButton');
+        if (arButton) {
+            arButton.addEventListener('click', launchAR);
+        }
+        
+        // Log successful load
+        console.log('🎉 AlUla Heritage Collection loaded with Manual AR Button');
+        console.log('📱 Mobile device detected:', isMobile());
+        console.log('🎯 AR Model ID: 9b18367aac28420bbc066d65e73b9acd');
+        
+        // Optional: Track AR launch analytics
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'ar_button_click', {
+                'event_category': 'AR',
+                'event_label': 'Qasr al-Farid'
             });
         }
     });
+</script>
+
+<!-- Additional Mobile Detection for iOS -->
+<script>
+    // Detect iOS Safari for better instructions
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    
+    if (isIOS && isSafari) {
+        console.log('📱 iOS Safari detected - AR ready');
+        // Add iOS specific instruction
+        const arButton = document.getElementById('arLaunchButton');
+        if (arButton) {
+            arButton.setAttribute('title', 'Tap then tap VR headset icon in viewer');
+        }
+    }
+    
+    if (isMobile() && !isIOS) {
+        console.log('📱 Android device detected - AR ready with Chrome');
+    }
 </script>
 {% endblock %}
