@@ -21,99 +21,86 @@
     </div>
 
     <!-- =========================================================== -->
-    <!-- SEPARATE AR BUTTONS: LOCAL USDZ for iOS / SKETCHFAB for Others -->
+    <!-- iOS AR BUTTON - USING LOCAL USDZ FILE (NO SKETCHFAB) -->
     <!-- =========================================================== -->
     <div class="container my-4">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 
                 <!-- AR Info Alert -->
-                <div class="alert alert-info text-center rounded-4 mb-3" style="background: linear-gradient(135deg, #e8f4f8, #d4eaf0); border: none;">
-                    <i class="bi bi-info-circle-fill text-primary"></i>
+                <div class="alert alert-success text-center rounded-4 mb-3" style="background: linear-gradient(135deg, #d4f5e8, #b8e6d4); border: none;">
+                    <i class="bi bi-apple"></i>
                     {% if current_lang == 'en' %}
-                    <strong>Choose your device:</strong> Select the appropriate button below for your device.
+                    <strong>iPhone / iPad Augmented Reality:</strong> Click the button below to experience Qasr al-Farid directly in AR Quick Look.
                     {% else %}
-                    <strong>اختر جهازك:</strong> اختر الزر المناسب لجهازك أدناه.
+                    <strong>الواقع المعزز لأجهزة iPhone / iPad:</strong> اضغط الزر أدناه لتجربة قصر الفريد مباشرة في AR Quick Look.
                     {% endif %}
                 </div>
                 
-                <!-- Button 1: iOS Only - Local USDZ File (Direct AR Quick Look) -->
-                <div class="d-grid gap-2 mb-3">
+                <!-- Main AR Button - Local USDZ File -->
+                <div class="d-grid gap-2">
                     <a href="{{ url_for('static', filename='models/qasr_al_farid.usdz') }}" 
                        rel="ar" 
                        class="btn btn-success btn-lg rounded-pill py-3"
-                       style="background: linear-gradient(135deg, #28a745, #20c997); font-size: 1.2rem; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                       style="background: linear-gradient(135deg, #28a745, #20c997); font-size: 1.3rem; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
                         <i class="bi bi-apple"></i> 🕶️ 
-                        {% if current_lang == 'en' %}iPhone / iPad - Direct AR Experience{% else %}iPhone / iPad - تجربة واقع معزز مباشرة{% endif %}
+                        {% if current_lang == 'en' %}Experience Qasr al-Farid in AR (iPhone/iPad){% else %}جرب قصر الفريد بالواقع المعزز (iPhone/iPad){% endif %}
+                        <i class="bi bi-box-arrow-up-right ms-2"></i>
                     </a>
-                    <p class="small text-muted text-center mt-1">
-                        <i class="bi bi-check-circle-fill text-success"></i> 
-                        {% if current_lang == 'en' %}
-                        Opens directly in AR Quick Look | iOS 12+ required | No extra steps
-                        {% else %}
-                        يفتح مباشرة في AR Quick Look | يتطلب iOS 12+ | بدون خطوات إضافية
-                        {% endif %}
-                    </p>
                 </div>
                 
-                <!-- Button 2: Android / Desktop / Others - Sketchfab Viewer -->
-                <div class="d-grid gap-2">
-                    <button id="arLaunchButton" class="btn btn-warning btn-lg rounded-pill py-3" 
-                            style="background: linear-gradient(135deg, #DAA520, #B8860B); font-size: 1.2rem; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-                        <i class="bi bi-phone"></i> <i class="bi bi-windows"></i> 🕶️ 
-                        {% if current_lang == 'en' %}Android / PC / Others - Interactive 3D Viewer{% else %}Android / PC / أخرى - عارض ثلاثي الأبعاد تفاعلي{% endif %}
-                        <i class="bi bi-arrow-repeat ms-2"></i>
-                    </button>
-                    <p class="small text-muted text-center mt-1">
-                        <i class="bi bi-info-circle"></i> 
-                        {% if current_lang == 'en' %}
-                        Opens interactive 3D viewer | Tap VR button then "Enter AR" for Android AR
-                        {% else %}
-                        يفتح عارض ثلاثي الأبعاد تفاعلي | اضغط زر VR ثم "Enter AR" لتجربة AR على Android
-                        {% endif %}
-                    </p>
-                </div>
-                
-                <!-- Instructions -->
+                <!-- Instructions for iOS -->
                 <div class="text-center mt-3">
                     <p class="small text-muted">
-                        <i class="bi bi-apple"></i> 
+                        <i class="bi bi-check-circle-fill text-success"></i> 
                         {% if current_lang == 'en' %}
-                        <strong>iPhone users:</strong> Use the GREEN button for instant AR.
+                        <strong>How it works:</strong> The button links to a USDZ file hosted on our server. Opens in AR Quick Look automatically.
                         {% else %}
-                        <strong>مستخدمو iPhone:</strong> استخدم الزر الأخضر للواقع المعزز الفوري.
-                        {% endif %}
-                        &nbsp;|&nbsp;
-                        <i class="bi bi-android2"></i>
-                        {% if current_lang == 'en' %}
-                        <strong>Android users:</strong> Use the GOLD button, then tap VR icon → "Enter AR"
-                        {% else %}
-                        <strong>مستخدمو Android:</strong> استخدم الزر الذهبي، ثم اضغط أيقونة VR → "Enter AR"
+                        <strong>كيف يعمل:</strong> الزر يرتبط بملف USDZ مستضاف على خادمنا. يفتح تلقائياً في AR Quick Look.
                         {% endif %}
                     </p>
+                    <p class="small text-muted">
+                        <i class="bi bi-info-circle"></i> 
+                        {% if current_lang == 'en' %}
+                        <strong>Requirements:</strong> iOS 12+ | Safari browser | No additional apps needed
+                        {% else %}
+                        <strong>المتطلبات:</strong> iOS 12+ | متصفح Safari | لا يحتاج تطبيقات إضافية
+                        {% endif %}
+                    </p>
+                </div>
+                
+                <!-- Alternative Viewer for Android/Desktop -->
+                <hr class="my-4">
+                <div class="alert alert-secondary text-center rounded-4 mb-3">
+                    <i class="bi bi-android2"></i> <i class="bi bi-windows"></i>
+                    {% if current_lang == 'en' %}
+                    <strong>For Android / Desktop users:</strong> Use the interactive 3D viewer below.
+                    {% else %}
+                    <strong>لمستخدمي Android / الكمبيوتر:</strong> استخدم العارض التفاعلي ثلاثي الأبعاد أدناه.
+                    {% endif %}
                 </div>
                 
                 <!-- Huawei/Honor Warning Container -->
-                <div id="huawei-ar-warning" class="mt-3"></div>
+                <div id="huawei-ar-warning" class="mt-2"></div>
             </div>
         </div>
     </div>
 
     <!-- =========================================================== -->
-    <!-- 3D Model Viewer (Interactive) - For Android/Desktop -->
+    <!-- 3D Model Viewer - Alternative for Android/Desktop (Sketchfab) -->
     <!-- =========================================================== -->
     <div class="container my-4">
         <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
             <div class="card-header bg-gradient" style="background: linear-gradient(135deg, #DAA520, #B8860B);">
                 <h5 class="mb-0 text-white">
                     <i class="bi bi-vr"></i> 
-                    {% if current_lang == 'en' %}AlUla 3D Models - Interactive Viewer{% else %}عارض النماذج ثلاثية الأبعاد للعلا{% endif %}
+                    {% if current_lang == 'en' %}AlUla 3D Models - Interactive Viewer (Android/PC){% else %}عارض النماذج ثلاثية الأبعاد للعلا (Android/PC){% endif %}
                 </h5>
             </div>
             <div class="card-body p-0">
-                <div id="modelViewerContainer" style="position: relative; width: 100%; height: 65vh; min-height: 500px; background: #0a0a0a;">
+                <div id="modelViewerContainer" style="position: relative; width: 100%; height: 60vh; min-height: 450px; background: #0a0a0a;">
                     
-                    <!-- Sketchfab Playlist Embed (for Android/Desktop/VR) -->
+                    <!-- Sketchfab Playlist Embed (fallback for non-iOS) -->
                     <iframe 
                         id="sketchfabIframe"
                         src="https://sketchfab.com/playlists/embed?collection=80ef67b9a7314be0baf0335152d5a25a&autostart=1&ui_controls=1&ui_infos=1&ui_stop=1&ui_watermark=0&ui_related=0&ui_inspector=0&ui_settings=0&ui_annotations=1&ui_vr=1"
@@ -141,9 +128,9 @@
             <p class="small text-muted">
                 <i class="bi bi-hand-index-thumb"></i> 
                 {% if current_lang == 'en' %}
-                Drag to rotate | Pinch to zoom | Click the VR button (headset icon) then "Enter AR" for Android AR experience
+                Drag to rotate | Pinch to zoom | Click VR button (headset icon) for immersive VR experience
                 {% else %}
-                اسحب لتدوير | اقرص للتكبير | اضغط زر VR (أيقونة السماعة) ثم "Enter AR" لتجربة AR على Android
+                اسحب لتدوير | اقرص للتكبير | اضغط زر VR (أيقونة السماعة) لتجربة VR غامرة
                 {% endif %}
             </p>
         </div>
@@ -194,7 +181,7 @@
     </div>
     
     <!-- =========================================================== -->
-    <!-- QR CODE SECTION (UPDATED with short URL) -->
+    <!-- QR CODE SECTION -->
     <!-- =========================================================== -->
     <div class="container my-4">
         <div class="row justify-content-center">
@@ -219,119 +206,9 @@
 </div>
 
 <!-- =========================================================== -->
-<!-- JAVASCRIPT - MANUAL AR BUTTON (Sketchfab Modal) -->
+<!-- JAVASCRIPT -->
 <!-- =========================================================== -->
-<style>
-    /* Custom AR Button Animation */
-    #arLaunchButton {
-        transition: all 0.3s ease;
-        animation: pulse-ar 2s infinite;
-    }
-    
-    #arLaunchButton:hover {
-        transform: scale(1.02);
-        box-shadow: 0 6px 20px rgba(218,165,32,0.5);
-    }
-    
-    @keyframes pulse-ar {
-        0% { opacity: 0.9; transform: scale(1); }
-        50% { opacity: 1; transform: scale(1.01); }
-        100% { opacity: 0.9; transform: scale(1); }
-    }
-    
-    /* Modal overlay for AR launch */
-    .ar-modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.9);
-        z-index: 9999;
-        justify-content: center;
-        align-items: center;
-    }
-    
-    .ar-modal.active {
-        display: flex;
-    }
-    
-    .ar-modal-content {
-        width: 90%;
-        height: 80%;
-        background: #0a0a0a;
-        border-radius: 20px;
-        overflow: hidden;
-        position: relative;
-    }
-    
-    .close-ar-modal {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background: rgba(0,0,0,0.7);
-        color: white;
-        border: none;
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        font-size: 24px;
-        cursor: pointer;
-        z-index: 10000;
-    }
-</style>
-
 <script>
-    // Sketchfab Playlist URL for Modal
-    const PLAYLIST_URL = "https://sketchfab.com/playlists/embed?collection=80ef67b9a7314be0baf0335152d5a25a&autostart=1&ui_controls=1&ui_infos=1&ui_stop=1&ui_watermark=0&ui_related=0&ui_inspector=0&ui_settings=0&ui_annotations=1&ui_vr=1";
-    
-    let arModal = null;
-    
-    // Create AR Modal for better UX
-    function createARModal() {
-        if (document.getElementById('arModal')) return;
-        
-        const modal = document.createElement('div');
-        modal.id = 'arModal';
-        modal.className = 'ar-modal';
-        modal.innerHTML = `
-            <div class="ar-modal-content">
-                <button class="close-ar-modal" onclick="closeARModal()">✕</button>
-                <iframe id="arIframe" src="" frameborder="0" allow="autoplay; fullscreen; xr-spatial-tracking; vr" allowfullscreen style="width:100%; height:100%; border:none;"></iframe>
-            </div>
-        `;
-        document.body.appendChild(modal);
-        arModal = modal;
-    }
-    
-    // Open AR Modal
-    function openARModal() {
-        createARModal();
-        const iframe = document.getElementById('arIframe');
-        if (iframe) {
-            iframe.src = PLAYLIST_URL;
-        }
-        arModal.classList.add('active');
-        console.log('🎯 AR Modal launched - AlUla Collection');
-    }
-    
-    // Close AR Modal
-    function closeARModal() {
-        if (arModal) {
-            const iframe = document.getElementById('arIframe');
-            if (iframe) iframe.src = '';
-            arModal.classList.remove('active');
-        }
-    }
-    
-    // Close modal with Escape key
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape' && arModal && arModal.classList.contains('active')) {
-            closeARModal();
-        }
-    });
-    
     // ============================================================
     // كشف وتوجيه مستخدمي أجهزة Huawei / Honor
     // ============================================================
@@ -345,7 +222,7 @@
                 <div class="alert alert-warning text-center" style="border-right: 4px solid #ffc107; background: #fff8e7;">
                     <i class="bi bi-exclamation-triangle-fill" style="color: #ffc107;"></i>
                     <strong>📱 لأجهزة Huawei/Honor:</strong><br>
-                    لتجربة الواقع المعزز، تأكد من تثبيت <strong>HUAWEI AR Engine</strong> من متجر AppGallery.
+                    لتجربة الواقع المعزز على iPhone، تأكد من تثبيت <strong>HUAWEI AR Engine</strong> من متجر AppGallery.
                     <hr>
                     <a href="https://consumer.huawei.com/en/support/ar-engine/" target="_blank" class="btn btn-sm btn-warning mt-1">
                         <i class="bi bi-box-arrow-up-right"></i> معلومات عن AR Engine
@@ -359,19 +236,13 @@
     
     // Initialize on page load
     document.addEventListener('DOMContentLoaded', function() {
-        // Attach Sketchfab AR button event
-        const arButton = document.getElementById('arLaunchButton');
-        if (arButton) {
-            arButton.addEventListener('click', openARModal);
-        }
-        
         // Detect Huawei/Honor devices
         detectHuaweiARSupport();
         
         // Log successful load
         console.log('🎉 AlUla Heritage Collection loaded');
-        console.log('📱 iOS users: Use GREEN button for direct AR');
-        console.log('🤖 Android users: Use GOLD button, then VR icon → Enter AR');
+        console.log('📱 iOS users: Use GREEN button for direct AR (local USDZ file)');
+        console.log('📍 Local USDZ path: /static/models/qasr_al_farid.usdz');
     });
 </script>
 {% endblock %}
