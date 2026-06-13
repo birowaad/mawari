@@ -8,70 +8,121 @@
             🏛️ {% if current_lang == 'en' %}Qasr al-Farid - Augmented Reality{% else %}قصر الفريد - الواقع المعزز{% endif %}
         </h1>
         <p class="text-white-50 lead">
-            {% if current_lang == 'en' %}Experience the Nabataean tomb directly in your space{% else %}جرب المقبرة النبطية مباشرة في مكانك{% endif %}
+            {% if current_lang == 'en' %}Experience the Nabataean tomb in Augmented Reality{% else %}جرب المقبرة النبطية بتقنية الواقع المعزز{% endif %}
         </p>
         <div class="mt-3">
             <span class="badge bg-warning text-dark rounded-pill px-3 py-2 me-2">
-                <i class="bi bi-apple"></i> AR Quick Look
+                <i class="bi bi-vr"></i> WebXR AR
             </span>
             <span class="badge bg-info rounded-pill px-3 py-2">
-                <i class="bi bi-vr"></i> iOS 12+
+                <i class="bi bi-phone"></i> All Devices
             </span>
         </div>
     </div>
 
     <!-- =========================================================== -->
-    <!-- iOS AR BUTTON - LOCAL USDZ FILE -->
+    <!-- MARKER-BASED AR (GLB/glTF) - ALL DEVICES -->
     <!-- =========================================================== -->
     <div class="container my-4">
         <div class="row justify-content-center">
-            <div class="col-md-8">
-                
-                <!-- Info Alert -->
-                <div class="alert alert-success text-center rounded-4 mb-3" style="background: linear-gradient(135deg, #d4f5e8, #b8e6d4); border: none;">
-                    <i class="bi bi-apple fs-3"></i>
-                    <h5 class="mt-2 mb-1"><strong>iPhone / iPad Augmented Reality</strong></h5>
-                    <p class="mb-0">Click the button below to place Qasr al-Farid in your real environment.</p>
+            <div class="col-md-10">
+                <div class="alert alert-info text-center rounded-4" style="background: linear-gradient(135deg, #e8f4f8, #d4eaf0); border: none;">
+                    <i class="bi bi-vr fs-3"></i>
+                    <h5 class="mt-2 mb-1"><strong>{% if current_lang == 'en' %}Augmented Reality Experience{% else %}تجربة الواقع المعزز{% endif %}</strong></h5>
+                    <p class="mb-0">
+                        {% if current_lang == 'en' %}
+                        Print or display the HIRO marker below, then point your camera at it to see the 3D model of Qasr al-Farid.
+                        {% else %}
+                        اطبع أو اعرض علامة HIRO أدناه، ثم وجه الكاميرا نحوها لرؤية النموذج ثلاثي الأبعاد لقصر الفريد.
+                        {% endif %}
+                    </p>
                 </div>
                 
-                <!-- Main AR Button - Local USDZ File -->
-                <div class="d-grid gap-2">
-                    <a href="{{ url_for('static', filename='models/qasr_al_farid.usdz') }}" 
-                       rel="ar" 
-                       class="btn btn-success btn-lg rounded-pill py-3"
-                       style="background: linear-gradient(135deg, #28a745, #20c997); font-size: 1.3rem; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-                        <i class="bi bi-apple"></i> 🕶️ 
-                        {% if current_lang == 'en' %}Experience Qasr al-Farid in AR{% else %}جرب قصر الفريد بالواقع المعزز{% endif %}
-                    </a>
+                <!-- HIRO Marker Image -->
+                <div class="text-center mb-4">
+                    <img src="https://raw.githubusercontent.com/AR-js-org/AR.js/master/data/images/hiro.png" 
+                         alt="HIRO Marker" 
+                         style="width: 200px; height: 200px; border: 3px solid #DAA520; border-radius: 15px; padding: 10px; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                    <p class="small text-muted mt-2">
+                        <i class="bi bi-printer"></i> 
+                        {% if current_lang == 'en' %}
+                        <strong>HIRO Marker</strong> - Print this marker or display it on a second screen
+                        {% else %}
+                        <strong>علامة HIRO</strong> - اطبع هذه العلامة أو اعرضها على شاشة ثانية
+                        {% endif %}
+                    </p>
+                </div>
+                
+                <!-- AR.js Viewer -->
+                <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                    <div class="card-header bg-gradient" style="background: linear-gradient(135deg, #DAA520, #B8860B);">
+                        <h5 class="mb-0 text-white">
+                            <i class="bi bi-camera"></i> 
+                            {% if current_lang == 'en' %}AR Camera View - Point at HIRO Marker{% else %}كاميرا الواقع المعزز - وجه الكاميرا نحو علامة HIRO{% endif %}
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div id="arjs-container" style="position: relative; width: 100%; height: 550px; background: #0a0a0a;">
+                            
+                            <!-- AR.js Scene -->
+                            <a-scene 
+                                embedded
+                                arjs="sourceType: webcam; debugUIEnabled: false; trackingMethod: best;"
+                                vr-mode-ui="enabled: false"
+                                renderer="logarithmicDepthBuffer: true"
+                                style="width: 100%; height: 100%;">
+                                
+                                <!-- HIRO Marker -->
+                                <a-marker preset="hiro" id="hiroMarker">
+                                    
+                                    <!-- 3D Model of Qasr al-Farid (GLB/glTF) -->
+                                    <!-- تستخدم نموذج أثري مؤقت يمكن استبداله بنموذج قصر الفريد الحقيقي -->
+                                    <a-entity
+                                        gltf-model="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/AncientTomb/glTF/AncientTomb.gltf"
+                                        scale="0.25 0.25 0.25"
+                                        position="0 0 0"
+                                        rotation="0 90 0">
+                                    </a-entity>
+                                    
+                                    <!-- 3D Text Label -->
+                                    <a-text value="🏛️ Qasr al-Farid - Hegra" color="#FFD700" align="center" position="0 1.2 0" scale="0.6 0.6 0.6"></a-text>
+                                    
+                                </a-marker>
+                                
+                                <!-- Camera -->
+                                <a-entity camera></a-entity>
+                            </a-scene>
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- Instructions -->
                 <div class="text-center mt-3">
                     <p class="small text-muted">
-                        <i class="bi bi-check-circle-fill text-success"></i> 
+                        <i class="bi bi-hand-index-thumb"></i> 
                         {% if current_lang == 'en' %}
-                        Opens in AR Quick Look | Move your device to place the model | iOS 12+ required
+                        <strong>How to use:</strong> 1️⃣ Allow camera access 2️⃣ Point your camera at the HIRO marker 3️⃣ The 3D model will appear automatically
                         {% else %}
-                        يفتح في AR Quick Look | حرك جهازك لوضع المجسم | يتطلب iOS 12+
+                        <strong>كيفية الاستخدام:</strong> 1️⃣ اسمح بالوصول إلى الكاميرا 2️⃣ وجه الكاميرا نحو علامة HIRO 3️⃣ سيظهر النموذج ثلاثي الأبعاد تلقائياً
                         {% endif %}
                     </p>
                     <p class="small text-muted">
-                        <i class="bi bi-info-circle"></i> 
+                        <i class="bi bi-arrow-repeat"></i> 
                         {% if current_lang == 'en' %}
-                        <strong>Note:</strong> This experience uses a local USDZ file hosted on our server.
+                        Once detected, you can walk around the model and view it from any angle
                         {% else %}
-                        <strong>ملاحظة:</strong> هذه التجربة تستخدم ملف USDZ محلي مستضاف على خادمنا.
+                        بعد التعرف على العلامة، يمكنك المشي حول النموذج ورؤيته من أي زاوية
                         {% endif %}
                     </p>
                 </div>
                 
-                <!-- Warning for Android/PC users -->
-                <div class="alert alert-secondary text-center rounded-4 mt-4">
-                    <i class="bi bi-android2"></i> <i class="bi bi-windows"></i>
+                <!-- Requirements Alert -->
+                <div class="alert alert-secondary text-center rounded-4 mt-3">
+                    <i class="bi bi-check-circle-fill text-success"></i>
                     {% if current_lang == 'en' %}
-                    <strong>For Android / PC users:</strong> This experience is optimized for iPhone/iPad.
+                    <strong>Works on:</strong> iPhone (iOS 13+), Android (Chrome), Windows, Mac | No additional apps required
                     {% else %}
-                    <strong>لمستخدمي Android / الكمبيوتر:</strong> هذه التجربة محسّنة لـ iPhone/iPad.
+                    <strong>يعمل على:</strong> iPhone (iOS 13+), Android (Chrome), Windows, Mac | لا يحتاج تطبيقات إضافية
                     {% endif %}
                 </div>
                 
@@ -82,9 +133,9 @@
     </div>
     
     <!-- =========================================================== -->
-    <!-- PREVIEW OF THE 3D MODEL -->
+    <!-- ABOUT QASR AL-FARID -->
     <!-- =========================================================== -->
-    <div class="container my-4">
+    <div class="container my-5">
         <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
             <div class="card-header bg-gradient" style="background: linear-gradient(135deg, #DAA520, #B8860B);">
                 <h5 class="mb-0 text-white">
@@ -92,28 +143,32 @@
                     {% if current_lang == 'en' %}About Qasr al-Farid{% else %}عن قصر الفريد{% endif %}
                 </h5>
             </div>
-            <div class="card-body text-center">
+            <div class="card-body">
                 <div class="row align-items-center">
-                    <div class="col-md-6">
-                        <img src="https://via.placeholder.com/400x250?text=Qasr+al-Farid" 
+                    <div class="col-md-5 text-center">
+                        <img src="https://via.placeholder.com/350x200?text=Qasr+al-Farid" 
                              alt="Qasr al-Farid" 
                              class="img-fluid rounded-3"
-                             style="max-height: 250px; width: auto;">
+                             style="max-height: 200px; width: auto;">
                     </div>
-                    <div class="col-md-6 text-start">
-                        <h4 class="text-warning">🏛️ Qasr al-Farid</h4>
+                    <div class="col-md-7">
+                        <h4 class="text-warning">🏛️ Qasr al-Farid (The Lonely Castle)</h4>
                         <p class="small text-muted">
                             {% if current_lang == 'en' %}
-                            Also known as "The Lonely Castle," this magnificent tomb is carved entirely from a single sandstone monolith. 
-                            It dates back to the 1st century CE and is located at Hegra (Mada'in Salih), Saudi Arabia's first UNESCO World Heritage Site.
+                            Qasr al-Farid is the most iconic tomb at Hegra (Mada'in Salih), Saudi Arabia's first UNESCO World Heritage Site. 
+                            Carved entirely from a single sandstone monolith in the 1st century CE, it represents the architectural mastery 
+                            of the Nabataean civilization, who also built Petra in Jordan.
                             {% else %}
-                            يُعرف أيضاً باسم "القصر الوحيد"، هذه المقبرة الرائعة منحوتة بالكامل من كتلة واحدة من الحجر الرملي.
-                            يعود تاريخها إلى القرن الأول الميلادي وتقع في الحجر (مدائن صالح)، أول موقع تراث عالمي لليونسكو في المملكة العربية السعودية.
+                            قصر الفريد هو أشهر مقبرة في الحجر (مدائن صالح)، أول موقع تراث عالمي لليونسكو في المملكة العربية السعودية.
+                            تم نحته بالكامل من كتلة واحدة من الحجر الرملي في القرن الأول الميلادي، وهو يمثل الإتقان المعماري للحضارة النبطية،
+                            الذين بنوا أيضاً البتراء في الأردن.
                             {% endif %}
                         </p>
-                        <span class="badge bg-secondary">Nabataean Tomb</span>
-                        <span class="badge bg-info ms-1">1st Century CE</span>
-                        <span class="badge bg-warning ms-1">UNESCO</span>
+                        <div class="mt-2">
+                            <span class="badge bg-secondary">Nabataean Tomb</span>
+                            <span class="badge bg-info ms-1">1st Century CE</span>
+                            <span class="badge bg-warning ms-1">UNESCO World Heritage</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -121,7 +176,7 @@
     </div>
     
     <!-- =========================================================== -->
-    <!-- QR CODE SECTION - SHORT URL -->
+    <!-- QR CODE SECTION -->
     <!-- =========================================================== -->
     <div class="container my-4">
         <div class="row justify-content-center">
@@ -138,7 +193,7 @@
                                  style="width: 150px; height: 150px;">
                         </div>
                         <p class="small text-muted mt-3 mb-0">
-                            📱 {% if current_lang == 'en' %}Scan with your iPhone camera to open AR experience{% else %}امسح الرمز بكاميرا iPhone لفتح تجربة الواقع المعزز{% endif %}
+                            📱 {% if current_lang == 'en' %}Scan with your phone camera to open this page and start the AR experience{% else %}امسح الرمز بكاميرا هاتفك لفتح هذه الصفحة وبدء تجربة الواقع المعزز{% endif %}
                         </p>
                     </div>
                 </div>
@@ -147,8 +202,41 @@
     </div>
 </div>
 
+<!-- AR.js Libraries -->
+<script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+<script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+
 <script>
-    // كشف أجهزة Huawei/Honor
+    // Monitor marker detection status
+    function setupMarkerDetection() {
+        const marker = document.getElementById('hiroMarker');
+        const statusDiv = document.getElementById('huawei-warning');
+        
+        if (marker) {
+            marker.addEventListener('markerFound', () => {
+                console.log('🎯 HIRO Marker Found - Qasr al-Farid 3D Model Displayed');
+                // Optional: Show temporary success message
+                const tempMsg = document.createElement('div');
+                tempMsg.className = 'alert alert-success text-center rounded-4 mt-2';
+                tempMsg.innerHTML = '<i class="bi bi-check-circle-fill"></i> ✅ تم التعرف على العلامة - النموذج ثلاثي الأبعاد معروض';
+                tempMsg.style.position = 'fixed';
+                tempMsg.style.bottom = '20px';
+                tempMsg.style.left = '50%';
+                tempMsg.style.transform = 'translateX(-50%)';
+                tempMsg.style.zIndex = '1000';
+                tempMsg.style.backgroundColor = '#28a745';
+                tempMsg.style.color = 'white';
+                document.body.appendChild(tempMsg);
+                setTimeout(() => tempMsg.remove(), 3000);
+            });
+            
+            marker.addEventListener('markerLost', () => {
+                console.log('👋 HIRO Marker Lost - Point camera at the marker again');
+            });
+        }
+    }
+    
+    // Detect Huawei/Honor devices for AR Engine recommendation
     function detectHuawei() {
         const ua = navigator.userAgent;
         if (/huawei|honor/i.test(ua)) {
@@ -166,11 +254,13 @@
         }
     }
     
+    // Initialize on page load
     document.addEventListener('DOMContentLoaded', function() {
+        setupMarkerDetection();
         detectHuawei();
-        console.log('🎉 Qasr al-Farid AR page loaded');
-        console.log('📱 Local USDZ file path: /static/models/qasr_al_farid.usdz');
-        console.log('🍎 For iPhone: Click the green button for AR Quick Look');
+        console.log('🎉 Qasr al-Farid AR page loaded (GLB/glTF + AR.js)');
+        console.log('📱 To experience AR: Print the HIRO marker and point your camera at it');
+        console.log('🏛️ Works on all devices: iPhone, Android, Windows, Mac');
     });
 </script>
 {% endblock %}
