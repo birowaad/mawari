@@ -12,41 +12,24 @@
             </a>
         </div>
         
-        <!-- AR Viewer for Qasr al-Farid -->
-        <model-viewer 
-            id="qasr-viewer"
-            src="{{ url_for('static', filename='models/qasr_al_farid.glb') }}"
-            alt="Qasr al-Farid - The Lonely Castle, AlUla, Saudi Arabia"
-            ar
-            ar-modes="webxr scene-viewer quick-look"
-            ar-scale="auto"
-            camera-controls
-            touch-action="pan-y"
-            auto-rotate
-            auto-rotate-delay="0"
-            rotation-per-second="20deg"
-            interaction-prompt="auto"
-            exposure="1.0"
-            shadow-intensity="1"
-            environment-image="neutral"
-            style="width:100%; height:100vh; --poster-color: #1a1a1a; --progress-bar-color: #DAA520; --progress-bar-height: 4px;">
-            
-            <!-- Custom AR Button -->
-            <button slot="ar-button" class="btn-ar-custom">
-                🕶️ {% if current_lang == 'en' %}View Qasr al-Farid in AR{% else %}عرض قصر الفريد بالواقع المعزز{% endif %}
-            </button>
-            
-            <!-- Poster Image while model loads -->
-            <img slot="poster" src="{{ url_for('static', filename='images/qasr_poster.jpg') }}" alt="Qasr al-Farid">
-            
-            <!-- Progress Bar -->
-            <div slot="progress-bar">
-                <div style="background: linear-gradient(135deg, #DAA520, #B8860B); height: 4px; width: 0%; transition: width 0.3s;"></div>
-            </div>
-        </model-viewer>
+        <!-- 3D Model Viewer Container -->
+        <div id="modelContainer" style="width:100%; height:100vh; background: #0a0a0a;">
+            <!-- Sketchfab Iframe for Qasr al-Farid -->
+            <iframe 
+                id="sketchfab-frame"
+                title="Qasr al-Farid - 3D Model"
+                src="https://sketchfab.com/models/9b18367aac28420bbc066d65e73b9acd/embed?autostart=1&ui_controls=1&ui_infos=1&ui_stop=1&ui_watermark=0&ui_watermark_link=0&ui_related=0&ui_inspector=0&ui_settings=0&ui_annotations=1&ui_vr=1"
+                frameborder="0"
+                allow="autoplay; fullscreen; xr-spatial-tracking; vr"
+                allowfullscreen
+                mozallowfullscreen="true"
+                webkitallowfullscreen="true"
+                style="width:100%; height:100vh; background: #0a0a0a;">
+            </iframe>
+        </div>
         
         <!-- Info Panel -->
-        <div class="position-absolute bottom-0 start-0 end-0 p-3" style="background: linear-gradient(90deg, rgba(0,0,0,0.8), rgba(0,0,0,0.6)); backdrop-filter: blur(10px); z-index: 100;">
+        <div class="position-absolute bottom-0 start-0 end-0 p-3" style="background: linear-gradient(90deg, rgba(0,0,0,0.85), rgba(0,0,0,0.6)); backdrop-filter: blur(10px); z-index: 100;">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-md-8">
@@ -56,16 +39,16 @@
                         </h4>
                         <p class="text-white-50 mb-0 small">
                             {% if current_lang == 'en' %}
-                            Nabataean Tomb | 1st Century CE | Hegra (Mada'in Salih) | UNESCO World Heritage Site
+                            🏛️ Nabataean Tomb | 1st Century CE | Hegra (Mada'in Salih) | UNESCO World Heritage Site
                             {% else %}
-                            مقبرة نبطية | القرن الأول الميلادي | الحجر (مدائن صالح) | موقع التراث العالمي لليونسكو
+                            🏛️ مقبرة نبطية | القرن الأول الميلادي | الحجر (مدائن صالح) | موقع التراث العالمي لليونسكو
                             {% endif %}
                         </p>
                     </div>
                     <div class="col-md-4 text-md-end mt-2 mt-md-0">
                         <span class="badge bg-warning text-dark p-2 rounded-pill">
                             <i class="bi bi-info-circle"></i> 
-                            {% if current_lang == 'en' %}Drag to rotate | Pinch to zoom{% else %}اسحب للتدوير | اقرص للتكبير{% endif %}
+                            {% if current_lang == 'en' %}Drag to rotate | Pinch to zoom | VR Ready{% else %}اسحب للتدوير | اقرص للتكبير | دعم الواقع الافتراضي{% endif %}
                         </span>
                     </div>
                 </div>
@@ -76,16 +59,53 @@
         <div class="position-absolute top-0 end-0 p-3" style="z-index: 100;">
             <div class="bg-dark bg-opacity-75 rounded-pill px-3 py-2 small text-white-50">
                 <i class="bi bi-hand-index-thumb"></i> 
-                {% if current_lang == 'en' %}6-DoF Controls{% else %}تحكم كامل الحركة{% endif %}
+                {% if current_lang == 'en' %}6-DoF Controls | VR Supported{% else %}تحكم كامل الحركة | دعم الواقع الافتراضي{% endif %}
+            </div>
+        </div>
+        
+        <!-- AR QR Code Button -->
+        <div class="position-absolute bottom-0 end-0 p-3 m-2" style="z-index: 101;">
+            <button class="btn btn-dark rounded-pill px-3 py-2" onclick="scrollToQR()" style="background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);">
+                <i class="bi bi-qr-code"></i> 
+                {% if current_lang == 'en' %}AR Mobile View{% else %}عرض AR للجوال{% endif %}
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- QR Code Section -->
+<div id="qrSection" class="container py-4 mt-3" style="background: linear-gradient(135deg, #f8f9fa, #e9ecef); border-radius: 20px;">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="text-center p-4 rounded-4 shadow-sm" style="background: white; border: 1px solid rgba(184,134,11,0.2);">
+                <h5 class="text-warning mb-3">
+                    <i class="bi bi-vr"></i> 
+                    {% if current_lang == 'en' %}View on Mobile AR{% else %}عرض على AR للجوال{% endif %}
+                </h5>
+                <div class="d-flex align-items-center justify-content-center gap-4 flex-wrap">
+                    <div style="background: white; padding: 10px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                        <img id="qrCodeImage" src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data={{ request.url }}" alt="QR Code" style="width: 100px; height: 100px;">
+                    </div>
+                    <div class="text-start">
+                        <span class="badge bg-warning text-dark rounded-pill px-3 py-2 mb-2">
+                            <i class="bi bi-phone"></i> {% if current_lang == 'en' %}Scan to Open{% else %}امسح للفتح{% endif %}
+                        </span>
+                        <p class="small text-muted mb-1">
+                            <i class="bi bi-check-circle-fill text-success"></i> 
+                            {% if current_lang == 'en' %}Works on iOS 13+ (Safari) & Android 10+ (Chrome){% else %}يعمل على iOS 13+ (Safari) و Android 10+ (Chrome){% endif %}
+                        </p>
+                        <p class="small text-muted">
+                            <i class="bi bi-arrow-repeat"></i> 
+                            {% if current_lang == 'en' %}Tap "View in VR" or "Enter VR" for immersive experience{% else %}اضغط "عرض في الواقع الافتراضي" لتجربة غامرة{% endif %}
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Model-Viewer Library -->
-<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
-
-<!-- Custom CSS for AR Button -->
+<!-- Custom CSS -->
 <style>
     .btn-ar-custom {
         background: linear-gradient(135deg, #DAA520, #B8860B);
@@ -113,55 +133,44 @@
         100% { transform: scale(1); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
     }
     
-    /* Mobile optimizations */
     @media (max-width: 768px) {
         .btn-ar-custom {
             padding: 10px 20px;
             font-size: 14px;
         }
-        .info-panel h4 {
-            font-size: 16px;
-        }
     }
     
-    /* Model viewer styling */
-    model-viewer {
-        width: 100%;
-        height: 100vh;
-        --poster-color: #1a1a1a;
-        --progress-bar-color: #DAA520;
-        --progress-bar-height: 4px;
-    }
-    
-    /* Hide default AR button, show custom one */
-    model-viewer::part(default-ar-button) {
-        display: none !important;
+    /* Hide default Sketchfab watermark if needed */
+    #sketchfab-frame {
+        border: none;
     }
 </style>
 
 <script>
-    // Model-Viewer Event Listeners
-    const viewer = document.getElementById('qasr-viewer');
-    
-    if (viewer) {
-        viewer.addEventListener('load', () => {
-            console.log('✅ Qasr al-Farid 3D model loaded successfully!');
-        });
-        
-        viewer.addEventListener('error', (error) => {
-            console.error('❌ Error loading model:', error);
-        });
-        
-        viewer.addEventListener('ar-status', (event) => {
-            console.log('AR Status:', event.detail.status);
-            if (event.detail.status === 'session-started') {
-                console.log('🎉 AR session started! User is in AR mode.');
-            }
-        });
-        
-        viewer.addEventListener('camera-change', () => {
-            console.log('📷 Camera changed - user interaction detected');
+    // Function to scroll to QR section
+    function scrollToQR() {
+        document.getElementById('qrSection').scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center' 
         });
     }
+    
+    // Log when iframe loads
+    document.addEventListener('DOMContentLoaded', function() {
+        const frame = document.getElementById('sketchfab-frame');
+        if (frame) {
+            frame.addEventListener('load', function() {
+                console.log('✅ Qasr al-Farid 3D model loaded from Sketchfab!');
+                console.log('🎉 Model ID: 9b18367aac28420bbc066d65e73b9acd');
+                console.log('📍 Hegra (Mada\'in Salih), AlUla, Saudi Arabia - UNESCO World Heritage Site');
+            });
+        }
+        
+        // Update QR code with current URL
+        const qrImage = document.getElementById('qrCodeImage');
+        if (qrImage) {
+            qrImage.src = "https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=" + encodeURIComponent(window.location.href);
+        }
+    });
 </script>
 {% endblock %}
