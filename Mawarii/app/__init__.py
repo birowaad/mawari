@@ -1,5 +1,5 @@
 # app/__init__.py
-from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, make_response
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, make_response, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
@@ -11,7 +11,6 @@ import json
 from datetime import datetime, timedelta
 import csv
 from io import StringIO
-from flask import send_from_directory
 
 # Initialize extensions
 db = SQLAlchemy()
@@ -136,10 +135,17 @@ def load_user(user_id):
 def create_app():
     app = Flask(__name__)
 
+    # ===========================================================
+    # FIX MIME TYPES FOR USDZ FILES (iOS AR Quick Look)
+    # ===========================================================
+    # إضافة نوع MIME لملفات USDZ لدعم AR Quick Look على iOS
+    app.config['MIMETYPES'] = {'usdz': 'application/x-usdz'}
+    
     # App config
     app.config['SECRET_KEY'] = 'your-secret-key-change-this'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
     # Initialize extensions
     db.init_app(app)
@@ -268,21 +274,18 @@ def create_app():
     
     @app.route('/ar-collection')
     def ar_collection():
-        """AlUla Heritage Collection - 3D models with AR/VR support from Sketchfab"""
+        """AlUla Heritage Collection - Qasr al-Farid AR Experience"""
         current_lang = session.get('language', 'en')
         return render_template('ar_collection.html',
                              current_lang=current_lang,
                              is_rtl=current_lang == 'ar',
-                             title='AlUla Heritage - AR Collection')
+                             title='Qasr al-Farid - AR Experience')
     
-    # ==================== SHORT URL ROUTE ====================
-    @app.route('/ar')
-    def ar_shortcut():
-        """
-        Short URL redirect to AR Collection page
-        Usage: https://mawari-1hif.onrender.com/ar
-        This bypasses the need for external URL shorteners
-        """
+    # ==================== SHORT URL ROUTE FOR QR CODE ====================
+    @app.route('/a')
+    def qr_shortcut():
+        """Super short URL for QR code - redirects to AR page"""
+        print("🎯 QR Code short URL /a accessed - redirecting to AR page")
         return redirect(url_for('ar_collection'))
     
     @app.route('/ar/site/<int:site_id>')
@@ -719,18 +722,5 @@ def create_app():
         response.headers['Content-Disposition'] = 'attachment; filename=metrics_export.csv'
         response.headers['Content-type'] = 'text/csv'
         return response
-    # ===========================================================
-    # FIX MIME TYPES FOR USDZ FILES (iOS AR Quick Look)
-    # ===========================================================
-  
-    
-    @app.route('/static/models/<path:filename>')
-    def serve_usdz_file(filename):
-        """Serve USDZ files with correct MIME type for iOS AR Quick Look"""
-        if filename.endswith('.usdz'):
-            response = send_from_directory('static/models', filename)
-            response.headers['Content-Type'] = 'application/x-usdz'
-            response.headers['Content-Disposition'] = 'inline'
-            return response
-        return send_from_directory('static/models', filename)
+
     return app
