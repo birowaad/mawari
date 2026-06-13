@@ -251,6 +251,19 @@ def create_app():
         return render_template('virtual_city_tour.html', title='Virtual City Tour | AlUla Heritage')
 
     # ===========================================================
+    # NEW: Qasr al-Farid Full AR Experience Route
+    # ===========================================================
+    
+    @app.route('/qasr')
+    def qasr_full_ar():
+        """Full AR experience for Qasr al-Farid (The Lonely Castle)"""
+        current_lang = session.get('language', 'en')
+        return render_template('qasr.html', 
+                             current_lang=current_lang,
+                             is_rtl=current_lang == 'ar',
+                             title='Qasr al-Farid AR Experience')
+
+    # ===========================================================
     # Authentication Routes
     # ===========================================================
 
