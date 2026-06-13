@@ -1,11 +1,11 @@
-<!DOCTYPE html your-server="needed">
+<!DOCTYPE html>
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>AR - تجربة قصر أثري | نظام عملي</title>
+    <title>AR تجربة - معبد البترا الأثري</title>
     <style>
-        body { margin: 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { margin: 0; overflow: hidden; font-family: 'Cairo', sans-serif; }
         .info {
             position: absolute;
             bottom: 20px;
@@ -14,30 +14,45 @@
             text-align: center;
             background: rgba(0,0,0,0.8);
             color: #FFD700;
-            padding: 12px;
+            padding: 15px;
             font-size: 14px;
-            pointer-events: none;
             z-index: 10;
-            backdrop-filter: blur(5px);
-            font-weight: bold;
-            border-radius: 10px;
+            backdrop-filter: blur(8px);
+            border-radius: 12px;
             margin: 10px;
         }
         .status {
             position: absolute;
-            top: 10px;
-            left: 10px;
-            background: rgba(0,0,0,0.6);
-            color: #0f0;
-            padding: 5px 10px;
-            font-size: 11px;
-            border-radius: 5px;
+            top: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.7);
+            color: #00ff00;
+            padding: 8px 16px;
+            font-size: 12px;
+            border-radius: 8px;
             font-family: monospace;
             z-index: 10;
         }
         @keyframes pulse {
-            0% { opacity: 0.6; }
-            100% { opacity: 1; }
+            0% { opacity: 0.6; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.02); }
+        }
+        .btn-ar-custom {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #DAA520, #B8860B);
+            border: none;
+            border-radius: 50px;
+            padding: 12px 24px;
+            color: white;
+            font-weight: bold;
+            z-index: 20;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            animation: pulse 1.5s infinite alternate;
         }
     </style>
 </head>
@@ -45,73 +60,64 @@
 
     <div class="status" id="statusMsg">🔄 جاري تحميل النظام...</div>
     <div class="info">
-        🏛️ **وجه الكاميرا نحو علامة "HIRO"** (الصورة المعروضة) لرؤية النموذج الأثري<br>
-        📍 تأكد من إضاءة جيدة وثبات اليد
+        🏛️ **معبد الخزنة - البترا** (الحضارة النبطية)<br>
+        📍 وجه الكاميرا نحو العلامة أو سطح مستوٍ لرؤية النموذج الأثري<br>
+        ✨ نفس حضارة العلا ومدائن صالح
     </div>
+    <button class="btn-ar-custom" id="arBtn">🕶️ عرض بالواقع المعزز</button>
 
-    <!-- مشهد AR الرئيسي -->
-    <a-scene 
-        embedded
-        arjs="sourceType: webcam; debugUIEnabled: false; trackingMethod: best;"
-        vr-mode-ui="enabled: false"
-        renderer="logarithmicDepthBuffer: true">
+    <model-viewer 
+        id="heritage-viewer"
+        src="رابط_النموذج_الخاص_بك.glb"
+        alt="معبد البترا - الحضارة النبطية"
+        ar
+        ar-modes="webxr scene-viewer quick-look"
+        ar-scale="auto"
+        camera-controls
+        auto-rotate
+        auto-rotate-delay="1"
+        rotation-per-second="15deg"
+        environment-image="neutral"
+        style="width:100%; height:100vh; --poster-color: #1a1a1a; --progress-bar-color: #DAA520;">
         
-        <!-- علامة HIRO المدمجة -->
-        <a-marker preset="hiro" id="arMarker">
-            
-            <!-- نموذج أثري (قصر/معبد) - رابط مضمون من نموذج افتراضي -->
-            <a-entity 
-                gltf-model="https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/FlightHelmet/glTF/FlightHelmet.gltf"
-                scale="0.3 0.3 0.3"
-                position="0 0 0"
-                rotation="0 90 0">
-            </a-entity>
-            
-            <!-- نص توضيحي فوق النموذج -->
-            <a-text value="🏛️ قصر أثري - العلا" color="#FFD700" align="center" position="0 1.2 0" scale="0.8 0.8 0.8"></a-text>
-            
-        </a-marker>
+        <button slot="ar-button" class="ar-button-default" style="display:none;"></button>
+    </model-viewer>
 
-        <!-- كاميرا المشهد -->
-        <a-entity camera></a-entity>
-    </a-scene>
-
-    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+    
     <script>
-        // مراقبة حالة النظام
+        const viewer = document.getElementById('heritage-viewer');
         const statusDiv = document.getElementById('statusMsg');
+        const arBtn = document.getElementById('arBtn');
         
-        // رسالة عند تحميل الصفحة
-        window.addEventListener('load', function() {
-            statusDiv.innerHTML = '✅ النظام جاهز | وجه الكاميرا نحو العلامة "Hiro"';
-            statusDiv.style.color = '#0f0';
-            console.log('✅ AR system loaded successfully!');
+        // إخفاء الزر الافتراضي لـ model-viewer
+        viewer.addEventListener('load', () => {
+            statusDiv.innerHTML = '✅ النموذج جاهز | اضغط زر "عرض بالواقع المعزز"';
+            statusDiv.style.color = '#00ff00';
+            console.log('🎉 نموذج البترا جاهز للعرض');
         });
         
-        // مراقبة العثور على العلامة
-        const marker = document.getElementById('arMarker');
-        if (marker) {
-            marker.addEventListener('markerFound', () => {
-                statusDiv.innerHTML = '🎯 تم العثور على العلامة! النموذج معروض';
-                statusDiv.style.color = '#FFD700';
-                console.log('🎯 HIRO marker found!');
-            });
-            
-            marker.addEventListener('markerLost', () => {
-                statusDiv.innerHTML = '🔍 تم فقد العلامة. وجه الكاميرا نحو العلامة مرة أخرى';
+        // تفعيل AR عند الضغط على الزر المخصص
+        arBtn.addEventListener('click', () => {
+            if (viewer.canActivateAR) {
+                viewer.activateAR();
+                statusDiv.innerHTML = '🎯 جاري تشغيل الواقع المعزز...';
+            } else {
+                statusDiv.innerHTML = '⚠️ متصفحك لا يدعم AR. جرب Chrome أو Safari على جوال حديث';
                 statusDiv.style.color = '#ffaa00';
-                console.log('👋 HIRO marker lost');
-            });
-        }
-        
-        // في حالة حدوث خطأ في تحميل النموذج
-        window.addEventListener('error', (e) => {
-            if (e.message && e.message.includes('gltf')) {
-                statusDiv.innerHTML = '⚠️ خطأ في تحميل النموذج. تأكد من الاتصال بالإنترنت';
-                statusDiv.style.color = '#ff0000';
             }
+        });
+        
+        viewer.addEventListener('ar-status', (event) => {
+            if (event.detail.status === 'session-started') {
+                statusDiv.innerHTML = '✨ وضع AR نشط | يمكنك تحريك الجوال حول النموذج';
+                statusDiv.style.color = '#FFD700';
+            }
+        });
+        
+        viewer.addEventListener('error', (error) => {
+            console.error('❌ خطأ:', error);
+            statusDiv.innerHTML = '❌ حدث خطأ في تحميل النموذج';
         });
     </script>
 </body>
