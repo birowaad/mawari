@@ -7,15 +7,15 @@
         
         <!-- Back Button -->
         <div class="position-absolute top-0 start-0 p-3" style="z-index: 100;">
-            <a href="{{ url_for('index') }}" class="btn btn-outline-warning rounded-pill">
-                <i class="bi bi-arrow-left"></i> {% if current_lang == 'en' %}Back{% else %}رجوع{% endif %}
+            <a href="{{ url_for('virtual_city_tour') }}" class="btn btn-outline-warning rounded-pill">
+                <i class="bi bi-arrow-left"></i> {% if current_lang == 'en' %}Back to Tour{% else %}رجوع إلى الجولة{% endif %}
             </a>
         </div>
         
-        <!-- AR Viewer -->
+        <!-- AR Viewer for Qasr al-Farid -->
         <model-viewer 
             id="qasr-viewer"
-            src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/DamagedHelmet/glTF/DamagedHelmet.gltf"
+            src="{{ url_for('static', filename='models/qasr_al_farid.glb') }}"
             alt="Qasr al-Farid - The Lonely Castle, AlUla, Saudi Arabia"
             ar
             ar-modes="webxr scene-viewer quick-look"
@@ -35,6 +35,9 @@
             <button slot="ar-button" class="btn-ar-custom">
                 🕶️ {% if current_lang == 'en' %}View Qasr al-Farid in AR{% else %}عرض قصر الفريد بالواقع المعزز{% endif %}
             </button>
+            
+            <!-- Poster Image while model loads -->
+            <img slot="poster" src="{{ url_for('static', filename='images/qasr_poster.jpg') }}" alt="Qasr al-Farid">
             
             <!-- Progress Bar -->
             <div slot="progress-bar">
@@ -121,7 +124,7 @@
         }
     }
     
-    /* Ensure model-viewer fills the screen */
+    /* Model viewer styling */
     model-viewer {
         width: 100%;
         height: 100vh;
@@ -152,13 +155,11 @@
         viewer.addEventListener('ar-status', (event) => {
             console.log('AR Status:', event.detail.status);
             if (event.detail.status === 'session-started') {
-                // AR session started
                 console.log('🎉 AR session started! User is in AR mode.');
             }
         });
         
         viewer.addEventListener('camera-change', () => {
-            // User is interacting with the model
             console.log('📷 Camera changed - user interaction detected');
         });
     }
