@@ -21,7 +21,7 @@
     </div>
 
     <!-- =========================================================== -->
-    <!-- MANUAL AR BUTTON - MOST EFFECTIVE FOR iOS & Android -->
+    <!-- SEPARATE AR BUTTONS: LOCAL USDZ for iOS / SKETCHFAB for Others -->
     <!-- =========================================================== -->
     <div class="container my-4">
         <div class="row justify-content-center">
@@ -31,54 +31,76 @@
                 <div class="alert alert-info text-center rounded-4 mb-3" style="background: linear-gradient(135deg, #e8f4f8, #d4eaf0); border: none;">
                     <i class="bi bi-info-circle-fill text-primary"></i>
                     {% if current_lang == 'en' %}
-                    <strong>For Augmented Reality:</strong> Click the button below, then tap the VR/AR button in the viewer.
+                    <strong>Choose your device:</strong> Select the appropriate button below for your device.
                     {% else %}
-                    <strong>للحصول على تجربة الواقع المعزز:</strong> اضغط الزر أدناه، ثم اضغط زر VR/AR في العارض.
+                    <strong>اختر جهازك:</strong> اختر الزر المناسب لجهازك أدناه.
                     {% endif %}
                 </div>
                 
-                <!-- Main AR Button (JavaScript powered) -->
+                <!-- Button 1: iOS Only - Local USDZ File (Direct AR Quick Look) -->
+                <div class="d-grid gap-2 mb-3">
+                    <a href="{{ url_for('static', filename='models/qasr_al_farid.usdz') }}" 
+                       rel="ar" 
+                       class="btn btn-success btn-lg rounded-pill py-3"
+                       style="background: linear-gradient(135deg, #28a745, #20c997); font-size: 1.2rem; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                        <i class="bi bi-apple"></i> 🕶️ 
+                        {% if current_lang == 'en' %}iPhone / iPad - Direct AR Experience{% else %}iPhone / iPad - تجربة واقع معزز مباشرة{% endif %}
+                    </a>
+                    <p class="small text-muted text-center mt-1">
+                        <i class="bi bi-check-circle-fill text-success"></i> 
+                        {% if current_lang == 'en' %}
+                        Opens directly in AR Quick Look | iOS 12+ required | No extra steps
+                        {% else %}
+                        يفتح مباشرة في AR Quick Look | يتطلب iOS 12+ | بدون خطوات إضافية
+                        {% endif %}
+                    </p>
+                </div>
+                
+                <!-- Button 2: Android / Desktop / Others - Sketchfab Viewer -->
                 <div class="d-grid gap-2">
                     <button id="arLaunchButton" class="btn btn-warning btn-lg rounded-pill py-3" 
-                            style="background: linear-gradient(135deg, #DAA520, #B8860B); font-size: 1.3rem; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-                        <i class="bi bi-vr"></i> 🕶️ 
-                        {% if current_lang == 'en' %}Launch Augmented Reality - Qasr al-Farid{% else %}تشغيل الواقع المعزز - قصر الفريد{% endif %}
+                            style="background: linear-gradient(135deg, #DAA520, #B8860B); font-size: 1.2rem; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                        <i class="bi bi-phone"></i> <i class="bi bi-windows"></i> 🕶️ 
+                        {% if current_lang == 'en' %}Android / PC / Others - Interactive 3D Viewer{% else %}Android / PC / أخرى - عارض ثلاثي الأبعاد تفاعلي{% endif %}
                         <i class="bi bi-arrow-repeat ms-2"></i>
                     </button>
+                    <p class="small text-muted text-center mt-1">
+                        <i class="bi bi-info-circle"></i> 
+                        {% if current_lang == 'en' %}
+                        Opens interactive 3D viewer | Tap VR button then "Enter AR" for Android AR
+                        {% else %}
+                        يفتح عارض ثلاثي الأبعاد تفاعلي | اضغط زر VR ثم "Enter AR" لتجربة AR على Android
+                        {% endif %}
+                    </p>
                 </div>
                 
                 <!-- Instructions -->
                 <div class="text-center mt-3">
                     <p class="small text-muted">
-                        <i class="bi bi-lightbulb"></i> 
-                        {% if current_lang == 'en' %}
-                        <strong>How to use:</strong> 1️⃣ Tap the button above → 2️⃣ Tap the VR headset icon in the viewer → 3️⃣ Select "Enter AR"
-                        {% else %}
-                        <strong>كيفية الاستخدام:</strong> 1️⃣ اضغط الزر أعلاه → 2️⃣ اضغط أيقونة سماعة VR في العارض → 3️⃣ اختر "Enter AR"
-                        {% endif %}
-                    </p>
-                    <p class="small text-muted">
                         <i class="bi bi-apple"></i> 
                         {% if current_lang == 'en' %}
-                        <strong>iPhone users:</strong> Use Safari browser for best AR experience.
+                        <strong>iPhone users:</strong> Use the GREEN button for instant AR.
                         {% else %}
-                        <strong>مستخدمو iPhone:</strong> استخدم متصفح Safari للحصول على أفضل تجربة واقع معزز.
+                        <strong>مستخدمو iPhone:</strong> استخدم الزر الأخضر للواقع المعزز الفوري.
                         {% endif %}
                         &nbsp;|&nbsp;
                         <i class="bi bi-android2"></i>
                         {% if current_lang == 'en' %}
-                        <strong>Android users:</strong> Chrome + Google Play Services for AR required.
+                        <strong>Android users:</strong> Use the GOLD button, then tap VR icon → "Enter AR"
                         {% else %}
-                        <strong>مستخدمو Android:</strong> مطلوب Chrome + خدمات AR من Google Play.
+                        <strong>مستخدمو Android:</strong> استخدم الزر الذهبي، ثم اضغط أيقونة VR → "Enter AR"
                         {% endif %}
                     </p>
                 </div>
+                
+                <!-- Huawei/Honor Warning Container -->
+                <div id="huawei-ar-warning" class="mt-3"></div>
             </div>
         </div>
     </div>
 
     <!-- =========================================================== -->
-    <!-- 3D Model Viewer (Interactive) -->
+    <!-- 3D Model Viewer (Interactive) - For Android/Desktop -->
     <!-- =========================================================== -->
     <div class="container my-4">
         <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
@@ -91,10 +113,10 @@
             <div class="card-body p-0">
                 <div id="modelViewerContainer" style="position: relative; width: 100%; height: 65vh; min-height: 500px; background: #0a0a0a;">
                     
-                    <!-- Sketchfab Playlist Embed -->
+                    <!-- Sketchfab Playlist Embed (for Android/Desktop/VR) -->
                     <iframe 
                         id="sketchfabIframe"
-                        src="https://mawari-1hif.onrender.com/static/models/qasr_al_farid.usdz"
+                        src="https://sketchfab.com/playlists/embed?collection=80ef67b9a7314be0baf0335152d5a25a&autostart=1&ui_controls=1&ui_infos=1&ui_stop=1&ui_watermark=0&ui_related=0&ui_inspector=0&ui_settings=0&ui_annotations=1&ui_vr=1"
                         title="AlUla Heritage Collection - 3D Models"
                         frameborder="0"
                         allowfullscreen
@@ -119,9 +141,9 @@
             <p class="small text-muted">
                 <i class="bi bi-hand-index-thumb"></i> 
                 {% if current_lang == 'en' %}
-                Drag to rotate | Pinch to zoom | Click the VR button (headset icon) for immersive experience
+                Drag to rotate | Pinch to zoom | Click the VR button (headset icon) then "Enter AR" for Android AR experience
                 {% else %}
-                اسحب لتدوير | اقرص للتكبير | اضغط زر VR (أيقونة السماعة) للتجربة الغامرة
+                اسحب لتدوير | اقرص للتكبير | اضغط زر VR (أيقونة السماعة) ثم "Enter AR" لتجربة AR على Android
                 {% endif %}
             </p>
         </div>
@@ -172,7 +194,7 @@
     </div>
     
     <!-- =========================================================== -->
-    <!-- QR CODE SECTION -->
+    <!-- QR CODE SECTION (UPDATED with short URL) -->
     <!-- =========================================================== -->
     <div class="container my-4">
         <div class="row justify-content-center">
@@ -184,10 +206,10 @@
                             {% if current_lang == 'en' %}Scan to View on Mobile{% else %}امسح QR للعرض على الجوال{% endif %}
                         </h5>
                         <div class="d-flex justify-content-center">
-                            <img id="qrCode" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ request.url }}" alt="QR Code" style="width: 120px; height: 120px;">
+                            <img id="qrCode" src="https://chart.googleapis.com/chart?chs=180x180&cht=qr&chl=https://mawari-1hif.onrender.com/ar-collection&choe=UTF-8" alt="QR Code" style="width: 140px; height: 140px;">
                         </div>
                         <p class="small text-muted mt-3 mb-0">
-                            📱 {% if current_lang == 'en' %}Open this page on your mobile device for AR experience{% else %}افتح هذه الصفحة على جهازك الجوال لتجربة الواقع المعزز{% endif %}
+                            📱 {% if current_lang == 'en' %}Scan with your phone camera to open this page{% else %}امسح الرمز بكاميرا هاتفك لفتح هذه الصفحة{% endif %}
                         </p>
                     </div>
                 </div>
@@ -197,7 +219,7 @@
 </div>
 
 <!-- =========================================================== -->
-<!-- JAVASCRIPT - MANUAL AR BUTTON (Most Effective) -->
+<!-- JAVASCRIPT - MANUAL AR BUTTON (Sketchfab Modal) -->
 <!-- =========================================================== -->
 <style>
     /* Custom AR Button Animation */
@@ -261,15 +283,13 @@
 </style>
 
 <script>
-    // AR Model URLs
-    const AR_MODEL_URL = "https://sketchfab.com/models/9b18367aac28420bbc066d65e73b9acd/embed?autostart=1&ui_ar=1&ui_vr=1&ui_controls=1&ui_infos=1";
-    const PLAYLIST_URL = "https://sketchfab.com/playlists/embed?collection=80ef67b9a7314be0baf0335152d5a25a&autostart=1&ui_controls=1&ui_infos=1&ui_stop=1&ui_watermark=0&ui_related=0";
+    // Sketchfab Playlist URL for Modal
+    const PLAYLIST_URL = "https://sketchfab.com/playlists/embed?collection=80ef67b9a7314be0baf0335152d5a25a&autostart=1&ui_controls=1&ui_infos=1&ui_stop=1&ui_watermark=0&ui_related=0&ui_inspector=0&ui_settings=0&ui_annotations=1&ui_vr=1";
     
     let arModal = null;
     
     // Create AR Modal for better UX
     function createARModal() {
-        // Check if modal already exists
         if (document.getElementById('arModal')) return;
         
         const modal = document.createElement('div');
@@ -290,12 +310,10 @@
         createARModal();
         const iframe = document.getElementById('arIframe');
         if (iframe) {
-            iframe.src = AR_MODEL_URL;
+            iframe.src = PLAYLIST_URL;
         }
         arModal.classList.add('active');
-        
-        // Log AR launch
-        console.log('🎯 AR Modal launched - Qasr al-Farid');
+        console.log('🎯 AR Modal launched - AlUla Collection');
     }
     
     // Close AR Modal
@@ -307,44 +325,6 @@
         }
     }
     
-    // Open AR in new window (fallback)
-    function openARInNewWindow() {
-        window.open(AR_MODEL_URL, '_blank', 'width=1024,height=768');
-        console.log('🎯 AR launched in new window');
-    }
-    
-    // Detect mobile device
-    function isMobile() {
-        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    }
-    
-    // Main AR Launch Function
-    function launchAR() {
-        const statusDiv = document.getElementById('arStatus');
-        
-        if (isMobile()) {
-            // On mobile - open modal for better UX
-            openARModal();
-            if (statusDiv) {
-                statusDiv.innerHTML = '<i class="bi bi-check-circle"></i> AR mode activated! Tap the VR headset icon in the viewer.';
-                setTimeout(() => {
-                    if (statusDiv) statusDiv.innerHTML = '';
-                }, 5000);
-            }
-        } else {
-            // On desktop - open new window
-            openARInNewWindow();
-        }
-    }
-    
-    // Update QR Code with current URL
-    function updateQRCode() {
-        const qrImg = document.getElementById('qrCode');
-        if (qrImg) {
-            qrImg.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(window.location.href);
-        }
-    }
-    
     // Close modal with Escape key
     document.addEventListener('keydown', function(event) {
         if (event.key === 'Escape' && arModal && arModal.classList.contains('active')) {
@@ -352,49 +332,46 @@
         }
     });
     
+    // ============================================================
+    // كشف وتوجيه مستخدمي أجهزة Huawei / Honor
+    // ============================================================
+    function detectHuaweiARSupport() {
+        const userAgent = navigator.userAgent;
+        const isHuawei = /huawei/i.test(userAgent);
+        const isHonor = /honor/i.test(userAgent);
+        
+        if (isHuawei || isHonor) {
+            const message = `
+                <div class="alert alert-warning text-center" style="border-right: 4px solid #ffc107; background: #fff8e7;">
+                    <i class="bi bi-exclamation-triangle-fill" style="color: #ffc107;"></i>
+                    <strong>📱 لأجهزة Huawei/Honor:</strong><br>
+                    لتجربة الواقع المعزز، تأكد من تثبيت <strong>HUAWEI AR Engine</strong> من متجر AppGallery.
+                    <hr>
+                    <a href="https://consumer.huawei.com/en/support/ar-engine/" target="_blank" class="btn btn-sm btn-warning mt-1">
+                        <i class="bi bi-box-arrow-up-right"></i> معلومات عن AR Engine
+                    </a>
+                </div>
+            `;
+            const container = document.getElementById('huawei-ar-warning');
+            if (container) container.innerHTML = message;
+        }
+    }
+    
     // Initialize on page load
     document.addEventListener('DOMContentLoaded', function() {
-        // Update QR Code
-        updateQRCode();
-        
-        // Attach AR button event
+        // Attach Sketchfab AR button event
         const arButton = document.getElementById('arLaunchButton');
         if (arButton) {
-            arButton.addEventListener('click', launchAR);
+            arButton.addEventListener('click', openARModal);
         }
+        
+        // Detect Huawei/Honor devices
+        detectHuaweiARSupport();
         
         // Log successful load
-        console.log('🎉 AlUla Heritage Collection loaded with Manual AR Button');
-        console.log('📱 Mobile device detected:', isMobile());
-        console.log('🎯 AR Model ID: 9b18367aac28420bbc066d65e73b9acd');
-        
-        // Optional: Track AR launch analytics
-        if (typeof gtag !== 'undefined') {
-            gtag('event', 'ar_button_click', {
-                'event_category': 'AR',
-                'event_label': 'Qasr al-Farid'
-            });
-        }
+        console.log('🎉 AlUla Heritage Collection loaded');
+        console.log('📱 iOS users: Use GREEN button for direct AR');
+        console.log('🤖 Android users: Use GOLD button, then VR icon → Enter AR');
     });
-</script>
-
-<!-- Additional Mobile Detection for iOS -->
-<script>
-    // Detect iOS Safari for better instructions
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-    
-    if (isIOS && isSafari) {
-        console.log('📱 iOS Safari detected - AR ready');
-        // Add iOS specific instruction
-        const arButton = document.getElementById('arLaunchButton');
-        if (arButton) {
-            arButton.setAttribute('title', 'Tap then tap VR headset icon in viewer');
-        }
-    }
-    
-    if (isMobile() && !isIOS) {
-        console.log('📱 Android device detected - AR ready with Chrome');
-    }
 </script>
 {% endblock %}
