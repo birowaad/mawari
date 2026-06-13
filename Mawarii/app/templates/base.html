@@ -261,6 +261,15 @@
             box-shadow: 0 5px 15px rgba(46, 139, 87, 0.3);
         }
         
+        /* Special styling for Qasr al-Farid AR link */
+        .dropdown-item-qasr {
+            background: linear-gradient(135deg, rgba(218,165,32,0.1), rgba(139,109,20,0.05));
+        }
+        
+        .dropdown-item-qasr:hover {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark)) !important;
+        }
+        
         @media (max-width: 768px) {
             .logo-text h1 { font-size: 1.2rem; }
             .logo-img { width: 40px; height: 40px; }
@@ -301,6 +310,7 @@
                         </a>
                     </li>
                     
+                    <!-- AR Explorer Dropdown with Qasr al-Farid Full AR Experience -->
                     <li class="nav-item dropdown-modern">
                         <button class="dropdown-toggle" data-bs-toggle="dropdown">
                             <i class="bi bi-vr"></i> {% if current_lang == 'en' %}AR Explorer{% else %}المستكشف{% endif %}
@@ -309,6 +319,11 @@
                         <ul class="dropdown-menu">
                             <li><a href="{{ url_for('heritage') }}" class="dropdown-item"><i class="bi bi-3d"></i> {% if current_lang == 'en' %}3D Heritage Sites{% else %}مواقع تراثية ثلاثية الأبعاد{% endif %}</a></li>
                             <li><a href="{{ url_for('virtual_city_tour') }}" class="dropdown-item"><i class="bi bi-building"></i> {% if current_lang == 'en' %}Virtual City Tour{% else %}جولة المدينة الافتراضية{% endif %}</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <!-- Qasr al-Farid Full AR Experience Link -->
+                            <li><a href="{{ url_for('qasr_full_ar') }}" class="dropdown-item text-warning fw-bold">
+                                <i class="bi bi-arrow-repeat"></i> 🕶️ {% if current_lang == 'en' %}Qasr al-Farid - Full AR Experience{% else %}قصر الفريد - تجربة واقع معزز كاملة{% endif %}
+                            </a></li>
                         </ul>
                     </li>
                     
@@ -386,6 +401,7 @@
                     <ul class="list-unstyled small">
                         <li><a href="{{ url_for('heritage') }}" class="text-decoration-none opacity-75">🎨 {% if current_lang == 'en' %}AR Experience{% else %}تجربة الواقع المعزز{% endif %}</a></li>
                         <li><a href="{{ url_for('virtual_city_tour') }}" class="text-decoration-none opacity-75">🏙️ {% if current_lang == 'en' %}Virtual Tour{% else %}جولة افتراضية{% endif %}</a></li>
+                        <li><a href="{{ url_for('qasr_full_ar') }}" class="text-decoration-none opacity-75 text-warning">🕶️ {% if current_lang == 'en' %}Qasr al-Farid AR{% else %}قصر الفريد - واقع معزز{% endif %}</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4 mb-3">
