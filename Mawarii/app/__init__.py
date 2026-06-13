@@ -197,7 +197,8 @@ def create_app():
         current_lang = session.get('language', 'en')
         return {
             'current_lang': current_lang,
-            'is_rtl': current_lang == 'ar'
+            'is_rtl': current_lang == 'ar',
+            'request': request
         }
 
     @app.before_request
@@ -253,7 +254,7 @@ def create_app():
         """Virtual city tour page with gamification and AI recommendations"""
         return render_template('virtual_city_tour.html', title='Virtual City Tour | AlUla Heritage')
 
-    # ==================== NEW AR ROUTES ====================
+    # ==================== AR ROUTES ====================
     
     @app.route('/qasr')
     def qasr_full_ar():
@@ -263,6 +264,15 @@ def create_app():
                              current_lang=current_lang,
                              is_rtl=current_lang == 'ar',
                              title='Qasr al-Farid AR Experience')
+    
+    @app.route('/ar-collection')
+    def ar_collection():
+        """AlUla Heritage Collection - 3D models with AR/VR support from Sketchfab"""
+        current_lang = session.get('language', 'en')
+        return render_template('ar_collection.html',
+                             current_lang=current_lang,
+                             is_rtl=current_lang == 'ar',
+                             title='AlUla Heritage - AR Collection')
     
     @app.route('/ar/site/<int:site_id>')
     def ar_site_viewer(site_id):
@@ -285,6 +295,90 @@ def create_app():
                              site=site,
                              site_id=site_id,
                              title=f"{site['name_en']} - AR Experience")
+
+    # ==================== AR API ENDPOINTS ====================
+    
+    @app.route('/api/ar/complete', methods=['POST'])
+    @login_required
+    def api_ar_complete():
+        """Record AR exploration completion and award points"""
+        data = request.get_json()
+        user = current_user
+        
+        site_id = data.get('site_id', 'qasr_al_farid')
+        site_name = data.get('site_name', 'Qasr al-Farid')
+        points_earned = data.get('points', 50)
+        time_spent = data.get('time_spent', 0)
+        
+        prefs = user.get_preferences()
+        completed_sites = prefs.get('completed_ar_sites', [])
+        
+        if site_id not in completed_sites:
+            completed_sites.append(site_id)
+            prefs['completed_ar_sites'] = completed_sites
+            prefs['ar_points'] = prefs.get('ar_points', 0) + points_earned
+            prefs['total_ar_time'] = prefs.get('total_ar_time', 0) + time_spent
+            user.set_preferences(prefs)
+            db.session.commit()
+            
+            UserInteraction.log_interaction(
+                db.session, user.id, 1, 'ar_exploration',
+                duration=time_spent, completion=100,
+                site_name=site_name, points=points_earned
+            )
+            
+            return jsonify({
+                'status': 'success',
+                'points': prefs['ar_points'],
+                'completed_count': len(completed_sites),
+                'message': f'+{points_earned} points earned!'
+            })
+        
+        return jsonify({'status': 'already_completed', 'points': prefs.get('ar_points', 0)})
+    
+    @app.route('/api/ar/stats')
+    @login_required
+    def api_ar_stats():
+        """Get user AR exploration statistics"""
+        user = current_user
+        prefs = user.get_preferences()
+        
+        return jsonify({
+            'points': prefs.get('ar_points', 0),
+            'completed_sites': prefs.get('completed_ar_sites', []),
+            'total_time': prefs.get('total_ar_time', 0),
+            'achievements': prefs.get('ar_achievements', [])
+        })
+    
+    @app.route('/api/ar/track', methods=['POST'])
+    def api_ar_track():
+        """Track AR interaction for anonymous users (stored in session)"""
+        data = request.get_json()
+        
+        if 'ar_session' not in session:
+            session['ar_session'] = {
+                'points': 0,
+                'completed': [],
+                'total_time': 0
+            }
+        
+        ar_session = session['ar_session']
+        site_id = data.get('site_id', 'qasr_al_farid')
+        
+        if site_id not in ar_session['completed']:
+            ar_session['completed'].append(site_id)
+            ar_session['points'] += data.get('points', 50)
+            ar_session['total_time'] += data.get('time_spent', 0)
+            session['ar_session'] = ar_session
+            session.modified = True
+            
+            return jsonify({
+                'status': 'success',
+                'points': ar_session['points'],
+                'completed_count': len(ar_session['completed'])
+            })
+        
+        return jsonify({'status': 'already_completed', 'points': ar_session['points']})
 
     # ===========================================================
     # Authentication Routes
