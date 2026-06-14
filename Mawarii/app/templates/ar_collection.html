@@ -7,96 +7,37 @@
             🚁 تجربة الواقع المعزز - خوذة الطيران
         </h1>
         <p class="text-white-50 lead">
-            استمتع بتجربة غامرة وتحرك حول المجسم بحرية
+            جرب النموذج ثلاثي الأبعاد في مكانك الحقيقي
         </p>
     </div>
 
     <div class="container my-4">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <div class="alert alert-success text-center rounded-4 mb-3">
-                    <h5><strong>✨ جرب الواقع المعزز الآن ✨</strong></h5>
-                    <p>اضغط الزر أدناه، ثم حرك جهازك ببطء لتثبيت المجسم في غرفتك.</p>
+                <div class="alert alert-primary text-center rounded-4 mb-3">
+                    <i class="bi bi-info-circle-fill"></i>
+                    <strong>👇 للاستمتاع بتجربة غامرة:</strong><br>
+                    1. اضغط الزر أدناه<br>
+                    2. انتظر حتى يتم تجهيز التجربة<br>
+                    3. ابحث عن سطح مستوٍ (الأرض أو طاولة) وضع النموذج عليه<br>
+                    4. يمكنك بعد ذلك التحرك حول النموذج والمشي من حوله
                 </div>
-                
+
                 <div class="d-grid gap-2">
-                    <button id="directArButton" class="btn btn-success btn-lg rounded-pill py-3" 
-                            style="background: linear-gradient(135deg, #28a745, #20c997); font-size: 1.3rem; font-weight: bold;">
+                    <a href="intent://arvr.google.com/scene-viewer/1?file=https://threejs.org/examples/models/gltf/FlightHelmet/glTF/FlightHelmet.glb&mode=ar_only#Intent;scheme=https;package=com.google.android.apps.tachyon;action=android.intent.action.VIEW;S.browser_fallback_url=https://developers.google.com/ar;end;"
+                       class="btn btn-success btn-lg rounded-pill py-3" 
+                       style="background: linear-gradient(135deg, #28a745, #20c997); font-size: 1.3rem; font-weight: bold;">
                         <i class="bi bi-vr"></i> 🕶️ تشغيل الواقع المعزز - خوذة الطيران
-                    </button>
+                    </a>
                 </div>
                 <p class="small text-muted text-center mt-2">
-                    🌟 <strong>نصيحة هامة:</strong> تأكد من الإضاءة الجيدة، وحرك جهازك ببطء عندما تطلب الكاميرا "البحث عن سطح مستوٍ".
+                    🛠️ هذه التجربة تستخدم تطبيق "Scene Viewer" من Google للحصول على أداء أفضل.
+                </p>
+                <p class="small text-muted text-center mt-1">
+                    💡 <strong>ملاحظة:</strong> قد يطلب منك النظام التحديث إلى "Google Play Services for AR" إذا كنت تستخدمه لأول مرة.
                 </p>
             </div>
         </div>
     </div>
 </div>
-
-<!-- Model-Viewer Library -->
-<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
-
-<script>
-    function initDirectAR() {
-        const arButton = document.getElementById('directArButton');
-        if (arButton) {
-            arButton.addEventListener('click', () => {
-                // 1. إنشاء عنصر model-viewer ديناميكيًا
-                const viewer = document.createElement('model-viewer');
-                viewer.setAttribute('src', 'https://threejs.org/examples/models/gltf/FlightHelmet/glTF/FlightHelmet.glb');
-                viewer.setAttribute('alt', 'Flight Helmet 3D Model');
-                viewer.setAttribute('ar', '');
-                viewer.setAttribute('ar-modes', 'webxr scene-viewer quick-look'); // 🔥 الحل المطلوب هنا 🔥
-                viewer.setAttribute('camera-controls', '');
-                viewer.setAttribute('auto-rotate', '');
-                viewer.setAttribute('style', 'width: 100%; height: 100%; background-color: #1a1a1a;');
-                
-                // 2. إنشاء نافذة منبثقة (Modal) لعرض النموذج
-                const modal = document.createElement('div');
-                modal.style.position = 'fixed';
-                modal.style.top = '0';
-                modal.style.left = '0';
-                modal.style.width = '100%';
-                modal.style.height = '100%';
-                modal.style.backgroundColor = 'rgba(0,0,0,0.95)';
-                modal.style.zIndex = '10000';
-                modal.style.display = 'flex';
-                modal.style.flexDirection = 'column';
-                
-                // 3. إضافة زر الإغلاق
-                const closeBtn = document.createElement('button');
-                closeBtn.innerHTML = '✕';
-                closeBtn.style.position = 'absolute';
-                closeBtn.style.top = '20px';
-                closeBtn.style.right = '20px';
-                closeBtn.style.width = '40px';
-                closeBtn.style.height = '40px';
-                closeBtn.style.borderRadius = '50%';
-                closeBtn.style.backgroundColor = '#fff';
-                closeBtn.style.border = 'none';
-                closeBtn.style.fontSize = '24px';
-                closeBtn.style.cursor = 'pointer';
-                closeBtn.style.zIndex = '10001';
-                closeBtn.onclick = () => document.body.removeChild(modal);
-                
-                // 4. تجميع العناصر وعرضها للمستخدم
-                modal.appendChild(viewer);
-                modal.appendChild(closeBtn);
-                document.body.appendChild(modal);
-                
-                // 5. تشغيل الواقع المعزز تلقائيًا (خطوة إضافية لتحسين تجربة المستخدم)
-                setTimeout(() => {
-                    viewer.activateAR();
-                }, 500);
-                
-                console.log('🎯 Direct AR launched - Flight Helmet');
-            });
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        initDirectAR();
-        console.log('🎉 AR page loaded with correct ar-modes order (webxr first)');
-    });
-</script>
 {% endblock %}
