@@ -2,42 +2,111 @@
 
 {% block content %}
 <div class="container-fluid p-0">
+    <!-- Hero Section -->
     <div class="text-center py-5" style="background: linear-gradient(135deg, #2E8B57, #1F6B43);">
         <h1 class="display-5 fw-bold text-white">
-            🚁 تجربة الواقع المعزز - خوذة الطيران
+            🏛️ {% if current_lang == 'en' %}Hegra Tomb - Augmented Reality{% else %}مقبرة الحجر - الواقع المعزز{% endif %}
         </h1>
         <p class="text-white-50 lead">
-            جرب النموذج ثلاثي الأبعاد في مكانك الحقيقي
+            {% if current_lang == 'en' %}Experience the Nabataean tomb of Mada'in Salih in AR{% else %}جرب المقبرة النبطية في مدائن صالح بتقنية الواقع المعزز{% endif %}
         </p>
     </div>
 
     <div class="container my-4">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <div class="alert alert-primary text-center rounded-4 mb-3">
-                    <i class="bi bi-info-circle-fill"></i>
-                    <strong>👇 للاستمتاع بتجربة غامرة:</strong><br>
-                    1. اضغط الزر أدناه<br>
-                    2. انتظر حتى يتم تجهيز التجربة<br>
-                    3. ابحث عن سطح مستوٍ (الأرض أو طاولة) وضع النموذج عليه<br>
-                    4. يمكنك بعد ذلك التحرك حول النموذج والمشي من حوله
+                
+                <!-- =========================================================== -->
+                <!-- الأهم: زر الواقع المعزز المباشر باستخدام رابط echo3D -->
+                <!-- =========================================================== -->
+                <div class="alert alert-success text-center rounded-4 mb-3" style="background: linear-gradient(135deg, #d4f5e8, #b8e6d4); border: none;">
+                    <i class="bi bi-stars fs-3"></i>
+                    <h5 class="mt-2 mb-1"><strong>✨ تجربة الواقع المعزز الغامرة ✨</strong></h5>
+                    <p class="mb-0">
+                        {% if current_lang == 'en' %}
+                        اضغط الزر أدناه لتجربة المقبرة النبطية مباشرة في مكانك الحقيقي.
+                        {% else %}
+                        Click the button below to experience the Nabataean tomb directly in your real environment.
+                        {% endif %}
+                    </p>
                 </div>
 
-                <div class="d-grid gap-2">
-                    <a href="intent://arvr.google.com/scene-viewer/1?file=https://threejs.org/examples/models/gltf/FlightHelmet/glTF/FlightHelmet.glb&mode=ar_only#Intent;scheme=https;package=com.google.android.apps.tachyon;action=android.intent.action.VIEW;S.browser_fallback_url=https://developers.google.com/ar;end;"
+                <div class="d-grid gap-2 mb-5">
+                    <a href="https://go.echo3d.com/9VYO" 
+                       target="_blank"
                        class="btn btn-success btn-lg rounded-pill py-3" 
-                       style="background: linear-gradient(135deg, #28a745, #20c997); font-size: 1.3rem; font-weight: bold;">
-                        <i class="bi bi-vr"></i> 🕶️ تشغيل الواقع المعزز - خوذة الطيران
+                       style="background: linear-gradient(135deg, #28a745, #20c997); font-size: 1.3rem; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                        <i class="bi bi-vr"></i> 🕶️ 
+                        {% if current_lang == 'en' %}Launch Augmented Reality (Full Experience){% else %}تشغيل الواقع المعزز (تجربة كاملة){% endif %}
                     </a>
                 </div>
+                
+                <hr class="my-4">
+                
+                <!-- =========================================================== -->
+                <!-- عارض ثلاثي الأبعاد تقليدي للكمبيوتر أو كبديل -->
+                <!-- =========================================================== -->
+                <div class="alert alert-info text-center rounded-4 mb-3">
+                    <i class="bi bi-info-circle-fill"></i>
+                    {% if current_lang == 'en' %}
+                    <strong>Interactive 3D Viewer (Desktop/Alternative):</strong> لرؤية النموذج وتدويره، يمكنك استخدام العارض أدناه.
+                    {% else %}
+                    <strong>Interactive 3D Viewer (Desktop/Alternative):</strong> To view and rotate the model, use the viewer below.
+                    {% endif %}
+                </div>
+
+                <!-- عارض ثلاثي الأبعاد (يستخدم الرابط نفسه لكن كعارض عادي) -->
+                <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                    <div class="card-header bg-gradient" style="background: linear-gradient(135deg, #DAA520, #B8860B);">
+                        <h5 class="mb-0 text-white">
+                            <i class="bi bi-3d"></i> 
+                            {% if current_lang == 'en' %}3D Model Viewer{% else %}عارض النماذج ثلاثية الأبعاد{% endif %}
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <!-- نموذج `<model-viewer>` لعرض المجسم بشكل تفاعلي على الكمبيوتر -->
+                        <model-viewer 
+                            src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/AncientTomb/glTF/AncientTomb.gltf"
+                            alt="Hegra Tomb"
+                            camera-controls
+                            auto-rotate
+                            style="width:100%; height: 500px; background-color: #1a1a1a;">
+                        </model-viewer>
+                    </div>
+                </div>
                 <p class="small text-muted text-center mt-2">
-                    🛠️ هذه التجربة تستخدم تطبيق "Scene Viewer" من Google للحصول على أداء أفضل.
-                </p>
-                <p class="small text-muted text-center mt-1">
-                    💡 <strong>ملاحظة:</strong> قد يطلب منك النظام التحديث إلى "Google Play Services for AR" إذا كنت تستخدمه لأول مرة.
+                    🖱️ {% if current_lang == 'en' %}Drag to rotate | Scroll to zoom{% else %}اسحب لتدوير | مرر للتكبير{% endif %}
                 </p>
             </div>
         </div>
     </div>
+
+    <!-- =========================================================== -->
+    <!-- رمز QR Code للدخول السريع من الجوال -->
+    <!-- =========================================================== -->
+    <div class="container my-4">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm rounded-4 bg-light">
+                    <div class="card-body text-center">
+                        <h5 class="text-warning mb-3">
+                            <i class="bi bi-qr-code"></i> 
+                            {% if current_lang == 'en' %}Scan to View on Mobile{% else %}امسح للعرض على الجوال{% endif %}
+                        </h5>
+                        <div class="d-flex justify-content-center">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://go.echo3d.com/9VYO&choe=UTF-8" 
+                                 alt="QR Code" 
+                                 style="width: 150px; height: 150px;">
+                        </div>
+                        <p class="small text-muted mt-3 mb-0">
+                            📱 {% if current_lang == 'en' %}Scan with your phone camera to start the AR experience instantly{% else %}امسح الرمز بكاميرا هاتفك لبدء تجربة الواقع المعزز فوراً{% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
 {% endblock %}
