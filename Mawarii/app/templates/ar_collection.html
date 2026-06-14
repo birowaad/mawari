@@ -5,10 +5,10 @@
     <!-- Hero Section -->
     <div class="text-center py-5" style="background: linear-gradient(135deg, #2E8B57, #1F6B43);">
         <h1 class="display-5 fw-bold text-white">
-            🏛️ {% if current_lang == 'en' %}Hegra Tombs - Augmented Reality{% else %}مقابر الحجر - الواقع المعزز{% endif %}
+            🐪 {% if current_lang == 'en' %}AlUla Desert Life - Augmented Reality{% else %}الحياة الصحراوية في العلا - الواقع المعزز{% endif %}
         </h1>
         <p class="text-white-50 lead">
-            {% if current_lang == 'en' %}Experience the Nabataean tomb in Augmented Reality{% else %}جرب المقبرة النبطية بتقنية الواقع المعزز{% endif %}
+            {% if current_lang == 'en' %}Experience the Arabian Camel in Augmented Reality{% else %}جرب الجمل العربي بتقنية الواقع المعزز{% endif %}
         </p>
     </div>
 
@@ -36,6 +36,14 @@
                     </p>
                 </div>
                 
+                <!-- Loading Indicator -->
+                <div id="loadingIndicator" class="text-center mb-3" style="display: none;">
+                    <div class="spinner-border text-warning" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="text-muted mt-2">{% if current_lang == 'en' %}Loading 3D model...{% else %}جاري تحميل النموذج ثلاثي الأبعاد...{% endif %}</p>
+                </div>
+                
                 <!-- AR.js Viewer -->
                 <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
                     <div class="card-header bg-gradient" style="background: linear-gradient(135deg, #DAA520, #B8860B);">
@@ -58,16 +66,17 @@
                                 <!-- HIRO Marker -->
                                 <a-marker preset="hiro" id="hiroMarker">
                                     
-                                    <!-- استخدام نموذج hegra_tomb.glb الموجود لديك -->
+                                    <!-- استخدام نموذج camel.glb (صغير الحجم وسريع التحميل) -->
                                     <a-entity
-                                        gltf-model="{{ url_for('static', filename='models/hegra_tomb.glb') }}"
-                                        scale="0.15 0.15 0.15"
+                                        id="camelModel"
+                                        gltf-model="{{ url_for('static', filename='models/camel.glb') }}"
+                                        scale="0.3 0.3 0.3"
                                         position="0 0 0"
                                         rotation="0 90 0">
                                     </a-entity>
                                     
                                     <!-- 3D Text Label -->
-                                    <a-text value="🏛️ Hegra Tomb - Mada'in Salih" color="#FFD700" align="center" position="0 1.2 0" scale="0.5 0.5 0.5"></a-text>
+                                    <a-text value="🐪 Arabian Camel - Ship of the Desert" color="#FFD700" align="center" position="0 1.2 0" scale="0.5 0.5 0.5"></a-text>
                                     
                                 </a-marker>
                                 
@@ -82,9 +91,17 @@
                     <p class="small text-muted">
                         <i class="bi bi-arrow-repeat"></i> 
                         {% if current_lang == 'en' %}
-                        Once the marker is detected, the 3D tomb will appear. You can walk around it for a full view.
+                        Once the marker is detected, the 3D camel will appear. You can walk around it for a full view.
                         {% else %}
-                        عند التعرف على العلامة، سيظهر القبر ثلاثي الأبعاد. يمكنك المشي حوله لمشاهدته من جميع الزوايا.
+                        عند التعرف على العلامة، سيظهر الجمل ثلاثي الأبعاد. يمكنك المشي حوله لمشاهدته من جميع الزوايا.
+                        {% endif %}
+                    </p>
+                    <p class="small text-muted">
+                        <i class="bi bi-rocket-takeoff"></i> 
+                        {% if current_lang == 'en' %}
+                        <strong>Tip:</strong> This model is optimized for fast loading. For best results, ensure good lighting.
+                        {% else %}
+                        <strong>نصيحة:</strong> هذا النموذج محسّن للتحميل السريع. للحصول على أفضل النتائج، تأكد من الإضاءة الجيدة.
                         {% endif %}
                     </p>
                 </div>
@@ -122,16 +139,32 @@
 <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
 
 <script>
-    // Monitor marker detection
+    // Monitor marker detection and loading
     function setupMarkerDetection() {
         const marker = document.getElementById('hiroMarker');
+        const model = document.getElementById('camelModel');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        
         if (marker) {
             marker.addEventListener('markerFound', () => {
-                console.log('🎯 HIRO Marker Found - Hegra Tomb Displayed');
-                showTempMessage('✅ تم التعرف على العلامة - نموذج مقبرة الحجر معروض', 'success');
+                console.log('🎯 HIRO Marker Found - Camel Model Displayed');
+                showTempMessage('✅ تم التعرف على العلامة - نموذج الجمل معروض', 'success');
             });
             marker.addEventListener('markerLost', () => {
                 console.log('👋 HIRO Marker Lost');
+                showTempMessage('⚠️ تم فقد العلامة - وجه الكاميرا نحو العلامة مرة أخرى', 'warning');
+            });
+        }
+        
+        // Show/hide loading indicator for model
+        if (model) {
+            model.addEventListener('model-loading', () => {
+                if (loadingIndicator) loadingIndicator.style.display = 'block';
+                console.log('🔄 Loading 3D model...');
+            });
+            model.addEventListener('model-loaded', () => {
+                if (loadingIndicator) loadingIndicator.style.display = 'none';
+                console.log('✅ 3D model loaded successfully');
             });
         }
     }
@@ -151,10 +184,26 @@
         setTimeout(() => div.remove(), 3000);
     }
     
+    // Detect device type
+    function detectDevice() {
+        const ua = navigator.userAgent;
+        if (/huawei|honor/i.test(ua)) {
+            console.log('📱 Huawei/Honor device detected');
+        }
+        if (/iPhone|iPad/i.test(ua)) {
+            console.log('📱 iOS device detected');
+        }
+        if (/Android/i.test(ua)) {
+            console.log('📱 Android device detected');
+        }
+    }
+    
     document.addEventListener('DOMContentLoaded', function() {
         setupMarkerDetection();
-        console.log('🎉 Hegra Tombs AR page loaded');
-        console.log('📍 Using local GLB file: hegra_tomb.glb');
+        detectDevice();
+        console.log('🎉 AlUla Desert Life AR page loaded');
+        console.log('📍 Using local GLB file: camel.glb (small size, fast loading)');
+        console.log('🐪 Experience the Arabian Camel in Augmented Reality');
     });
 </script>
 {% endblock %}
