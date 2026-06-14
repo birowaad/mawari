@@ -5,85 +5,86 @@
     <!-- Hero Section -->
     <div class="text-center py-5" style="background: linear-gradient(135deg, #2E8B57, #1F6B43);">
         <h1 class="display-5 fw-bold text-white">
-            🏛️ {% if current_lang == 'en' %}Hegra Tomb - Augmented Reality{% else %}مقبرة الحجر - الواقع المعزز{% endif %}
+            🏛️🏜️ {% if current_lang == 'en' %}AlUla Immersive Heritage{% else %}التراث الغامر في العلا{% endif %}
         </h1>
         <p class="text-white-50 lead">
-            {% if current_lang == 'en' %}Experience the Nabataean tomb of Mada'in Salih in AR{% else %}جرب المقبرة النبطية في مدائن صالح بتقنية الواقع المعزز{% endif %}
+            {% if current_lang == 'en' %}Explore Nabataean tombs and majestic desert landscapes in Augmented Reality{% else %}استكشف المقابر النبطية والمناظر الصحراوية المهيبة بتقنية الواقع المعزز{% endif %}
         </p>
     </div>
 
     <div class="container my-4">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                
                 <!-- =========================================================== -->
-                <!-- الأهم: زر الواقع المعزز المباشر باستخدام رابط echo3D -->
+                <!-- اختيار التجربة: أزرار للتبديل بين النموذجين -->
                 <!-- =========================================================== -->
-                <div class="alert alert-success text-center rounded-4 mb-3" style="background: linear-gradient(135deg, #d4f5e8, #b8e6d4); border: none;">
-                    <i class="bi bi-stars fs-3"></i>
-                    <h5 class="mt-2 mb-1"><strong>✨ تجربة الواقع المعزز الغامرة ✨</strong></h5>
-                    <p class="mb-0">
-                        {% if current_lang == 'en' %}
-                        اضغط الزر أدناه لتجربة المقبرة النبطية مباشرة في مكانك الحقيقي.
-                        {% else %}
-                        Click the button below to experience the Nabataean tomb directly in your real environment.
-                        {% endif %}
-                    </p>
+                <div class="d-flex justify-content-center gap-3 mb-4">
+                    <button id="selectHegraBtn" class="btn btn-outline-light rounded-pill px-4 active" style="border-color: #DAA520; color: #DAA520;">
+                        🏛️ {% if current_lang == 'en' %}Hegra Tomb{% else %}مقبرة الحجر{% endif %}
+                    </button>
+                    <button id="selectDesertBtn" class="btn btn-outline-light rounded-pill px-4" style="border-color: #DAA520; color: #DAA520;">
+                        🏜️ {% if current_lang == 'en' %}Desert Cliff{% else %}منحدر صحراوي{% endif %}
+                    </button>
                 </div>
 
-                <div class="d-grid gap-2 mb-5">
-                    <a href="https://go.echo3d.com/9VYO" 
-                       target="_blank"
-                       class="btn btn-success btn-lg rounded-pill py-3" 
-                       style="background: linear-gradient(135deg, #28a745, #20c997); font-size: 1.3rem; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-                        <i class="bi bi-vr"></i> 🕶️ 
-                        {% if current_lang == 'en' %}Launch Augmented Reality (Full Experience){% else %}تشغيل الواقع المعزز (تجربة كاملة){% endif %}
-                    </a>
-                </div>
-                
-                <hr class="my-4">
-                
                 <!-- =========================================================== -->
-                <!-- عارض ثلاثي الأبعاد تقليدي للكمبيوتر أو كبديل -->
+                <!-- محتوى المقبرة النبطية (Hegra Tomb) -->
                 <!-- =========================================================== -->
-                <div class="alert alert-info text-center rounded-4 mb-3">
-                    <i class="bi bi-info-circle-fill"></i>
-                    {% if current_lang == 'en' %}
-                    <strong>Interactive 3D Viewer (Desktop/Alternative):</strong> لرؤية النموذج وتدويره، يمكنك استخدام العارض أدناه.
-                    {% else %}
-                    <strong>Interactive 3D Viewer (Desktop/Alternative):</strong> To view and rotate the model, use the viewer below.
-                    {% endif %}
+                <div id="hegraContent" class="experience-content">
+                    <div class="alert alert-success text-center rounded-4 mb-3" style="background: linear-gradient(135deg, #d4f5e8, #b8e6d4); border: none;">
+                        <i class="bi bi-stars fs-3"></i>
+                        <h5 class="mt-2 mb-1"><strong>🏛️ Hegra Tomb: Qasr al-Farid</strong></h5>
+                        <p class="mb-0">
+                            {% if current_lang == 'en' %}
+                            Experience the iconic Nabataean tomb carved from a single sandstone monolith.
+                            {% else %}
+                            جرب المقبرة النبطية الأيقونية المنحوتة من كتلة واحدة من الحجر الرملي.
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <div class="d-grid gap-2 mb-4">
+                        <a href="https://go.echo3d.com/9VYO" 
+                           target="_blank"
+                           class="btn btn-success btn-lg rounded-pill py-3" 
+                           style="background: linear-gradient(135deg, #28a745, #20c997); font-size: 1.2rem; font-weight: bold;">
+                            <i class="bi bi-vr"></i> 🕶️ 
+                            {% if current_lang == 'en' %}Experience Hegra Tomb in AR{% else %}جرب مقبرة الحجر بالواقع المعزز{% endif %}
+                        </a>
+                    </div>
                 </div>
 
-                <!-- عارض ثلاثي الأبعاد (يستخدم الرابط نفسه لكن كعارض عادي) -->
-                <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
-                    <div class="card-header bg-gradient" style="background: linear-gradient(135deg, #DAA520, #B8860B);">
-                        <h5 class="mb-0 text-white">
-                            <i class="bi bi-3d"></i> 
-                            {% if current_lang == 'en' %}3D Model Viewer{% else %}عارض النماذج ثلاثية الأبعاد{% endif %}
-                        </h5>
+                <!-- =========================================================== -->
+                <!-- محتوى التشكيل الصخري (Desert Cliff) -->
+                <!-- =========================================================== -->
+                <div id="desertContent" class="experience-content" style="display: none;">
+                    <div class="alert alert-info text-center rounded-4 mb-3" style="background: linear-gradient(135deg, #e0f2fe, #bae6fd); border: none;">
+                        <i class="bi bi-stars fs-3"></i>
+                        <h5 class="mt-2 mb-1"><strong>🏜️ Western Desert Cliff</strong></h5>
+                        <p class="mb-0">
+                            {% if current_lang == 'en' %}
+                            Explore the layered majestic rock formations that define AlUla's landscape.
+                            {% else %}
+                            استكشف التكوينات الصخرية المهيبة متعددة الطبقات التي تحدد منظر العلا الطبيعي.
+                            {% endif %}
+                        </p>
                     </div>
-                    <div class="card-body p-0">
-                        <!-- نموذج `<model-viewer>` لعرض المجسم بشكل تفاعلي على الكمبيوتر -->
-                        <model-viewer 
-                            src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/AncientTomb/glTF/AncientTomb.gltf"
-                            alt="Hegra Tomb"
-                            camera-controls
-                            auto-rotate
-                            style="width:100%; height: 500px; background-color: #1a1a1a;">
-                        </model-viewer>
+
+                    <div class="d-grid gap-2 mb-4">
+                        <a href="https://go.echo3d.com/mEB1" 
+                           target="_blank"
+                           class="btn btn-info btn-lg rounded-pill py-3" 
+                           style="background: linear-gradient(135deg, #0ea5e9, #0284c7); font-size: 1.2rem; font-weight: bold; color: white;">
+                            <i class="bi bi-vr"></i> 🕶️ 
+                            {% if current_lang == 'en' %}Experience Desert Cliff in AR{% else %}جرب المنحدر الصحراوي بالواقع المعزز{% endif %}
+                        </a>
                     </div>
                 </div>
-                <p class="small text-muted text-center mt-2">
-                    🖱️ {% if current_lang == 'en' %}Drag to rotate | Scroll to zoom{% else %}اسحب لتدوير | مرر للتكبير{% endif %}
-                </p>
             </div>
         </div>
     </div>
 
-    <!-- =========================================================== -->
-    <!-- رمز QR Code للدخول السريع من الجوال -->
-    <!-- =========================================================== -->
+    <!-- QR Code Section (سيتم تحديثه ديناميكيًا) -->
     <div class="container my-4">
         <div class="row justify-content-center">
             <div class="col-md-6">
@@ -94,12 +95,12 @@
                             {% if current_lang == 'en' %}Scan to View on Mobile{% else %}امسح للعرض على الجوال{% endif %}
                         </h5>
                         <div class="d-flex justify-content-center">
-                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://go.echo3d.com/9VYO&choe=UTF-8" 
+                            <img id="qrCodeImage" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://go.echo3d.com/9VYO&choe=UTF-8" 
                                  alt="QR Code" 
                                  style="width: 150px; height: 150px;">
                         </div>
-                        <p class="small text-muted mt-3 mb-0">
-                            📱 {% if current_lang == 'en' %}Scan with your phone camera to start the AR experience instantly{% else %}امسح الرمز بكاميرا هاتفك لبدء تجربة الواقع المعزز فوراً{% endif %}
+                        <p class="small text-muted mt-3 mb-0" id="qrCodeText">
+                            📱 {% if current_lang == 'en' %}Scan to start the AR experience instantly{% else %}امسح لبدء تجربة الواقع المعزز فوراً{% endif %}
                         </p>
                     </div>
                 </div>
@@ -109,4 +110,52 @@
 </div>
 
 <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+
+<script>
+    // جافا سكريبت للتبديل بين النموذجين وتحديث رمز QR ديناميكيًا
+    const hegraBtn = document.getElementById('selectHegraBtn');
+    const desertBtn = document.getElementById('selectDesertBtn');
+    const hegraContent = document.getElementById('hegraContent');
+    const desertContent = document.getElementById('desertContent');
+    const qrImage = document.getElementById('qrCodeImage');
+    const qrText = document.getElementById('qrCodeText');
+
+    const HEGRA_URL = 'https://go.echo3d.com/9VYO';
+    const DESERT_URL = 'https://go.echo3d.com/mEB1';
+
+    function setActiveButton(active, inactive) {
+        active.classList.add('active');
+        active.style.color = '#DAA520';
+        active.style.borderColor = '#DAA520';
+        active.style.backgroundColor = 'rgba(218, 165, 32, 0.1)';
+        
+        inactive.classList.remove('active');
+        inactive.style.color = '#DAA520';
+        inactive.style.borderColor = '#DAA520';
+        inactive.style.backgroundColor = 'transparent';
+    }
+
+    function updateQRCode(url, isHegra) {
+        qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(url)}&choe=UTF-8`;
+        if (isHegra) {
+            qrText.innerHTML = '📱 ' + (currentLang === 'en' ? 'Scan to experience Hegra Tomb in AR' : 'امسح لتجربة مقبرة الحجر بالواقع المعزز');
+        } else {
+            qrText.innerHTML = '📱 ' + (currentLang === 'en' ? 'Scan to experience Desert Cliff in AR' : 'امسح لتجربة المنحدر الصحراوي بالواقع المعزز');
+        }
+    }
+
+    hegraBtn.addEventListener('click', () => {
+        hegraContent.style.display = 'block';
+        desertContent.style.display = 'none';
+        setActiveButton(hegraBtn, desertBtn);
+        updateQRCode(HEGRA_URL, true);
+    });
+
+    desertBtn.addEventListener('click', () => {
+        hegraContent.style.display = 'none';
+        desertContent.style.display = 'block';
+        setActiveButton(desertBtn, hegraBtn);
+        updateQRCode(DESERT_URL, false);
+    });
+</script>
 {% endblock %}
