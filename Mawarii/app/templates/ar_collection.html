@@ -5,23 +5,59 @@
     <!-- Hero Section -->
     <div class="text-center py-5" style="background: linear-gradient(135deg, #2E8B57, #1F6B43);">
         <h1 class="display-5 fw-bold text-white">
-            🐪 {% if current_lang == 'en' %}AlUla Desert Life - Augmented Reality{% else %}الحياة الصحراوية في العلا - الواقع المعزز{% endif %}
+            🚁 {% if current_lang == 'en' %}Flight Helmet - Augmented Reality{% else %}خوذة الطيران - الواقع المعزز{% endif %}
         </h1>
         <p class="text-white-50 lead">
-            {% if current_lang == 'en' %}Experience the Arabian Camel in Augmented Reality{% else %}جرب الجمل العربي بتقنية الواقع المعزز{% endif %}
+            {% if current_lang == 'en' %}Experience a high-quality 3D model in Augmented Reality{% else %}جرب نموذج ثلاثي الأبعاد عالي الجودة في الواقع المعزز{% endif %}
         </p>
+        <div class="mt-3">
+            <span class="badge bg-warning text-dark rounded-pill px-3 py-2 me-2">
+                <i class="bi bi-vr"></i> WebXR AR
+            </span>
+            <span class="badge bg-info rounded-pill px-3 py-2">
+                <i class="bi bi-phone"></i> All Devices
+            </span>
+        </div>
     </div>
 
     <div class="container my-4">
         <div class="row justify-content-center">
             <div class="col-md-10">
                 
+                <!-- =========================================================== -->
+                <!-- DIRECT AR BUTTON (WebXR) - يعمل على جميع الأجهزة -->
+                <!-- =========================================================== -->
+                <div class="alert alert-success text-center rounded-4 mb-3" style="background: linear-gradient(135deg, #d4f5e8, #b8e6d4); border: none;">
+                    <i class="bi bi-phone fs-3"></i>
+                    <h5 class="mt-2 mb-1"><strong>{% if current_lang == 'en' %}Direct AR Experience{% else %}تجربة الواقع المعزز المباشرة{% endif %}</strong></h5>
+                    <p class="mb-0">
+                        {% if current_lang == 'en' %}
+                        Click the button below to launch AR directly on your device (WebXR supported).
+                        {% else %}
+                        اضغط الزر أدناه لتشغيل الواقع المعزز مباشرة على جهازك (يدعم WebXR).
+                        {% endif %}
+                    </p>
+                </div>
+                
+                <div class="d-grid gap-2 mb-5">
+                    <button id="directArButton" class="btn btn-success btn-lg rounded-pill py-3" 
+                            style="background: linear-gradient(135deg, #28a745, #20c997); font-size: 1.3rem; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                        <i class="bi bi-vr"></i> 🕶️ 
+                        {% if current_lang == 'en' %}Launch Augmented Reality - Flight Helmet{% else %}تشغيل الواقع المعزز - خوذة الطيران{% endif %}
+                    </button>
+                </div>
+                
+                <hr class="my-4">
+                
+                <!-- =========================================================== -->
+                <!-- MARKER-BASED AR (HIRO Marker) -->
+                <!-- =========================================================== -->
                 <div class="alert alert-info text-center rounded-4 mb-3">
                     <i class="bi bi-info-circle-fill"></i>
                     {% if current_lang == 'en' %}
-                    <strong>How to experience AR:</strong> Print or display the HIRO marker below, then point your camera at it.
+                    <strong>Alternative: Marker-Based AR</strong> - Print or display the HIRO marker below, then point your camera at it.
                     {% else %}
-                    <strong>كيفية تجربة الواقع المعزز:</strong> اطبع أو اعرض علامة HIRO أدناه، ثم وجه الكاميرا نحوها.
+                    <strong>بديل: الواقع المعزز بالعلامات</strong> - اطبع أو اعرض علامة HIRO أدناه، ثم وجه الكاميرا نحوها.
                     {% endif %}
                 </div>
                 
@@ -53,7 +89,7 @@
                         </h5>
                     </div>
                     <div class="card-body p-0">
-                        <div style="position: relative; width: 100%; height: 550px; background: #0a0a0a;">
+                        <div style="position: relative; width: 100%; height: 500px; background: #0a0a0a;">
                             
                             <!-- AR.js Scene -->
                             <a-scene 
@@ -66,17 +102,17 @@
                                 <!-- HIRO Marker -->
                                 <a-marker preset="hiro" id="hiroMarker">
                                     
-                                    <!-- استخدام نموذج camel.glb (صغير الحجم وسريع التحميل) -->
+                                    <!-- Flight Helmet Model (نموذج خوذة الطيران) -->
                                     <a-entity
-                                        id="camelModel"
-                                        gltf-model="{{ url_for('static', filename='models/camel.glb') }}"
-                                        scale="0.3 0.3 0.3"
+                                        id="helmetModel"
+                                        gltf-model="https://threejs.org/examples/models/gltf/FlightHelmet/glTF/FlightHelmet.glb"
+                                        scale="0.25 0.25 0.25"
                                         position="0 0 0"
                                         rotation="0 90 0">
                                     </a-entity>
                                     
                                     <!-- 3D Text Label -->
-                                    <a-text value="🐪 Arabian Camel - Ship of the Desert" color="#FFD700" align="center" position="0 1.2 0" scale="0.5 0.5 0.5"></a-text>
+                                    <a-text value="🚁 Flight Helmet - 3D Model" color="#FFD700" align="center" position="0 1.2 0" scale="0.5 0.5 0.5"></a-text>
                                     
                                 </a-marker>
                                 
@@ -91,17 +127,9 @@
                     <p class="small text-muted">
                         <i class="bi bi-arrow-repeat"></i> 
                         {% if current_lang == 'en' %}
-                        Once the marker is detected, the 3D camel will appear. You can walk around it for a full view.
+                        Once the marker is detected, the 3D flight helmet will appear. You can walk around it for a full view.
                         {% else %}
-                        عند التعرف على العلامة، سيظهر الجمل ثلاثي الأبعاد. يمكنك المشي حوله لمشاهدته من جميع الزوايا.
-                        {% endif %}
-                    </p>
-                    <p class="small text-muted">
-                        <i class="bi bi-rocket-takeoff"></i> 
-                        {% if current_lang == 'en' %}
-                        <strong>Tip:</strong> This model is optimized for fast loading. For best results, ensure good lighting.
-                        {% else %}
-                        <strong>نصيحة:</strong> هذا النموذج محسّن للتحميل السريع. للحصول على أفضل النتائج، تأكد من الإضاءة الجيدة.
+                        عند التعرف على العلامة، ستظهر خوذة الطيران ثلاثية الأبعاد. يمكنك المشي حولها لمشاهدتها من جميع الزوايا.
                         {% endif %}
                     </p>
                 </div>
@@ -109,7 +137,9 @@
         </div>
     </div>
     
+    <!-- =========================================================== -->
     <!-- QR CODE SECTION -->
+    <!-- =========================================================== -->
     <div class="container my-4">
         <div class="row justify-content-center">
             <div class="col-md-6">
@@ -138,21 +168,23 @@
 <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
 <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
 
+<!-- Model-Viewer for Direct AR (WebXR) -->
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+
 <script>
     // Monitor marker detection and loading
     function setupMarkerDetection() {
         const marker = document.getElementById('hiroMarker');
-        const model = document.getElementById('camelModel');
+        const model = document.getElementById('helmetModel');
         const loadingIndicator = document.getElementById('loadingIndicator');
         
         if (marker) {
             marker.addEventListener('markerFound', () => {
-                console.log('🎯 HIRO Marker Found - Camel Model Displayed');
-                showTempMessage('✅ تم التعرف على العلامة - نموذج الجمل معروض', 'success');
+                console.log('🎯 HIRO Marker Found - Flight Helmet Displayed');
+                showTempMessage('✅ تم التعرف على العلامة - نموذج خوذة الطيران معروض', 'success');
             });
             marker.addEventListener('markerLost', () => {
                 console.log('👋 HIRO Marker Lost');
-                showTempMessage('⚠️ تم فقد العلامة - وجه الكاميرا نحو العلامة مرة أخرى', 'warning');
             });
         }
         
@@ -165,6 +197,76 @@
             model.addEventListener('model-loaded', () => {
                 if (loadingIndicator) loadingIndicator.style.display = 'none';
                 console.log('✅ 3D model loaded successfully');
+            });
+        }
+    }
+    
+    // Direct AR using Model-Viewer (WebXR)
+    function initDirectAR() {
+        const arButton = document.getElementById('directArButton');
+        if (arButton) {
+            arButton.addEventListener('click', () => {
+                // Create modal with Model-Viewer for direct AR
+                const modal = document.createElement('div');
+                modal.style.position = 'fixed';
+                modal.style.top = '0';
+                modal.style.left = '0';
+                modal.style.width = '100%';
+                modal.style.height = '100%';
+                modal.style.backgroundColor = 'rgba(0,0,0,0.95)';
+                modal.style.zIndex = '10000';
+                modal.style.display = 'flex';
+                modal.style.flexDirection = 'column';
+                modal.style.justifyContent = 'center';
+                modal.style.alignItems = 'center';
+                
+                const closeBtn = document.createElement('button');
+                closeBtn.innerHTML = '✕';
+                closeBtn.style.position = 'absolute';
+                closeBtn.style.top = '20px';
+                closeBtn.style.right = '20px';
+                closeBtn.style.width = '40px';
+                closeBtn.style.height = '40px';
+                closeBtn.style.borderRadius = '50%';
+                closeBtn.style.backgroundColor = '#fff';
+                closeBtn.style.border = 'none';
+                closeBtn.style.fontSize = '24px';
+                closeBtn.style.cursor = 'pointer';
+                closeBtn.style.zIndex = '10001';
+                closeBtn.onclick = () => document.body.removeChild(modal);
+                
+                const viewer = document.createElement('model-viewer');
+                viewer.setAttribute('src', 'https://threejs.org/examples/models/gltf/FlightHelmet/glTF/FlightHelmet.glb');
+                viewer.setAttribute('alt', 'Flight Helmet 3D Model');
+                viewer.setAttribute('ar', '');
+                viewer.setAttribute('ar-modes', 'webxr scene-viewer quick-look');
+                viewer.setAttribute('camera-controls', '');
+                viewer.setAttribute('auto-rotate', '');
+                viewer.setAttribute('style', 'width: 90%; height: 80%; background-color: #1a1a1a; border-radius: 20px;');
+                
+                const arLaunchBtn = document.createElement('button');
+                arLaunchBtn.innerHTML = '🕶️ ' + (currentLang === 'en' ? 'View in Augmented Reality' : 'عرض بالواقع المعزز');
+                arLaunchBtn.style.position = 'absolute';
+                arLaunchBtn.style.bottom = '30px';
+                arLaunchBtn.style.left = '50%';
+                arLaunchBtn.style.transform = 'translateX(-50%)';
+                arLaunchBtn.style.padding = '12px 24px';
+                arLaunchBtn.style.backgroundColor = '#28a745';
+                arLaunchBtn.style.color = 'white';
+                arLaunchBtn.style.border = 'none';
+                arLaunchBtn.style.borderRadius = '40px';
+                arLaunchBtn.style.fontSize = '18px';
+                arLaunchBtn.style.fontWeight = 'bold';
+                arLaunchBtn.style.cursor = 'pointer';
+                arLaunchBtn.style.zIndex = '10001';
+                arLaunchBtn.onclick = () => viewer.activateAR();
+                
+                modal.appendChild(closeBtn);
+                modal.appendChild(viewer);
+                modal.appendChild(arLaunchBtn);
+                document.body.appendChild(modal);
+                
+                console.log('🎯 Direct AR launched - Flight Helmet');
             });
         }
     }
@@ -184,26 +286,12 @@
         setTimeout(() => div.remove(), 3000);
     }
     
-    // Detect device type
-    function detectDevice() {
-        const ua = navigator.userAgent;
-        if (/huawei|honor/i.test(ua)) {
-            console.log('📱 Huawei/Honor device detected');
-        }
-        if (/iPhone|iPad/i.test(ua)) {
-            console.log('📱 iOS device detected');
-        }
-        if (/Android/i.test(ua)) {
-            console.log('📱 Android device detected');
-        }
-    }
-    
     document.addEventListener('DOMContentLoaded', function() {
         setupMarkerDetection();
-        detectDevice();
-        console.log('🎉 AlUla Desert Life AR page loaded');
-        console.log('📍 Using local GLB file: camel.glb (small size, fast loading)');
-        console.log('🐪 Experience the Arabian Camel in Augmented Reality');
+        initDirectAR();
+        console.log('🎉 Flight Helmet AR page loaded');
+        console.log('📍 Using Flight Helmet model from threejs.org');
+        console.log('🕶️ Click the green button for direct AR experience');
     });
 </script>
 {% endblock %}
